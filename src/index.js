@@ -11,7 +11,8 @@ import keycloak from './keycloak';
   //if(!authentificated) {
     //window.location.reload();
   //}
-
+  //console.log("Token Keycloak:", keycloak.token);
+  //console.log("Roles", keycloak.realmAccess?.roles);
   const root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(
   <React.StrictMode>
