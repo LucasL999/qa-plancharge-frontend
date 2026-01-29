@@ -14,20 +14,20 @@ Une application web pour gérer le plan de charge de l'équipe QA
 ## Installation du front
 
 ### 1. Cloner le projet 
-'''bash
+```bash
 git clone 'lien du projet git récupérable depuis github/gitlab'
 cd 'nom du dossier qui vient d'être clonné'
-'''
+```
 
 ### 2. Installation des dépendances
-'''bash
+```bash
 npm install
-'''
+```
 
 ### 3. Lancement du front
-'''bash
+```bash
 npm start
-'''
+```
 
 
 ## Structure
