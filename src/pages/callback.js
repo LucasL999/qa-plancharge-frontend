@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 export default function Callback() {
   const navigate = useNavigate();
@@ -21,7 +22,21 @@ export default function Callback() {
     })
       .then(res => res.json())
       .then(tokens => {
+        // Stocker le token d'accès dans le localStorage
         localStorage.setItem("access_token", tokens.access_token);
+
+        // Décode le token 
+        const decoded = jwtDecode(tokens.access_token);
+
+        // Extraire les rôles du token
+        const client = process.env.REACT_APP_KEYCLOAK_CLIENT_ID;
+        const roles = decoded.resource_access?.[client]?.roles || [];
+
+        // Stocker les rôles dans le localStorage
+        localStorage.setItem("roles", JSON.stringify(roles));
+        console.log("Rôles extraits du token :", roles);
+
+        // Rediriger vers la page d'accueil
         navigate("/");
       });
   }, [navigate]);

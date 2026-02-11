@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from "react-router-dom";
 import { redirectToKeycloak } from "./auth/keycloak";
 
@@ -14,28 +14,34 @@ import User from "./pages/user";
 function AuthGuard({ children }) {
   const location = useLocation();
   const [token, setToken] = useState(localStorage.getItem("access_token"));
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const stored = localStorage.getItem("access_token");
-      if (stored !== token) setToken(stored);
-      }, 100);
+    const t = localStorage.getItem("access_token");
+    setToken(t);
+    setLoaded(true);
+  }, []);
 
-    return () => clearInterval(interval);
-  }, [token]);
-    
+  useEffect(() => {
+    if (loaded && !token && location.pathname !== "/callback") {
+      redirectToKeycloak();
+    }
+  }, [loaded, token, location.pathname]);
+
+  if(!loaded) return null; // ou un spinner de chargement
+
   return children;
 }
 
-
-
 export default function App() {
 
-  function logout(){
+  function logout() {
     console.log("Déconnexion");
     localStorage.removeItem("access_token");
     localStorage.removeItem("pkce_verifier");
-    window.location.href = `${process.env.REACT_APP_KEYCLOAK_LOGOUT_ENDPOINT}?redirect_uri=${encodeURIComponent(process.env.REACT_APP_KEYCLOAK_REDIRECT_URI)}`;
+
+    window.location.href =
+      `${process.env.REACT_APP_KEYCLOAK_LOGOUT_ENDPOINT}?redirect_uri=${encodeURIComponent(process.env.REACT_APP_KEYCLOAK_REDIRECT_URI)}`;
   }
 
   return (
@@ -45,21 +51,22 @@ export default function App() {
         <Link to="/chantier">Chantier</Link> |{" "}
         <Link to="/calendar">Calendar</Link> |{" "}
         <Link to="/team">Team</Link> |{" "}
-        <Link to="/user">User</Link>
+        <Link to="/user">User</Link>{" "}
         <button type="button" onClick={logout}>Se déconnecter</button>
       </nav>
 
       <AuthGuard>
-      <Routes>
-        <Route path="/callback" element={<Callback />} />
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/chantier" element={<Chantier />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/team" element={<Team />} />
-        <Route path="/user" element={<User />} />
-      </Routes>
+        <Routes>
+          <Route path="/callback" element={<Callback />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/chantier" element={<Chantier />} />
+          <Route path="/calendar" element={<Calendar />} />
+          <Route path="/team" element={<Team />} />
+          <Route path="/user" element={<User />} />
+        </Routes>
       </AuthGuard>
     </Router>
   );
 }
+
 
