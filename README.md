@@ -29,6 +29,28 @@ npm install
 npm start
 '''
 
+### 1️. Cloner le projet
+```bash
+git clone 'lien du projet récuperable sur github/gitlab'
+cd 'nom du dossier clonné'
+```
+
+### 2. Installation des dépendances
+
+Pour le frontend : 
+
+```bash
+npm install
+```
+
+### 3. Lancement du front
+
+côté frontend : 
+```bash
+npm start
+```
+
+
 
 ## Structure
 
