@@ -1,13 +1,15 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 export default function Callback() {
-  const navigate = useNavigate();
-
   useEffect(() => {
     const code = new URLSearchParams(window.location.search).get("code");
     const verifier = localStorage.getItem("pkce_verifier");
+
+    if (!code) {
+      console.error("❌ Pas de 'code' dans l'URL /callback");
+      return;
+    }
 
     fetch(process.env.REACT_APP_KEYCLOAK_TOKEN_ENDPOINT, {
       method: "POST",
@@ -16,30 +18,34 @@ export default function Callback() {
         grant_type: "authorization_code",
         client_id: process.env.REACT_APP_KEYCLOAK_CLIENT_ID,
         code,
-        redirect_uri: process.env.REACT_APP_KEYCLOAK_REDIRECT_URI,
+        redirect_uri: process.env.REACT_APP_KEYCLOAK_REDIRECT_URI, // <- doit être /callback
         code_verifier: verifier
       })
     })
       .then(res => res.json())
       .then(tokens => {
-        // Stocker le token d'accès dans le localStorage
+        if (!tokens.access_token) {
+          console.error("❌ Pas d'access_token reçu :", tokens);
+          return;
+        }
+
+        // 1) stocker token
         localStorage.setItem("access_token", tokens.access_token);
 
-        // Décode le token 
+        // 2) décoder & stocker rôles (client roles)
         const decoded = jwtDecode(tokens.access_token);
-
-        // Extraire les rôles du token
         const client = process.env.REACT_APP_KEYCLOAK_CLIENT_ID;
         const roles = decoded.resource_access?.[client]?.roles || [];
-
-        // Stocker les rôles dans le localStorage
         localStorage.setItem("roles", JSON.stringify(roles));
-        console.log("Rôles extraits du token :", roles);
+        console.log("✅ Rôles extraits :", roles);
 
-        // Rediriger vers la page d'accueil
-        navigate("/");
+        // 3) redirection “hard”
+        window.location.replace("/");
+      })
+      .catch(err => {
+        console.error("❌ Erreur d'échange de code/token :", err);
       });
-  }, [navigate]);
+  }, []);
 
   return <p>Connexion en cours…</p>;
 }

@@ -13,7 +13,7 @@ import User from "./pages/user";
 
 function AuthGuard({ children }) {
   const location = useLocation();
-  const [token, setToken] = useState(localStorage.getItem("access_token"));
+  const [token, setToken] = useState(null);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -39,9 +39,10 @@ export default function App() {
     console.log("Déconnexion");
     localStorage.removeItem("access_token");
     localStorage.removeItem("pkce_verifier");
+    localStorage.removeItem("roles");
 
     window.location.href =
-      `${process.env.REACT_APP_KEYCLOAK_LOGOUT_ENDPOINT}?redirect_uri=${encodeURIComponent(process.env.REACT_APP_KEYCLOAK_REDIRECT_URI)}`;
+      `${process.env.REACT_APP_KEYCLOAK_LOGOUT_ENDPOINT}?redirect_uri=${encodeURIComponent(process.env.REACT_APP_APP_URL)}`;
   }
 
   return (
