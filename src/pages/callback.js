@@ -59,7 +59,7 @@ export default function Callback() {
         );
 
         if (meRes.status === 403) {
-          // Utilisateur authentifié par Keycloak mais non autorisé dans ta BDD
+          // Utilisateur authentifié par Keycloak mais non autorisé dans la BDD
           console.warn("⛔ Utilisateur non autorisé (BDD)");
           
           // Option : déclencher un logout Keycloak propre
@@ -79,12 +79,10 @@ export default function Callback() {
         if (!meRes.ok) {
           const errText = await meRes.text();
           console.error("❌ Erreur /me :", meRes.status, errText);
-          // À toi de choisir : bloquer ici ou laisser accéder avec rôles KC
-          // return;
         }
 
         const me = await meRes.json().catch(() => ({}));
-        // me = { nom, prenom, role } selon ton contrôleur
+        // me = { nom, prenom, role } selon le contrôleur
 
         if (me?.role) {
           localStorage.setItem("role", me.role); // rôle métier depuis BDD
