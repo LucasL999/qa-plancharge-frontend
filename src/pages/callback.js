@@ -21,7 +21,7 @@ export default function Callback() {
             grant_type: "authorization_code",
             client_id: process.env.REACT_APP_KEYCLOAK_CLIENT_ID,
             code,
-            redirect_uri: process.env.REACT_APP_KEYCLOAK_REDIRECT_URI, // <- DOIT être http://localhost:3000/callback
+            redirect_uri: process.env.REACT_APP_KEYCLOAK_REDIRECT_URI,
             code_verifier: verifier
           })
         });
@@ -37,18 +37,16 @@ export default function Callback() {
         localStorage.setItem("access_token", tokens.access_token);
         localStorage.setItem("id_token", tokens.id_token);
 
-        // 3) Décoder le token pour récupérer email (et éventuellement rôles Keycloak)
+        // 3) Décoder le token pour récupérer les infos (et éventuellement rôles Keycloak)
         const decoded = jwtDecode(tokens.access_token);
         const client = process.env.REACT_APP_KEYCLOAK_CLIENT_ID;
         const kcRoles = decoded.resource_access?.[client]?.roles || [];
         const email = decoded.email;
 
-
-        // (facultatif) conserver aussi ce que renvoie KC
         localStorage.setItem("roles_kc", JSON.stringify(kcRoles));
         if (email) localStorage.setItem("email", email);
 
-        // 4) Appeler le backend pour récupérer le rôle "métier" depuis TA BDD
+        // 4) Appeler le backend pour récupérer le rôle utilisateur depuis la BDD
         const meRes = await fetch(
           `${process.env.REACT_APP_BACKEND_URL}/me`,
           {
