@@ -16,6 +16,8 @@ Une application web pour gérer le plan de charge de l'équipe QA
 ### 1️. Cloner le projet
 ```bash
 git clone 'lien du projet récuperable sur github/gitlab'
+```
+```bash
 cd 'nom du dossier clonné'
 ```
 
