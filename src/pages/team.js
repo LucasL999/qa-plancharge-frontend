@@ -3,6 +3,10 @@ import Bandeau from "../component/bandeau";
 import Card3 from "../component/card3";
 import Card4 from "../component/card4";
 
+import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
+import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
+import InsertInvitationOutlinedIcon from '@mui/icons-material/InsertInvitationOutlined';
+import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 
 export default function Team() {
 
@@ -12,16 +16,16 @@ export default function Team() {
     <Box sx={{ paddingTop: "60px", }}>
       <Grid container spacing={2} alignItems="center" justifyContent="center">
         <Grid item xs={12} md={4}>
-          <Card3 title="Nombre de QA" value="7" icon="X" />
+          <Card3 title="Nombre de QA" value="7" icon={<PeopleOutlineOutlinedIcon />} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <Card3 title="CAF moyenne" value="18" icon="X" />
+          <Card3 title="CAF moyenne" value="18" icon={<TimelineOutlinedIcon />} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <Card3 title="Capacitaire mensuel" value="126" icon="X" />
+          <Card3 title="Capacitaire mensuel" value="126" icon={<InsertInvitationOutlinedIcon />} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <Card4 title="Capacité disponible" value="1414" icon="X" />
+          <Card4 title="Capacité disponible" value="1414" icon={<ThumbUpAltOutlinedIcon />} />
         </Grid>
       </Grid>
     </Box>

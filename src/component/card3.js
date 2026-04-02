@@ -8,19 +8,29 @@ export default function Card3({title, value, icon}) {
         height: 155,
         backgroundColor: alpha("#6B6B6B", 0.05),
         borderRadius: "10px",
-        paddingTop: "20px",
-        paddingLeft: "20px",
+        paddingTop: "15px",
+        paddingLeft: "15px",
         margin: "20px",
         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        transition: "transform 0.2s",
+        "&:hover": {
+          transform: "translateY(-4px)",
+          boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)",
+        },
         
     }}>
-      <Typography variant="h6" sx={{ color: "black", fontSize: "16px",  }}>
-        {icon} {title}
-      </Typography>
-      <Box>
+      <div style={{display: "flex", alignItems: "center", gap: "8px", color: "#6B6B6B", }}>
+        <div>
+          {icon}
+        </div>
+        <Typography variant="h6" sx={{ color: "#6B6B6B", fontSize: "16px", display: "flex", alignItems: "center", gap: "8px", }}>
+          {title}
+        </Typography>
+      </div>
+      <Box sx={{ paddingLeft: "5px" }}>
         <Typography variant="h4" sx={{ color: "black", fontSize: "70px", 
         }}>
             {value} 

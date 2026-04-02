@@ -6,17 +6,22 @@ export default function Card5( {title, value, icon, unit, color} ) {
         width: 240,
         height: 155,
         backgroundColor: "transparent",
-        paddingTop: "20px",
-        paddingLeft: "20px",
+        paddingTop: "15px",
+        paddingLeft: "15px",
         margin: "20px",
         display: "flex",
         flexDirection: "column",
         gap: "20px",
         
     }}>
-      <Typography variant="h6" sx={{ color: {color}, fontSize: "16px",  }}>
-        {icon} {title}
-      </Typography>
+      <div style={{display: "flex", alignItems: "center", gap: "8px", color: {color}, }}>
+        <div>
+          {icon}
+        </div>
+        <Typography variant="h6" sx={{ color: {color}, fontSize: "16px", display: "flex", alignItems: "center", gap: "8px", }}>
+          {title}
+        </Typography>
+      </div>
       <Box>
         <Typography variant="h4" sx={{ color: {color}, fontSize: "60px", paddingLeft: "20px", 
         }}>

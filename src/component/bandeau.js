@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { alpha } from "@mui/material/styles";
-import { Box, Divider, Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { Box, Divider, Typography, Dialog, DialogTitle, DialogContent } from "@mui/material";
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
