@@ -1,8 +1,15 @@
 import { use, useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Link, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, NavLink, useLocation } from "react-router-dom";
 import { redirectToKeycloak } from "./auth/keycloak";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { alpha } from "@mui/material";
+
+import HomeFilledIcon from '@mui/icons-material/HomeFilled';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ConstructionIcon from '@mui/icons-material/Construction';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PersonIcon from '@mui/icons-material/Person';
 
 import Callback from "./pages/callback";
 
@@ -94,15 +101,43 @@ export default function App() {
         }}
       >
         <img src={logo} alt="logo mnt" style={{display: "block", margin: "0 auto", width: "40%", height: "auto", alignItems: "center"}}/>
-        <Divider sx={{marginBottom: "20px",  border: "1px solid #8d8d8d"}}/>
-        <Box style={{ display: "flex", flexDirection: "column", gap: "15px", 
-          fontSize: "25px", fontWeight: "bold", }}>
-          <Link to="/" style={{ textDecoration: "none", color: "black",}}>Dashboard</Link>
-          <Link to="/team" style={{ textDecoration: "none", color: "black", }}>Plan de charge</Link>
-          <Link to="/chantier" style={{ textDecoration: "none", color: "black", }}>Chantiers</Link>
-          <Link to="/calendar" style={{ textDecoration: "none", color: "black", }}>Calendrier</Link>
-          <Link to="/user" style={{ textDecoration: "none", color: "black", }}>Utilisateurs</Link>
+        <Divider sx={{marginBottom: "20px",  border: "1px solid #8d8d8d",}}/>
+        <Box
+          style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "15px",
+          fontSize: "25px",
+          fontWeight: "bold",
+          }}
+        >
+          {[
+            { label: "Dashboard", path: "/", icon: <HomeFilledIcon /> },
+            { label: "Plan de charge", path: "/team", icon: <GroupsIcon /> },
+            { label: "Chantiers", path: "/chantier", icon: <ConstructionIcon /> },
+            { label: "Calendrier", path: "/calendar", icon: <CalendarMonthIcon /> },
+            { label: "Utilisateurs", path: "/user", icon: <PersonIcon /> },
+          ].map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            style={({ isActive }) => ({
+              display: "flex", alignItems: "center", gap: "12px", width: "calc(100% + 40px)", marginLeft: "-20px",
+              paddingTop: "5px", paddingBottom: "5px", paddingLeft: "20px", textDecoration: "none", color: "black",
+              backgroundColor: isActive ? alpha("#5D5D5D", 0.3) : "transparent",
+            })}
+          >
+            {({ isActive }) => (
+            <>
+            {/*  Icône uniquement quand actif */}
+            {isActive && item.icon}
+              <span>{item.label}</span>
+            </>
+          )}
+          </NavLink>
+          ))}
         </Box>
+
 
         {/* BOUTON DÉCONNEXION MUI */}
         <Button
