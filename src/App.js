@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, NavLink, useLocation } from "react-router-dom";
 import { redirectToKeycloak } from "./auth/keycloak";
 
@@ -10,6 +10,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import ConstructionIcon from '@mui/icons-material/Construction';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PersonIcon from '@mui/icons-material/Person';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import Callback from "./pages/callback";
 
@@ -154,6 +155,7 @@ export default function App() {
             color: "black",
           }}
         >
+          <LogoutIcon sx={{ marginRight: "8px" }} />
           Déconnexion
         </Button>
       </nav>
