@@ -1,7 +1,12 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
+import { useState } from 'react';
 
 export default function PopinNewChantier({ open, onClose }) {
-    
+
+    const [statuts, setStatuts] = useState([]);
+    const [statutId, setStatutId] = useState("");
+
+
 return (
     <Dialog
       open={open}
@@ -73,8 +78,10 @@ return (
             </Grid>
             <Grid size={4}>
                 <Field label="Statut">
-                    <Select fullWidth defaultValue="" sx={{borderRadius: "10px"}}>
-                        <MenuItem value="">Statut</MenuItem>
+                    <Select fullWidth value={statutId} onChange={(e) => setStatutId(e.target.value)} sx={{borderRadius: "10px"}}>
+                        {statuts.map((statut) => (
+                            <MenuItem key={statut.id} value={statut.id}>{statut.libelle}</MenuItem>
+                        ))}
                     </Select>
                 </Field>
             </Grid>

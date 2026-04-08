@@ -51,7 +51,7 @@ export default function Callback() {
           `${process.env.REACT_APP_BACKEND_URL}/me`,
           {
             headers: {
-              Authorization: `Bearer ${localStorage.getItem("id_token")}`,
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`,
             },
           }
         );
