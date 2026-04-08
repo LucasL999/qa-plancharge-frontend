@@ -12,7 +12,7 @@ export default function TableTeam() {
   ];
   return (
     
-<TableContainer>
+<TableContainer sx={{ boxShadow: 3, borderRadius: 2 }}>
       <Table sx={{ minWidth: 650, borderRadius: 10 }} aria-label="simple table">
         <TableHead>
           <TableRow>

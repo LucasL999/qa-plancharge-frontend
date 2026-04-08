@@ -5,6 +5,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TablePagination,
   alpha
 } from "@mui/material";
 import { useState } from "react";
@@ -24,9 +25,11 @@ export default function TableTeam() {
     { Chantier: "Chantier 7", Statut: "clos", ChefDeProjet: "Henry", Priorite: 1, Prev: 4, RAF: 0, Consomme: 4, QA: "Grace", NatureDuProjet: "Interne", Financement: "Budget IT", Capacite: 80, Debut: "2024-01-01", Fin: "2024-02-15" }
   ];
 
-  const [openPopinInfo, setOpenPopinInfo] = useState(false);
-  const [openPopinEdit, setOpenPopinEdit] = useState(false);
+  const [openPopinInfo, setOpenPopinInfo] = useState(false); // pour la popin d'info chantier
+  const [openPopinEdit, setOpenPopinEdit] = useState(false); // pour la popin d'édition chantier
   const [selectedChantier, setSelectedChantier] = useState(null);
+  const [page, setPage] = useState(0); // pour la pagination
+  const [rowsPerPage, setRowsPerPage] = useState(4); // pour la pagination
 
   const closePopinInfoChantier = () => setOpenPopinInfo(false);
   const closePopinEditChantier = () => setOpenPopinEdit(false);
@@ -42,7 +45,7 @@ export default function TableTeam() {
     setOpenPopinEdit(true);
   }
 
-  function getColorByStatut(statut) {
+  function getColorByStatut(statut) { // fonction pour déterminer la couleur du statut
     switch (statut) {
       case "en cours":
         return "#009951";
@@ -55,16 +58,24 @@ export default function TableTeam() {
     }
   }
 
-  function getColorByRAF(raf) {
+  function getColorByRAF(raf) { // fonction pour déterminer la couleur du RAF
     if (raf >= 0) return "#009951";
     if (raf < 0) return "#C00F0C";
     return "transparent";
   }
 
+  function handleChangePage(event, newPage) { // pour la pagination
+    setPage(newPage);
+  }
+  const handleChangeRowsPerPage = (event) => { // pour la pagination
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <>
-      <TableContainer>
-        <Table sx={{ minWidth: 650, borderRadius: 10 }}>
+      <TableContainer sx={{ boxShadow: 3, borderRadius: 2 }}>
+        <Table sx={{ minWidth: 650, borderRadius: 10, }}>
           <TableHead>
             <TableRow>
               <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Chantier</TableCell>
@@ -79,7 +90,7 @@ export default function TableTeam() {
           </TableHead>
 
           <TableBody>
-            {mockChantier.map((chantier) => (
+            {mockChantier.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((chantier) => (
               <TableRow
                 key={chantier.Chantier}
                 hover
@@ -106,6 +117,16 @@ export default function TableTeam() {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          component="div"
+          count={mockChantier.length}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          rowsPerPageOptions={[4]}
+          labelRowsPerPage="Chantiers par page"
+        />
       </TableContainer>
 
       {/* ✅ POPIN */}
