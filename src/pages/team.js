@@ -1,7 +1,8 @@
-import { Box, Grid, } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import Bandeau from "../component/bandeau";
 import Card3 from "../component/card3";
 import Card4 from "../component/card4";
+import TableTeam from "../component/tableTeam";
 
 import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
 import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
@@ -28,6 +29,9 @@ export default function Team() {
           <Card4 title="Capacité disponible" value="1414" icon={<ThumbUpAltOutlinedIcon />} />
         </Grid>
       </Grid>
+    </Box>
+    <Box sx={{ paddingTop: "40px", paddingBottom: "40px", margin: "0 60px", }}>
+      <TableTeam />
     </Box>
     </div>
   )

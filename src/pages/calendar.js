@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
 import Bandeau from "../component/bandeau";
 import Card5 from "../component/card5";
+import Schedule from "../component/schedule";
 
 export default function Calendar() {
 
@@ -17,6 +18,17 @@ export default function Calendar() {
           <Card5 title="Annuel" value="200" icon="" unit="J-ouvrés" color="#5DA1BC" />
         </Grid>
       </Grid>
+    </Box>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        paddingRight: "50px",
+        paddingLeft: "50px",
+        paddingTop: "20px",
+      }}
+    >
+      <Schedule width={600} />
     </Box>
     </div>
   )

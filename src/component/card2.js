@@ -32,11 +32,13 @@ export default function Card2({titre, value, icon, unit, onClick}) {
           {titre}
         </Typography>
       </div>
-      <Box sx={{ paddingLeft: "20px", paddingBottom: "5px", }}>
+      <Box sx={{ paddingLeft: "0px", paddingBottom: "5px", display: "flex", alignItems: "baseline", gap: 1, whiteSpace: "nowrap", }}>
         <Typography variant="h4" sx={{ color: "#6B6B6B", fontSize: "60px", 
         }}>
-            {value} 
-            <span style={{ fontSize: "18px",  }}> {unit} </span>
+          {value} 
+        </Typography>
+        <Typography sx={{ fontSize: "18px", color: "#6B6B6B", }}>
+          {unit}
         </Typography>
       </Box>
     </Box>

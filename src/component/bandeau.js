@@ -16,7 +16,7 @@ export default function Bandeau({title, subtitle}) {
         sx={{
           position: "relative",
           width: "100%",
-          backgroundColor: alpha("#5DA1BC", 0.4),
+          backgroundColor: "#0178A5",
           paddingTop: "40px",
           paddingBottom: "12px",
         }}
@@ -30,7 +30,7 @@ export default function Bandeau({title, subtitle}) {
           left: "92%",
           transform: "translate(-50%, -50%)",
           fontSize: 55,
-          color: "#5D5D5D",
+          color: "#D4DA17",
           cursor: "pointer",
           }}
         />
@@ -42,6 +42,7 @@ export default function Bandeau({title, subtitle}) {
             fontSize: "50px",
             fontWeight: "bold",
             margin: 0,
+            color: "#F5F7F9",
           }}
         >
           {title}
@@ -55,6 +56,7 @@ export default function Bandeau({title, subtitle}) {
             fontWeight: "bold",
             marginTop: "15px",
             marginBottom: 0,
+            color: "#F5F7F9",
           }}
         >
           {subtitle}

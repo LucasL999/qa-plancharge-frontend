@@ -24,21 +24,48 @@ export default function Card1({titre, value, icon, onClick}) {
         },
         
     }}>
-      <div style={{display: "flex", alignItems: "center", gap: "8px", color: "#5DA1BC", }}>
-              <div>
-                {icon}
-              </div>
-              <Typography variant="h6" sx={{ color: "#5DA1BC", fontSize: "16px", display: "flex", alignItems: "center", gap: "8px", }}>
+      <div style={{display: "flex", alignItems: "center", gap: "8px", color: "#0178A5", }}>
+        <div>
+          {icon}
+            </div>
+              <Typography variant="h6" sx={{ color: "#0178A5", fontSize: "16px", display: "flex", alignItems: "center", gap: "8px", }}>
                 {titre}
               </Typography>
             </div>
-      <Box sx={{ paddingLeft: "30px", }}>
-        <Typography variant="h4" sx={{ color: "#5DA1BC", fontSize: "80px", 
-        }}>
-            {value} 
-            <span style={{ fontSize: "22px",  }}> JH</span>
-        </Typography>
+            <Box
+  sx={{
+    display: "flex",
+    alignItems: "baseline",
+    whiteSpace: "nowrap",
+  }}
+>
+  <Typography
+    component="span"
+    sx={{
+      width: "110px",                  // ✅ largeur fixe
+      textAlign: "right",              // ✅ chiffres alignés entre eux
+      fontSize: "80px",
+      fontWeight: 500,
+      color: "#0178A5",
+      fontVariantNumeric: "tabular-nums",
+      letterSpacing: "-0.5px",
+    }}
+  >
+    {value}
+  </Typography>
+
+  <Typography
+    component="span"
+    sx={{
+      marginLeft: "80px",
+      fontSize: "22px",
+      fontWeight: 400,
+      color: "#0178A5",
+    }}
+  >
+    JH
+  </Typography>
+</Box>
       </Box>
-    </Box>
     );
 }

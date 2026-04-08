@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Route, Routes, NavLink, useLocation } from "re
 import { redirectToKeycloak } from "./auth/keycloak";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { alpha } from "@mui/material";
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
 import HomeFilledIcon from '@mui/icons-material/HomeFilled';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -31,13 +33,13 @@ import logo from "./img/logo.png";
 
 const theme = createTheme({
   typography: {
-    fontFamily: " Arial, sans-serif",
+    fontFamily: 'Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI"allVariants, sans serif',
   },
   components: {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          fontFamily: "Arial, sans-serif",
+          fontFamily: "Roboto, sans-serif",
         },
       },
     },
@@ -123,9 +125,9 @@ export default function App() {
             key={item.path}
             to={item.path}
             style={({ isActive }) => ({
-              display: "flex", alignItems: "center", gap: "12px", width: "calc(100% + 40px)", marginLeft: "-20px",
-              paddingTop: "5px", paddingBottom: "5px", paddingLeft: "20px", textDecoration: "none", color: "black",
-              backgroundColor: isActive ? alpha("#5D5D5D", 0.3) : "transparent",
+              display: "flex", alignItems: "center", gap: "12px", width: "calc(100% + 40px)", marginLeft: "-20px", borderLeft: isActive ? "5px solid #0178A5" : "none",
+              paddingTop: "5px", paddingBottom: "5px", paddingLeft: "20px", textDecoration: "none", color: isActive ? "#0178A5" : "#333333",
+              backgroundColor: isActive ? "#EAF4F8" : "transparent",
             })}
           >
             {({ isActive }) => (
@@ -151,6 +153,7 @@ export default function App() {
             transform: "translateX(-50%)",
             fontWeight: "bold",
             fontSize: "16px",
+            fontFamily: "Roboto, sans-serif",
             cursor: "pointer",
             color: "black",
           }}
