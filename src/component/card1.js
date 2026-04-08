@@ -33,39 +33,40 @@ export default function Card1({titre, value, icon, onClick}) {
               </Typography>
             </div>
             <Box
-  sx={{
-    display: "flex",
-    alignItems: "baseline",
-    whiteSpace: "nowrap",
-  }}
->
-  <Typography
-    component="span"
-    sx={{
-      width: "110px",                  // ✅ largeur fixe
-      textAlign: "right",              // ✅ chiffres alignés entre eux
-      fontSize: "80px",
-      fontWeight: 500,
-      color: "#0178A5",
-      fontVariantNumeric: "tabular-nums",
-      letterSpacing: "-0.5px",
-    }}
-  >
-    {value}
-  </Typography>
+              sx={{
+              display: "flex",
+              justifyContent: "flex-end", // ✅ alignement à droite
+              alignItems: "baseline",
+              whiteSpace: "nowrap",
+              paddingRight: "20px",
+              }}
+            >
+              <Typography
+              component="span"
+              sx={{
+              fontSize: "80px",
+              fontWeight: 500,
+              color: "#0178A5",
+              fontVariantNumeric: "tabular-nums",
+              letterSpacing: "-0.5px",
+              textAlign: "right",
+              }}
+              >
+                {value}
+              </Typography>
 
-  <Typography
-    component="span"
-    sx={{
-      marginLeft: "80px",
-      fontSize: "22px",
-      fontWeight: 400,
-      color: "#0178A5",
-    }}
-  >
-    JH
-  </Typography>
-</Box>
+              <Typography
+                component="span"
+                sx={{
+                marginLeft: "8px",
+                fontSize: "22px",
+                fontWeight: 400,
+                color: "#0178A5",
+                }}
+                >
+                  JH
+                </Typography>
+            </Box>
       </Box>
     );
 }

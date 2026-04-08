@@ -6,18 +6,27 @@ return (
     <Dialog
       open={open}
       onClose={onClose}
+      disablePortal
+      PaperProps={{
+        sx:{
+            position: "absolute",
+            top: 0,
+            left: "31%",
+        }
+      }}
       maxWidth="md"
       fullWidth
     >
       {/* HEADER */}
       <DialogTitle
         sx={{
-          backgroundColor: "#cfe6ef",
+          backgroundColor: "#0178A5",
           textAlign: "center",
           fontSize: "32px",
           fontWeight: 500,
           paddingTop: "31px",
           paddingBottom: "31px",
+          color: "white",
         }}
       >
         Nouveau chantier
