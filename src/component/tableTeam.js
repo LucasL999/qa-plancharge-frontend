@@ -25,9 +25,9 @@ export default function TableTeam() {
         <TableBody>
           {mockQAs.map((qa) => (
             <TableRow key={qa.name} sx={{ ":hover": {backgroundColor: alpha("#5DA1BC", 0.2), cursor: "pointer"} }}>
-              <TableCell align="center" sx={{ fontWeight: "bold" }}>{qa.firstname} {qa.name}</TableCell>
-              <TableCell align="center" sx={{color: "#003CFF"}}>{qa.capacity}</TableCell>
-              <TableCell align="center">{qa.absences}</TableCell>
+              <TableCell align="center" sx={{ color: "#0178A5", fontWeight: "bold" }}>{qa.firstname} {qa.name}</TableCell>
+              <TableCell align="center" sx={{color: "#009951", fontWeight: "bold"}}>{qa.capacity}</TableCell>
+              <TableCell align="center" sx={{color: "#6B6B6B", fontWeight: "bold"}}>{qa.absences}</TableCell>
             </TableRow>
           ))}
         </TableBody>

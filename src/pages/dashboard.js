@@ -36,7 +36,7 @@ export default function Dashboard() {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Card1 titre="Capacité QA disponible" value="1414" icon={<ThumbUpOffAltIcon sx={{fontSize: 50}} />} onClick={() => navigateCapacite("/team")} />
-              <Card1 titre="Reste à faire QA (RAFQA)" value="654" icon={<ErrorOutlineIcon sx={{fontSize: 50}} />} onClick={() => navigateRAF("/chantier")} />
+              <Card1 titre="Reste à faire QA (RAFQA)" value="653" icon={<ErrorOutlineIcon sx={{fontSize: 50}} />} onClick={() => navigateRAF("/chantier")} />
             </Grid>
           </Grid>
         </Grid>

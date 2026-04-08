@@ -3,6 +3,7 @@ import { useState } from "react";
 
 import Bandeau from "../component/bandeau";
 import Card5 from "../component/card5";
+import Card6 from "../component/card6";
 import TableChantier from "../component/tableChantier";
 import PopinNewChantier from "../component/popinNewChantier";
 import { Grid, Button, TextField } from "@mui/material";
@@ -31,9 +32,9 @@ export default function Chantier() {
       <Box sx={{ paddingTop: "26px", paddingLeft: "100px", height: "180px" }}>
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={12} md={4}>
-            <Card5
+            <Card6
               title="RAF QA"
-              value="654"
+              value="653"
               icon={<ErrorOutlineIcon sx={{ color: "#009951", fontSize: 35, fontWeight: "bold" }} />}
               unit="JH"
               color="#009951"
@@ -45,7 +46,7 @@ export default function Chantier() {
               value="202,5"
               icon={<CheckCircleOutlineIcon sx={{ color: "#C00F0C", fontSize: 35 }} />}
               unit="JH"
-              color="#C00F0C"
+              color="#9d0e0bdd"
             />
           </Grid>
           <Grid item xs={12} md={4}>
@@ -121,7 +122,7 @@ export default function Chantier() {
           borderRadius: "100px",
           height: "60px",
           textTransform: "none",
-          backgroundColor: alpha("#5DA1BC", 0.5),
+          backgroundColor: alpha("#0178A5", 0.7),
           color: "black",
           px: 3,
         }}
@@ -138,7 +139,7 @@ export default function Chantier() {
       borderRadius: "100px",
       height: "60px",
       textTransform: "none",
-      backgroundColor: alpha("#5DA1BC", 0.5),
+      backgroundColor: alpha("#0178A5", 0.7),
       color: "black",
       px: 3,
       }}

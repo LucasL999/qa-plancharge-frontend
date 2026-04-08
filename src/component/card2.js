@@ -35,7 +35,7 @@ export default function Card2({titre, value, icon, unit, onClick}) {
       <Box sx={{ paddingLeft: "0px", paddingBottom: "5px", display: "flex", alignItems: "baseline", gap: 1, whiteSpace: "nowrap", }}>
         <Typography variant="h4" sx={{ color: "#6B6B6B", fontSize: "60px", 
         }}>
-          {value} 
+            {value} 
         </Typography>
         <Typography sx={{ fontSize: "18px", color: "#6B6B6B", }}>
           {unit}

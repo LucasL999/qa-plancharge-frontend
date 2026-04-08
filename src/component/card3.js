@@ -22,16 +22,16 @@ export default function Card3({title, value, icon}) {
         },
         
     }}>
-      <div style={{display: "flex", alignItems: "center", gap: "8px", color: "#6B6B6B", }}>
+      <div style={{display: "flex", alignItems: "center", gap: "8px", color: "#0178A5", }}>
         <div>
           {icon}
         </div>
-        <Typography variant="h6" sx={{ color: "#6B6B6B", fontSize: "16px", display: "flex", alignItems: "center", gap: "8px", }}>
+        <Typography variant="h6" sx={{ color: "#0178A5", fontSize: "16px", display: "flex", alignItems: "center", gap: "8px", }}>
           {title}
         </Typography>
       </div>
       <Box sx={{ paddingLeft: "5px" }}>
-        <Typography variant="h4" sx={{ color: "black", fontSize: "70px", 
+        <Typography variant="h4" sx={{ color: "#0178A5", fontSize: "70px", 
         }}>
             {value} 
         </Typography>
