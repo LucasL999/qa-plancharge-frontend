@@ -1,22 +1,7 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TableContainer, Table, TableCell, Grid, MenuItem, Select, Divider, TableBody, TableRow } from '@mui/material';
 
-const mockData = {
-        chantier: "Chantier 1",
-        statut: "En cours",
-        qa: "Alice",
-        priorite: "2",
-        chef: "Bob",
-        nature: "Projet de construction",
-        financement: "Financement public",
-        capacite: "80",
-        prev: "1000 JH",
-        cons: "600 JH",
-        raf: "400 JH",
-        debut: "01/01/2024",
-        fin: "31/12/2024"
-    };
 
-export default function PopinInfoChantier({ open, onClose }) {
+export default function PopinInfoChantier({ open, onClose, chantier }) {
 
     return (
     <Dialog
@@ -69,19 +54,19 @@ export default function PopinInfoChantier({ open, onClose }) {
                             <TableBody>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Chantier :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.chantier}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Chantier}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Statut :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.statut}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Statut}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>QA :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.qa}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.QA}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Priorité :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.priorite}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Priorite}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -107,19 +92,19 @@ export default function PopinInfoChantier({ open, onClose }) {
                             <TableBody>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Chef de projet :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.chef}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.ChefDeProjet}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Nature du projet :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.nature}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.NatureDuProjet}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Financement :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.financement}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Financement}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Capacité (%) :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.capacite}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Capacite}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -145,15 +130,15 @@ export default function PopinInfoChantier({ open, onClose }) {
                             <TableBody>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Prévisionnel :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.prev}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Prev}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Consommé :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.cons}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Consomme}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Reste à faire :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.raf}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.RAF}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -179,11 +164,11 @@ export default function PopinInfoChantier({ open, onClose }) {
                             <TableBody>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Date de début :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.debut}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Debut}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Date de fin :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{mockData.fin}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Fin}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>

@@ -1,7 +1,32 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
+import { useState, useEffect } from 'react';
 
-export default function PopinEditChantier({ open, onClose }) {
+export default function PopinEditChantier({ open, onClose, chantier }) {
     
+    const [chefDeProjet, setChefDeProjet] = useState("");
+    const [financement, setFinancement] = useState("");
+    const [natureDuProjet, setNatureDuProjet] = useState("");
+    const [capacite, setCapacite] = useState("");
+    const [prev, setPrev] = useState("");
+    const [cons, setCons] = useState("");
+    const [raf, setRaf] = useState("");
+    const [debut, setDebut] = useState("");
+    const [fin, setFin] = useState("");
+
+    useEffect(() => {
+        if (chantier) {
+            setChefDeProjet(chantier.ChefDeProjet);
+            setFinancement(chantier.Financement);
+            setNatureDuProjet(chantier.NatureDuProjet);
+            setCapacite(chantier.Capacite);
+            setPrev(chantier.Prev);
+            setCons(chantier.Consomme);
+            setRaf(chantier.RAF);
+            setDebut(chantier.Debut);
+            setFin(chantier.Fin);
+        }
+    }, [chantier]);
+
 return (
     <Dialog
       open={open}
@@ -20,7 +45,7 @@ return (
           paddingBottom: "31px",
         }}
       >
-        Nouveau chantier
+        Modifier le chantier
       </DialogTitle>
       <Divider sx={{
           width: "100%",
@@ -84,6 +109,8 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        value={chefDeProjet}
+                        onChange={(e) => setChefDeProjet(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -98,6 +125,8 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        value={financement}
+                        onChange={(e) => setFinancement(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -114,6 +143,8 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        value={natureDuProjet}
+                        onChange={(e) => setNatureDuProjet(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -128,6 +159,8 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        value={capacite}
+                        onChange={(e) => setCapacite(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -152,6 +185,8 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        value={prev}
+                        onChange={(e) => setPrev(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -166,6 +201,8 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        value={cons}
+                        onChange={(e) => setCons(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -180,6 +217,8 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        value={raf}
+                        onChange={(e) => setRaf(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -204,6 +243,8 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        value={debut}
+                        onChange={(e) => setDebut(e.target.value)}
                         type="date"
                         sx={{
                             "& fieldset": {
@@ -219,6 +260,8 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        value={fin}
+                        onChange={(e) => setFin(e.target.value)}
                         type="date"
                         sx={{
                             "& fieldset": {

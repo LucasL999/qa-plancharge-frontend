@@ -15,22 +15,32 @@ import PopinEditChantier from "./popinEditChantier";
 
 export default function TableTeam() {
   const mockChantier = [
-    { Chantier: "Chantier 1", Statut: "en cours", ChefDeProjet: "Bob", Priorite: 2, Prev: 5, RAF: 3, Consomme: 2 },
-    { Chantier: "Chantier 2", Statut: "à faire", ChefDeProjet: "Charlie", Priorite: 1, Prev: 4, RAF: 4, Consomme: 0 },
-    { Chantier: "Chantier 3", Statut: "en cours", ChefDeProjet: "David", Priorite: 3, Prev: 6, RAF: 4, Consomme: 2 },
-    { Chantier: "Chantier 4", Statut: "clos", ChefDeProjet: "Eve", Priorite: 2, Prev: 6, RAF: -2, Consomme: 8 },
-    { Chantier: "Chantier 5", Statut: "en cours", ChefDeProjet: "Frank", Priorite: 1, Prev: 4, RAF: 3, Consomme: 1 },
-    { Chantier: "Chantier 6", Statut: "clos", ChefDeProjet: "Grace", Priorite: 2, Prev: 5, RAF: -1, Consomme: 6 },
-    { Chantier: "Chantier 7", Statut: "clos", ChefDeProjet: "Henry", Priorite: 1, Prev: 4, RAF: 0, Consomme: 4 }
+    { Chantier: "Chantier 1", Statut: "en cours", ChefDeProjet: "Bob", Priorite: 2, Prev: 5, RAF: 3, Consomme: 2, QA: "Alice", NatureDuProjet: "Interne", Financement: "Budget IT", Capacite: 80, Debut: "2024-01-01", Fin: "2024-02-15" },
+    { Chantier: "Chantier 2", Statut: "à faire", ChefDeProjet: "Charlie", Priorite: 1, Prev: 4, RAF: 4, Consomme: 0, QA: "Bob", NatureDuProjet: "Client", Financement: "Facturable", Capacite: 60, Debut: "2024-02-01", Fin: "2024-03-30" },
+    { Chantier: "Chantier 3", Statut: "en cours", ChefDeProjet: "David", Priorite: 3, Prev: 6, RAF: 4, Consomme: 2, QA: "Charlie", NatureDuProjet: "Interne", Financement: "Budget IT", Capacite: 80, Debut: "2024-01-01", Fin: "2024-02-15" },
+    { Chantier: "Chantier 4", Statut: "clos", ChefDeProjet: "Eve", Priorite: 2, Prev: 6, RAF: -2, Consomme: 8, QA: "David", NatureDuProjet: "Client", Financement: "Facturable", Capacite: 60, Debut: "2024-02-01", Fin: "2024-03-30" },
+    { Chantier: "Chantier 5", Statut: "en cours", ChefDeProjet: "Frank", Priorite: 1, Prev: 4, RAF: 3, Consomme: 1, QA: "Eve", NatureDuProjet: "Interne", Financement: "Budget IT", Capacite: 80, Debut: "2024-01-01", Fin: "2024-02-15" },
+    { Chantier: "Chantier 6", Statut: "clos", ChefDeProjet: "Grace", Priorite: 2, Prev: 5, RAF: -1, Consomme: 6, QA: "Frank", NatureDuProjet: "Client", Financement: "Facturable", Capacite: 60, Debut: "2024-02-01", Fin: "2024-03-30" },
+    { Chantier: "Chantier 7", Statut: "clos", ChefDeProjet: "Henry", Priorite: 1, Prev: 4, RAF: 0, Consomme: 4, QA: "Grace", NatureDuProjet: "Interne", Financement: "Budget IT", Capacite: 80, Debut: "2024-01-01", Fin: "2024-02-15" }
   ];
 
   const [openPopinInfo, setOpenPopinInfo] = useState(false);
   const [openPopinEdit, setOpenPopinEdit] = useState(false);
+  const [selectedChantier, setSelectedChantier] = useState(null);
 
-  const openPopinInfoChantier = () => setOpenPopinInfo(true);
   const closePopinInfoChantier = () => setOpenPopinInfo(false);
-  const openPopinEditChantier = () => setOpenPopinEdit(true);
   const closePopinEditChantier = () => setOpenPopinEdit(false);
+
+
+  function openPopinInfoChantier(chantier) {
+    setSelectedChantier(chantier);
+    setOpenPopinInfo(true);
+  }
+
+  function openPopinEditChantier(chantier) {
+    setSelectedChantier(chantier);
+    setOpenPopinEdit(true);
+  }
 
   function getColorByStatut(statut) {
     switch (statut) {
@@ -74,7 +84,7 @@ export default function TableTeam() {
                 key={chantier.Chantier}
                 hover
                 sx={{ cursor: "pointer", "&.MuiTableRow-hover:hover": { backgroundColor: alpha("#5DA1BC", 0.2) } }}
-                onClick={openPopinInfoChantier}
+                onClick={() => openPopinInfoChantier(chantier)}
               >
                 <TableCell align="center" sx={{ fontSize: "16px", fontWeight: "bold" }}>
                   {chantier.Chantier}
@@ -89,7 +99,7 @@ export default function TableTeam() {
                   {chantier.RAF}
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.Consomme}</TableCell>
-                <TableCell align="center" sx={{ color: "#003CFF" }} onClick={(event) => { event.stopPropagation(); openPopinEditChantier(); }}>
+                <TableCell align="center" sx={{ color: "#003CFF" }} onClick={(event) => { event.stopPropagation(); openPopinEditChantier(chantier); }}>
                   <EditOutlinedIcon/>
                 </TableCell>
               </TableRow>
@@ -102,10 +112,12 @@ export default function TableTeam() {
       <PopinInfoChantier
         open={openPopinInfo}
         onClose={closePopinInfoChantier}
+        chantier={selectedChantier}
       />
       <PopinEditChantier
         open={openPopinEdit}
         onClose={closePopinEditChantier}
+        chantier={selectedChantier}
       />
     </>
   );
