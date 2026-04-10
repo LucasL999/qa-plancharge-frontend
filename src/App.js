@@ -7,12 +7,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-import HomeFilledIcon from '@mui/icons-material/HomeFilled';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import ConstructionIcon from '@mui/icons-material/Construction';
-import GroupsIcon from '@mui/icons-material/Groups';
-import PersonIcon from '@mui/icons-material/Person';
-import LogoutIcon from '@mui/icons-material/Logout';
+import Navbar from "./component/navbar";
 
 import Callback from "./pages/callback";
 
@@ -23,13 +18,10 @@ import Team from "./pages/team";
 import User from "./pages/user";
 
 import { 
-  Button, 
-  Divider,
   Box,
   CssBaseline, 
 } from "@mui/material";
 
-import logo from "./img/logo.png";
 
 const theme = createTheme({
   typography: {
@@ -87,97 +79,22 @@ export default function App() {
   <Router>
     <Box style={{ display: "flex" }}>
 
-      {/* SIDEBAR */}
-      <nav
-        className="sidebar"
-        style={{
-          width: "250px",
-          height: "100vh",
-          position: "fixed",
-          left: 0,
-          top: 0,
-          padding: "20px",
-          backgroundColor: "#f4f4f4",
-          display: "flex",
-          flexDirection: "column",
-          borderRight: "2px solid #8d8d8d",
-        }}
-      >
-        <img src={logo} alt="logo mnt" style={{display: "block", margin: "0 auto", width: "40%", height: "auto", alignItems: "center"}}/>
-        <Divider sx={{marginBottom: "20px",  border: "1px solid #8d8d8d",}}/>
-        <Box
-          style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "15px",
-          fontSize: "25px",
-          fontWeight: "bold",
-          }}
-        >
-          {[
-            { label: "Dashboard", path: "/", icon: <HomeFilledIcon /> },
-            { label: "Plan de charge", path: "/team", icon: <GroupsIcon /> },
-            { label: "Chantiers", path: "/chantier", icon: <ConstructionIcon /> },
-            { label: "Calendrier", path: "/calendar", icon: <CalendarMonthIcon /> },
-            { label: "Utilisateurs", path: "/user", icon: <PersonIcon /> },
-          ].map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            style={({ isActive }) => ({
-              display: "flex", alignItems: "center", gap: "12px", width: "calc(100% + 40px)", marginLeft: "-20px", borderLeft: isActive ? "5px solid #0178A5" : "none",
-              paddingTop: "5px", paddingBottom: "5px", paddingLeft: "20px", textDecoration: "none", color: isActive ? "#0178A5" : "#333333",
-              backgroundColor: isActive ? "#EAF4F8" : "transparent",
-            })}
-          >
-            {({ isActive }) => (
-            <>
-            {/*  Icône uniquement quand actif */}
-            {isActive && item.icon}
-              <span>{item.label}</span>
-            </>
-          )}
-          </NavLink>
-          ))}
-        </Box>
+  <Navbar onLogout={logout} />
 
+  <Box style={{ marginLeft: "230px", flexGrow: 1, paddingLeft: "20px" }}>
+    <AuthGuard>
+      <Routes>
+        <Route path="/callback" element={<Callback />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/chantier" element={<Chantier />} />
+        <Route path="/calendar" element={<Calendar />} />
+        <Route path="/team" element={<Team />} />
+        <Route path="/user" element={<User />} />
+      </Routes>
+    </AuthGuard>
+  </Box>
 
-        {/* BOUTON DÉCONNEXION MUI */}
-        <Button
-          variant="text"
-          onClick={logout}
-          sx={{
-            position: "absolute",
-            bottom: 40,
-            left: "50%",
-            transform: "translateX(-50%)",
-            fontWeight: "bold",
-            fontSize: "16px",
-            fontFamily: "Roboto, sans-serif",
-            cursor: "pointer",
-            color: "black",
-          }}
-        >
-          <LogoutIcon sx={{ marginRight: "8px" }} />
-          Déconnexion
-        </Button>
-      </nav>
-
-      {/* CONTENU PRINCIPAL */}
-      <Box style={{ marginLeft: "230px", flexGrow: 1, paddingLeft: "20px" }}>
-        <AuthGuard>
-          <Routes>
-            <Route path="/callback" element={<Callback />} />
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/chantier" element={<Chantier />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/team" element={<Team />} />
-            <Route path="/user" element={<User />} />
-          </Routes>
-        </AuthGuard>
-      </Box>
-
-    </Box>
+</Box>
   </Router>
   </ThemeProvider>
 );

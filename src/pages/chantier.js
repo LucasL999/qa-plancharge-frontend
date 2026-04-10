@@ -1,5 +1,8 @@
 import { alpha, Box, Divider } from "@mui/material";
 import { useState } from "react";
+import { useEffect } from "react";
+
+import { getStatuts } from "../services/chantierService";
 
 import Bandeau from "../component/bandeau";
 import Card5 from "../component/card5";
@@ -24,6 +27,18 @@ export default function Chantier() {
 
   const openPopinNewChantier = () => setOpenPopin(true);
   const closePopinNewChantier = () => setOpenPopin(false);
+
+  const [statuts, setStatuts] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    getStatuts()
+      .then(data => {setStatuts(data);})
+      .catch(error => {
+        console.error('Error fetching statuts:', error);
+        setError(error);
+      });
+  }, []);
 
   return (
     <>
@@ -177,7 +192,7 @@ export default function Chantier() {
       </Box>
 
       {/* POPIN NOUVEAU CHANTIER */}
-      <PopinNewChantier open={openPopin} onClose={closePopinNewChantier} />
+      <PopinNewChantier open={openPopin} onClose={closePopinNewChantier} statuts={statuts} />
     </>
   );
 }

@@ -1,10 +1,18 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { useState } from 'react';
 
-export default function PopinNewChantier({ open, onClose }) {
+export default function PopinNewChantier({ open, onClose, statuts }) {
 
-    const [statuts, setStatuts] = useState([]);
     const [statutId, setStatutId] = useState("");
+
+    const handleStatutChange = (event) => {
+        setStatutId(event.target.value);
+    };
+    const handleSubmit = () => {
+        // Logique de soumission du formulaire
+        console.log("Statut sélectionné :", statutId);
+        onClose();
+    };
 
 
 return (
@@ -78,7 +86,7 @@ return (
             </Grid>
             <Grid size={4}>
                 <Field label="Statut">
-                    <Select fullWidth value={statutId} onChange={(e) => setStatutId(e.target.value)} sx={{borderRadius: "10px"}}>
+                    <Select fullWidth value={statutId} onChange={handleStatutChange} sx={{borderRadius: "10px"}}>
                         {statuts.map((statut) => (
                             <MenuItem key={statut.id} value={statut.id}>{statut.libelle}</MenuItem>
                         ))}
