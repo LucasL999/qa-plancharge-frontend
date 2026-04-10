@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
-export default function Card3({title, value, icon}) {
+export default function Card3({title, value, icon, unit}) {
     return(
         <Box sx={{
         width: 240,
@@ -30,10 +30,13 @@ export default function Card3({title, value, icon}) {
           {title}
         </Typography>
       </div>
-      <Box sx={{ paddingLeft: "5px" }}>
+      <Box sx={{ paddingLeft: "5px", display: "flex", alignItems: "baseline", gap: 1, whiteSpace: "nowrap", }}>
         <Typography variant="h4" sx={{ color: "#0178A5", fontSize: "70px", 
         }}>
-            {value} 
+            {value}
+        </Typography>
+        <Typography variant="subtitle1" sx={{ color: "#0178A5", fontSize: "18px", marginTop: "-10px" }}>
+            {unit}
         </Typography>
       </Box>
     </Box>

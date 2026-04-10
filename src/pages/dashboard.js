@@ -1,5 +1,6 @@
 import { Box, Grid, } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -7,6 +8,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 
+import { getWorkingDaysUntilYearEnd} from "../algo/joursOuvresAn";
 
 import Bandeau from "../component/bandeau";
 import Delta from "../component/delta";
@@ -21,6 +23,16 @@ export default function Dashboard() {
   const navigateCharge = useNavigate();
   const navigateConsomme = useNavigate();
   const navigateJours = useNavigate();
+
+  const [workingDays, setWorkingDays] = useState(null);
+  
+    useEffect(() => {
+      async function load(){
+        const result = await getWorkingDaysUntilYearEnd(new Date());
+        setWorkingDays(result);
+      }
+      load();
+    }, []);
 
   return (
     <div>
@@ -52,7 +64,7 @@ export default function Dashboard() {
             <Card2 titre="Consommé" value="202,5" icon={<CheckCircleOutlineIcon sx={{fontSize: 40}} />} unit="JH" onClick={() => navigateConsomme("/chantier")} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Card2 titre="J-ouvrés annuels" value="200" icon={<LightModeIcon sx={{fontSize: 40}} />} unit="Jours restants" onClick={() => navigateJours("/calendar")} />
+            <Card2 titre="J-ouvrés annuels" value={workingDays} icon={<LightModeIcon sx={{fontSize: 40}} />} unit="Jours restants" onClick={() => navigateJours("/calendar")} />
           </Grid>
         </Grid>
       </Grid>

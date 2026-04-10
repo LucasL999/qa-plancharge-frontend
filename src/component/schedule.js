@@ -64,9 +64,9 @@ export default function Schedule() {
             style={{ width: "300px", fontSize: "20px", textAlign: "center", borderRadius: "10px", padding: "5px", marginLeft: "10px" }}
             onChange={(e) => setYear(Number(e.target.value))}
           >
-            {Array.from({ length: 20 }, (_, i) => (
-              <option key={i} value={today.getFullYear() - 10 + i}>
-                {today.getFullYear() - 10 + i}
+            {Array.from({ length: 2 }, (_, i) => (
+              <option key={i} value={today.getFullYear() - 0 + i}>
+                {today.getFullYear() - 0 + i}
               </option>
             ))}
           </select>
