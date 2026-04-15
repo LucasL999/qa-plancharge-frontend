@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 
-export default function Schedule() {
+export default function Schedule({onMonthYearChange}) {
   const today = new Date();
 
   const [month, setMonth] = useState(today.getMonth()); // 0-11
@@ -38,6 +39,10 @@ export default function Schedule() {
       setMonth(month + 1);
     }
   };
+
+  useEffect(() => {
+    onMonthYearChange?.({ month, year });
+  }, [month, year]);
 
   return (
     <div style={styles.calendar}>
