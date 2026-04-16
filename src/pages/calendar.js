@@ -43,7 +43,7 @@ export default function Calendar() {
     <div>
     <Bandeau title="Calendrier" subtitle="Planification des indisponibilités" />
     <Box sx={{ paddingTop: "20px", paddingLeft: "100px" }}>
-      <Grid container spacing={2} alignItems="center" justifyContent="flex-end" marginRight="50px">
+      <Grid container spacing={2} alignItems="center" justifyContent="flex-end" marginRight="30px">
         <Grid item xs={12} md={4}>
           <Card3 title="Mensuel" value={workingDaysMonth} icon="" unit="J-ouvrés"/>
         </Grid>

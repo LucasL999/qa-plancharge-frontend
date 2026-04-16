@@ -2,8 +2,20 @@ import { useState } from "react";
 import { useEffect } from "react";
 import ArrowForwardIosOutlinedIcon from '@mui/icons-material/ArrowForwardIosOutlined';
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
+import PopinNewEvent from "./popinNewEvent";
 
 export default function Schedule({onMonthYearChange}) {
+
+  const [openPopin, setOpenPopin] = useState(false);
+  const openPopinNewEvent = (day) => {
+    const date = new Date(year, month, day+1);
+    setSelectedDate(date);
+    setOpenPopin(true);
+  };
+  const closePopinNewEvent = () => setOpenPopin(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+
+
   const today = new Date();
 
   const [month, setMonth] = useState(today.getMonth()); // 0-11
@@ -47,6 +59,9 @@ export default function Schedule({onMonthYearChange}) {
   return (
     <div style={styles.calendar}>
       {/* HEADER */}
+      
+        <PopinNewEvent open={openPopin} onClose={closePopinNewEvent} date={selectedDate}/>
+
       <div style={styles.header}>
         <button onClick={prevMonth} style={{ background: "none", border: "none", cursor: "pointer" }}>
           <ArrowBackIosOutlinedIcon />
@@ -106,6 +121,7 @@ export default function Schedule({onMonthYearChange}) {
                     key={i}
                     style={{...styles.dayCell, backgroundColor: isWeekend ? "#d0d7de" : "#f5f5f5"
                     }}
+                    onClick={() => openPopinNewEvent(dayNumber)}
                 >
                     {dayNumber}
                 </div>
