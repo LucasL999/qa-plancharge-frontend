@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, NavLink, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { redirectToKeycloak } from "./auth/keycloak";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -56,7 +56,7 @@ function AuthGuard({ children }) {
     }
   }, [loaded, token, location.pathname]);
 
-  if(!loaded) return null; // ou un spinner de chargement
+  if(!loaded || (!token && location.pathname !== "/callback")) return null; // ou un spinner de chargement
 
   return children;
 }
