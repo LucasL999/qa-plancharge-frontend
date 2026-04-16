@@ -31,15 +31,6 @@ export default function Chantier() {
   const [statuts, setStatuts] = useState([]);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    getStatuts()
-      .then(data => {setStatuts(data);})
-      .catch(error => {
-        console.error('Error fetching statuts:', error);
-        setError(error);
-      });
-  }, []);
-
   return (
     <>
       <Bandeau title="Chantiers" subtitle="Gestion des chantiers QA" />
@@ -192,7 +183,7 @@ export default function Chantier() {
       </Box>
 
       {/* POPIN NOUVEAU CHANTIER */}
-      <PopinNewChantier open={openPopin} onClose={closePopinNewChantier} statuts={statuts} />
+      <PopinNewChantier open={openPopin} onClose={closePopinNewChantier} />
     </>
   );
 }
