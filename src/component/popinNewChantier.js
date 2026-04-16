@@ -1,18 +1,26 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function PopinNewChantier({ open, onClose, statuts }) {
 
-    const [statutId, setStatutId] = useState("");
+export default function PopinNewChantier({ open, onClose }) {
 
-    const handleStatutChange = (event) => {
-        setStatutId(event.target.value);
-    };
-    const handleSubmit = () => {
-        // Logique de soumission du formulaire
-        console.log("Statut sélectionné :", statutId);
-        onClose();
-    };
+    const [statuts, setStatuts] = useState([]);
+    const [selectedStatut, setSelectedStatut] = useState("");
+
+    useEffect(() => {
+        const fetchStatut = async () => {
+            const token = localStorage.getItem("access_token");
+            const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/statuts`, 
+                {headers: {Authorization: `Bearer ${token}`,},});
+            if (!res.ok) {
+                console.error('Erreur API:', res.status);
+                return;
+            }
+            const json = await res.json();
+            setStatuts(json);
+        };
+        fetchStatut();
+    }, []);
 
 
 return (
@@ -86,9 +94,10 @@ return (
             </Grid>
             <Grid size={4}>
                 <Field label="Statut">
-                    <Select fullWidth value={statutId} onChange={handleStatutChange} sx={{borderRadius: "10px"}}>
-                        {statuts.map((statut) => (
-                            <MenuItem key={statut.id} value={statut.id}>{statut.libelle}</MenuItem>
+                    <Select fullWidth value={selectedStatut} onChange={(e) => {
+                        setSelectedStatut(e.target.value);}} sx={{borderRadius: "10px"}}>
+                        {statuts.map((s) => (
+                            <MenuItem key={s.id_statut} value={String(s.id_statut)}>{s.libelle}</MenuItem>
                         ))}
                     </Select>
                 </Field>

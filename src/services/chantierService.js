@@ -1,9 +1,9 @@
-const API_URL = "http://localhost:3001/api";
+
 
 export async function getStatuts() {
     try {
         const token = localStorage.getItem('access_token');
-        const response = await fetch(`${API_URL}/statuts`, {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/statuts`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
