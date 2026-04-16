@@ -35,7 +35,7 @@ export default function TableUser() {
             <TableRow key={user.id} sx={{ ":hover": {backgroundColor: alpha("#5DA1BC", 0.2), cursor: "pointer"} }}>
               <TableCell align="center" sx={{ color: "#0178A5", fontWeight: "bold" }}>{user.name} {user.firstname}</TableCell>
               <TableCell align="center" sx={{color: "#009951", fontWeight: "bold"}}>{user.email}</TableCell>
-              <TableCell align="center" sx={{color: "#6B6B6B", fontWeight: "bold"}}>{user.role}</TableCell>
+              <TableCell align="center" sx={{color: "#6B6B6B", fontWeight: "bold"}}>{user.libelle}</TableCell>
               <TableCell align="center" sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
                 <Box sx={{ display: "flex", gap: 3,}}>
                     <Tooltip title="Modifier">

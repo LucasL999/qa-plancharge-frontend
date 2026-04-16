@@ -1,10 +1,14 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
-import {getRoles} from "../services/userService";
+import {getRoles, addUser} from "../services/userService";
 import React, { useEffect } from 'react';
 
 export default function PopinNewUser({ open, onClose }) {
     const [roles, setRoles] = React.useState([]);
     const [selectedRole, setSelectedRole] = React.useState("");
+    const [absences, setAbsences] = React.useState(0);
+    const [nom, setNom] = React.useState("");
+    const [prenom, setPrenom] = React.useState("");
+    const [email, setEmail] = React.useState("");
 
     useEffect(() => {
             const fetchRoles = async () => {
@@ -17,6 +21,30 @@ export default function PopinNewUser({ open, onClose }) {
             };
         fetchRoles();
     }, []);
+
+    const handleSubmit = async () => {
+        try {
+            if (!nom || !prenom || !email || !selectedRole) {
+                alert("Veuillez remplir tous les champs obligatoires.");
+                return;
+            }
+            const userData = {nom: nom, prenom: prenom, id_role: selectedRole, absences: absences || null, email: email};
+            await addUser(userData);
+            console.log("Utilisateur créé avec succès");
+
+            // reset form 
+            setNom("");
+            setPrenom("");
+            setEmail("");
+            setSelectedRole("");
+            setAbsences(0);
+
+            onClose();
+
+        } catch (error) {
+            console.error("Erreur création user:", error);
+        }
+    };
 
 return (
     <Dialog
@@ -65,7 +93,9 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
-                        value=""
+                        value={nom}
+                        required
+                        onChange = {(e) => setNom(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -80,7 +110,9 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
-                        value=""
+                        value={prenom}
+                        required
+                        onChange = {(e) => setPrenom(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -97,7 +129,9 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
-                        value=""
+                        value={email}
+                        required
+                        onChange = {(e) => setEmail(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -124,6 +158,8 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        value={absences}
+                        onChange = {(e) => setAbsences(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -155,6 +191,7 @@ return (
 
         <Button
           variant="contained"
+          onClick = {handleSubmit}
           sx={{
             backgroundColor: "#d7df21",
             color: "black",
