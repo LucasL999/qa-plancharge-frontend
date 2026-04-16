@@ -1,5 +1,6 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { getStatuts, getPriorites } from '../services/chantierService';
 
 
 export default function PopinNewChantier({ open, onClose }) {
@@ -9,19 +10,31 @@ export default function PopinNewChantier({ open, onClose }) {
 
     useEffect(() => {
         const fetchStatut = async () => {
-            const token = localStorage.getItem("access_token");
-            const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/statuts`, 
-                {headers: {Authorization: `Bearer ${token}`,},});
-            if (!res.ok) {
-                console.error('Erreur API:', res.status);
-                return;
+            try {
+                const res = await getStatuts();
+                setStatuts(res);
+            } catch (error) {
+                console.error(error);
             }
-            const json = await res.json();
-            setStatuts(json);
         };
         fetchStatut();
     }, []);
 
+
+    const [priorites, setPriorites] = useState([]);
+    const [selectedPriorite, setSelectedPriorite] = useState("");
+
+    useEffect(() => {
+        const fetchPriorite = async () => {
+            try {
+                const res = await getPriorites();
+                setPriorites(res);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchPriorite();
+    }, []);
 
 return (
     <Dialog
@@ -78,9 +91,12 @@ return (
             </Grid>
             <Grid size={2}>
                 <Field label="Priorité">
-                <Select fullWidth defaultValue="" sx={{borderRadius: "10px"}}>
-                    <MenuItem value="">Priorité</MenuItem>
-                </Select>
+                    <Select fullWidth value={selectedPriorite} onChange={(e) => {
+                        setSelectedPriorite(e.target.value);}} sx={{borderRadius: "10px"}}>
+                        {priorites.map((p) => (
+                            <MenuItem key={p.id_priorite} value={String(p.id_priorite)}>{p.libelle}</MenuItem>
+                        ))}
+                    </Select>
                 </Field>
             </Grid>
 
