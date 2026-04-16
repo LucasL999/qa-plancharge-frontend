@@ -15,8 +15,8 @@ export default function PopinNewUser({ open, onClose }) {
                     console.error(error);
                 }
             };
-            fetchRoles();
-        }, []);
+        fetchRoles();
+    }, []);
 
 return (
     <Dialog

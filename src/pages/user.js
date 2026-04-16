@@ -5,6 +5,9 @@ import { useState } from "react";
 
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PopinNewUser from "../component/popinNewUser";
+import TableUser from "../component/tableUser";
+
+
 
 
 export default function User() {
@@ -18,7 +21,7 @@ export default function User() {
   return (
     <div>
     <Bandeau title="Utilisateurs" subtitle="Gestion des utilisateurs et de leurs rôles" />
-    <Box>
+    <Box sx={{ display: "flex", padding: "0 60px", paddingTop: "40px" }}>
       {/* Bouton principal (CTA) */}
       <Button
         variant="contained"
@@ -38,6 +41,9 @@ export default function User() {
         Créer un utilisateur
       </Button>
       <PopinNewUser open={openPopin} onClose={closePopinNewUser} />
+    </Box>
+    <Box sx={{ paddingTop: "40px", paddingBottom: "40px", margin: "0 60px", }}>
+      <TableUser />
     </Box>
     </div>
   )
