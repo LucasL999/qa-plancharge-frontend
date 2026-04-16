@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
+import {useNavigate} from "react-router-dom";
 
 export default function Callback() {
   const hasRun = useRef(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (hasRun.current) return;
@@ -33,18 +35,39 @@ export default function Callback() {
 
       const tokens = await res.json();
 
-      console.log("TOKEN RESPONSE:", tokens);
-
       if (!res.ok) {
         console.error("❌ Token exchange failed");
         return;
       }
 
-      localStorage.setItem("access_token", tokens.access_token);
+      const accessToken = tokens.access_token;
+      localStorage.setItem("access_token", accessToken);
 
-      window.location.replace("/");
+      const meRes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/me`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+
+      if (!meRes.ok) {
+        console.error("Erreur /me", meRes.status);
+        localStorage.clear();
+        navigate("/unauthorized", { replace: true });
+        return;
+      }
+
+      const me = await meRes.json();
+
+      if (!me?.email){
+        console.warn("utilisateur refusé");
+        localStorage.clear();
+        navigate("/unauthorized", { replace: true });
+      }
+      console.log("Utilisateur connecté :", me.email);
+
+      navigate("/", { replace: true });
     })();
-  }, []);
+  });
 
   return <p>Connexion en cours…</p>;
 }

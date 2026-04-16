@@ -16,6 +16,7 @@ import Chantier from "./pages/chantier";
 import Calendar from "./pages/calendar";
 import Team from "./pages/team";
 import User from "./pages/user";
+import Unauthorized from "./pages/unauthorized";
 
 import { 
   Box,
@@ -73,25 +74,33 @@ export default function App() {
       `${process.env.REACT_APP_KEYCLOAK_LOGOUT_ENDPOINT}?redirect_uri=${encodeURIComponent(process.env.REACT_APP_APP_URL)}`;
   }
 
+  function ProtectedLayout({ children }) {
+  return (
+    <>
+      <Navbar onLogout={logout} />
+      <Box>
+        {children}
+      </Box>
+    </>
+  );
+  }
+
   return (
   <ThemeProvider theme={theme}>
     <CssBaseline />  
   <Router>
     <Box style={{ display: "flex" }}>
 
-  <Navbar onLogout={logout} />
-
   <Box style={{ marginLeft: "230px", flexGrow: 1, paddingLeft: "20px" }}>
-    <AuthGuard>
       <Routes>
         <Route path="/callback" element={<Callback />} />
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/chantier" element={<Chantier />} />
-        <Route path="/calendar" element={<Calendar />} />
-        <Route path="/team" element={<Team />} />
-        <Route path="/user" element={<User />} />
+        <Route path="/" element={<AuthGuard><ProtectedLayout><Dashboard /></ProtectedLayout></AuthGuard>} />
+        <Route path="/chantier" element={<AuthGuard><ProtectedLayout><Chantier /></ProtectedLayout></AuthGuard>} />
+        <Route path="/calendar" element={<AuthGuard><ProtectedLayout><Calendar /></ProtectedLayout></AuthGuard>} />
+        <Route path="/team" element={<AuthGuard><ProtectedLayout><Team /></ProtectedLayout></AuthGuard>} />
+        <Route path="/user" element={<AuthGuard><ProtectedLayout><User /></ProtectedLayout></AuthGuard>} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
       </Routes>
-    </AuthGuard>
   </Box>
 
 </Box>
