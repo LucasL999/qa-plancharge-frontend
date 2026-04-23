@@ -1,6 +1,5 @@
 import { alpha, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { useEffect, useState } from "react";
-import { getWorkingDaysUntilYearEnd } from "../algo/joursOuvresAn";
+
 
 export default function TableTeam({qas}) {
         

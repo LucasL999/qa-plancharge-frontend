@@ -7,20 +7,23 @@ import PopinEditUser from "./popinEditUser";
 
 export default function TableUser() {
     const [users, setUsers] = useState([]);
+    
+    const fetchAllUsers = async () => {
+      try {
+        const res = await getAllUsers();
+        setUsers(res);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     useEffect(() => {
-        const fetchAllUsers = async () => {
-            try {
-                const res = await getAllUsers();
-                setUsers(res);
-            } catch (error) {
-                console.error(error);
-                }
-            };
-        fetchAllUsers();
+      fetchAllUsers();
     }, []);
 
+
+
     const [openPopinEdit, setOpenPopinEdit] = useState(false);
-    const [reloadTable, setReloadTable] = useState(0);
     const [selectedUser, setSelectedUser] = useState(null);
     const openPopinEditUser = (user) => {
         setSelectedUser(user);
@@ -29,7 +32,7 @@ export default function TableUser() {
     const closePopinEditUser = () => {
         setOpenPopinEdit(false);
         setSelectedUser(null);
-        window.location.reload();
+        fetchAllUsers();
     };
 
   return (
