@@ -49,6 +49,7 @@ export default function PopinNewUser({ open, onClose }) {
             setSelectedRole("");
             setAbsences(0);
 
+            handleClose();
             onClose(true);
 
         } catch (error) {
@@ -56,10 +57,21 @@ export default function PopinNewUser({ open, onClose }) {
         }
     };
 
+    const handleClose = () => {
+      setNom("");
+      setPrenom("");
+      setEmail("");
+      setSelectedRole(""); 
+      setAbsences(0);
+      
+      onClose();
+    };
+
+
 return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       disablePortal
       PaperProps={{
         sx:{
@@ -163,6 +175,7 @@ return (
                     </Select>
                 </Field>
             </Grid>
+            {roles.find(role => String(role.id_role) === selectedRole)?.libelle === "QA" && (
             <Grid size={6}>
                 <Field label={<strong>Absences</strong>}>
                     <TextField
@@ -179,7 +192,7 @@ return (
                     />
                 </Field>
             </Grid>
-
+            )}
             
         </Grid>
       </DialogContent>
@@ -194,7 +207,7 @@ return (
             borderRadius: "10px",
             width: "120px"
           }}
-          onClick={onClose}
+          onClick={handleClose}
         >
           Annuler
         </Button>
