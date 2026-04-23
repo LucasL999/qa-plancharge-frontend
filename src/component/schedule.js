@@ -115,11 +115,13 @@ export default function Schedule({onMonthYearChange}) {
             const dayNumber = i + 1;
             const dayOfWeek = new Date(year, month, dayNumber).getDay();
             const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+            const isToday = dayNumber === today.getDate() && month === today.getMonth() && year === today.getFullYear();
 
             return (
                 <div
                     key={i}
-                    style={{...styles.dayCell, backgroundColor: isWeekend ? "#d0d7de" : "#f5f5f5"
+                    style={{...styles.dayCell, backgroundColor: isWeekend ? "#d0d7de" : "#f5f5f5", 
+                      border: isToday ? "2px solid #D4DA17" : "none"
                     }}
                     onClick={() => openPopinNewEvent(dayNumber)}
                 >
