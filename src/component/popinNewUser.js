@@ -27,9 +27,19 @@ export default function PopinNewUser({ open, onClose }) {
             if (!nom || !prenom || !email || !selectedRole) {
                 alert("Veuillez remplir tous les champs obligatoires.");
                 return;
+            } 
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(nom) || /[!@#$%^&*(),.?":{}|<>]/.test(prenom)) {
+                alert("Les champs Nom et Prénom ne peuvent contenir de caractères spéciaux.");
+                return;
             }
+            if(!email.endsWith("@mnt.fr")) {
+                alert("L'email n'est pas correct.");
+                return;
+            }
+
+
             const userData = {nom: nom, prenom: prenom, id_role: selectedRole, absences: absences || null, email: email};
-            await addUser(userData);
+            const result = await addUser(userData);
             console.log("Utilisateur créé avec succès");
 
             // reset form 
@@ -39,7 +49,7 @@ export default function PopinNewUser({ open, onClose }) {
             setSelectedRole("");
             setAbsences(0);
 
-            onClose();
+            onClose(true);
 
         } catch (error) {
             console.error("Erreur création user:", error);

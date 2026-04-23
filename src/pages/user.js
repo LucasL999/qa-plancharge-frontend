@@ -13,10 +13,15 @@ import TableUser from "../component/tableUser";
 export default function User() {
 
   const [openPopin, setOpenPopin] = useState(false);
+  const [reloadTable, setReloadTable] = useState(0);
   
   const openPopinNewUser = () => setOpenPopin(true);
-  const closePopinNewUser = () => setOpenPopin(false);
-  
+  const closePopinNewUser = (shouldReload = false) => {
+    setOpenPopin(false);
+    if (shouldReload) {
+      setReloadTable(prev => prev + 1);
+    }
+  };
 
   return (
     <div>
@@ -43,7 +48,7 @@ export default function User() {
       <PopinNewUser open={openPopin} onClose={closePopinNewUser} />
     </Box>
     <Box sx={{ paddingTop: "40px", paddingBottom: "40px", margin: "0 60px", }}>
-      <TableUser />
+      <TableUser key={reloadTable} />
     </Box>
     </div>
   )
