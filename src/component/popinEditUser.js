@@ -14,7 +14,7 @@ export default function PopinEditUser({ open, onClose, userData }) {
         setNom(userData?.name || "");
         setPrenom(userData?.firstname || "");
         setEmail(userData?.email || "");
-        setSelectedRole(userData?.id_role || "")
+        setSelectedRole(userData?.role || "")
         setAbsences(userData?.nbused || 0);
     }, [userData]);
 
