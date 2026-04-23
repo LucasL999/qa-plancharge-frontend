@@ -1,32 +1,8 @@
 import { alpha, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAllTeam } from "../services/teamService";
 import { getWorkingDaysUntilYearEnd } from "../algo/joursOuvresAn";
 
-export default function TableTeam() {
-    const [QAs, setQAs] = useState([]);
-    useEffect(() => {
-        const fetchQAs = async () => {
-            try {
-                const data = await getAllTeam();
-                setQAs(data);
-            } catch (error) {
-                console.error('Error fetching QAs:', error);
-            }
-        };
-
-        fetchQAs();
-    }, []);
-
-
-    const [workingDays, setWorkingDays] = useState(null);
-    useEffect(() => {
-      async function load(){
-        const result = await getWorkingDaysUntilYearEnd(new Date());
-        setWorkingDays(result);
-      }
-      load();
-    }, []);
+export default function TableTeam({qas}) {
         
   return (
     
@@ -41,10 +17,10 @@ export default function TableTeam() {
         </TableHead>
 
         <TableBody>
-          {QAs.map((qa) => (
+          {qas.map((qa) => (
             <TableRow key={qa.name} sx={{ ":hover": {backgroundColor: alpha("#5DA1BC", 0.2), cursor: "pointer"} }}>
-              <TableCell align="center" sx={{ color: "#0178A5", fontWeight: "bold" }}>{qa.firstname} {qa.name}</TableCell>
-              <TableCell align="center" sx={{color: "#009951", fontWeight: "bold"}}>{workingDays-qa.nbused}</TableCell>
+              <TableCell align="center" sx={{ color: "#0178A5", fontWeight: "bold" }}>{qa.name} {qa.firstname}</TableCell>
+              <TableCell align="center" sx={{color: "#009951", fontWeight: "bold"}}>{qa.capacity}</TableCell>
               <TableCell align="center" sx={{color: "#6B6B6B", fontWeight: "bold"}}>{qa.nbused}</TableCell>
             </TableRow>
           ))}

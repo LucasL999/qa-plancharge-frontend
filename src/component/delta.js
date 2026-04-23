@@ -2,7 +2,7 @@ import { alpha, Box, Typography } from "@mui/material";
 import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
-export default function Delta({onClick}){
+export default function Delta({value, onClick}){
   return (
     <Box 
       onClick={onClick}
@@ -33,7 +33,7 @@ export default function Delta({onClick}){
       <Box sx={{ paddingLeft: "5px", }}>
       <Typography variant="h4" sx={{ color: alpha("#009951", 0.7), fontWeight: "bold", fontSize: "150px", 
        }}>
-        760
+        {value}
       </Typography>
       <Typography variant="body1" sx={{ color: "#009951", gap: "8px", display: "flex", alignItems: "center", fontSize: "18px", }}>
         <InfoOutlinedIcon sx={{fontSize: 20 }} />

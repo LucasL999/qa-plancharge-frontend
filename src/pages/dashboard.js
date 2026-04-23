@@ -12,6 +12,7 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
 
 import { getWorkingDaysUntilYearEnd} from "../algo/joursOuvresAn";
+import {getTotCap} from "../services/dashboardService.js";
 
 import Bandeau from "../component/bandeau";
 import Delta from "../component/delta";
@@ -28,6 +29,8 @@ export default function Dashboard() {
   const navigateCharge = useNavigate(); // redirection de la kpi charge globale vers la page chantier
   const navigateConsomme = useNavigate(); // redirection de la kpi consommé vers la page chantier
   const navigateJours = useNavigate(); // redirection de la kpi jours ouvrés vers la page calendar
+  const [totalCapacity, setTotalCapacity] = useState([]);
+
 
   // State pour les jours ouvrés restants dans l'année
   const [workingDays, setWorkingDays] = useState(null);
@@ -39,6 +42,22 @@ export default function Dashboard() {
     load();
   }, []);
 
+  useEffect(() => {
+      const fetchCap = async () => {
+        try {
+          const result = await getTotCap();
+          setTotalCapacity(result);
+        } catch (error) {
+          console.error("Error fetching Capacité totale:", error);
+        }
+      };
+  
+      fetchCap();
+    }, []);
+
+    const Capacity = workingDays === null ? [] : totalCapacity.map(qa => ({...qa, capacity: workingDays - (qa.nbused ?? 0),}));
+    const total = Capacity.reduce((sum, qa) => sum+qa.capacity, 0);
+
   //BODY DE LA PAGE
   return (
     <div>
@@ -49,14 +68,14 @@ export default function Dashboard() {
         {/* LIGNE 1 */}
         {/* Delta */}
         <Grid item xs={12} md={4}>
-          <Delta onClick={() => navigateDelta("/chantier")} />
+          <Delta value="760*" onClick={() => navigateDelta("/chantier")} />
         </Grid>
         <Grid item xs={12} md={8}>
           {/* Capacité et RAF */}
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Card1 titre="Capacité QA disponible" value="1414" icon={<ThumbUpOffAltIcon sx={{fontSize: 50}} />} onClick={() => navigateCapacite("/team")} />
-              <Card1 titre="Reste à faire QA (RAFQA)" value="653" icon={<ErrorOutlineIcon sx={{fontSize: 50}} />} onClick={() => navigateRAF("/chantier")} />
+              <Card1 titre="Capacité QA disponible" value={total} icon={<ThumbUpOffAltIcon sx={{fontSize: 50}} />} onClick={() => navigateCapacite("/team")} />
+              <Card1 titre="Reste à faire QA (RAFQA)" value="653*" icon={<ErrorOutlineIcon sx={{fontSize: 50}} />} onClick={() => navigateRAF("/chantier")} />
             </Grid>
           </Grid>
         </Grid>
@@ -67,10 +86,10 @@ export default function Dashboard() {
       <Grid item xs={12}>
         <Grid container alignItems="center" justifyContent="center">
           <Grid item xs={12} sm={4}>
-            <Card2 titre="Charge globale" value="855,5" icon={<EqualizerIcon sx={{fontSize: 40}} />} unit="JH" onClick={() => navigateCharge("/chantier")} />
+            <Card2 titre="Charge globale" value="855,5*" icon={<EqualizerIcon sx={{fontSize: 40}} />} unit="JH" onClick={() => navigateCharge("/chantier")} />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <Card2 titre="Consommé" value="202,5" icon={<CheckCircleOutlineIcon sx={{fontSize: 40}} />} unit="JH" onClick={() => navigateConsomme("/chantier")} />
+            <Card2 titre="Consommé" value="202,5*" icon={<CheckCircleOutlineIcon sx={{fontSize: 40}} />} unit="JH" onClick={() => navigateConsomme("/chantier")} />
           </Grid>
           <Grid item xs={12} sm={4}>
             <Card2 titre="J-ouvrés annuels" value={workingDays} icon={<LightModeIcon sx={{fontSize: 40}} />} unit="Jours restants" onClick={() => navigateJours("/calendar")} />
