@@ -3,6 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useEffect, useState } from "react";
 import {getAllUsers} from "../services/userService";
+import PopinEditUser from "./popinEditUser";
 
 export default function TableUser() {
     const [users, setUsers] = useState([]);
@@ -17,6 +18,20 @@ export default function TableUser() {
             };
         fetchAllUsers();
     }, []);
+
+    const [openPopinEdit, setOpenPopinEdit] = useState(false);
+    const [reloadTable, setReloadTable] = useState(0);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const openPopinEditUser = (user) => {
+        setSelectedUser(user);
+        setOpenPopinEdit(true);
+    };
+    const closePopinEditUser = () => {
+        setOpenPopinEdit(false);
+        setSelectedUser(null);
+        window.location.reload();
+    };
+
   return (
     
 <TableContainer sx={{ boxShadow: 3, borderRadius: 2 }}>
@@ -26,7 +41,7 @@ export default function TableUser() {
             <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px" }} >Utilisateur</TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px" }} >Email</TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px" }} >Rôle</TableCell>
-            <TableCell align="center" ></TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px" }} >Actions</TableCell>
           </TableRow>
         </TableHead>
 
@@ -39,7 +54,7 @@ export default function TableUser() {
               <TableCell align="center" sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
                 <Box sx={{ display: "flex", gap: 3,}}>
                     <Tooltip title="Modifier">
-                    <EditIcon sx={{ color: "#003CFF" }} />
+                    <EditIcon sx={{ color: "#003CFF" }} onClick={() => openPopinEditUser(user)} />
                     </Tooltip>
                     <Tooltip title="Supprimer">
                         <DeleteIcon sx={{ color: "#ff0000" }} />
@@ -50,6 +65,7 @@ export default function TableUser() {
           ))}
         </TableBody>
       </Table>
+      <PopinEditUser open={openPopinEdit} onClose={closePopinEditUser} userData={selectedUser} />
     </TableContainer>
   );
 }
