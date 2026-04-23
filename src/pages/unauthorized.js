@@ -1,3 +1,7 @@
+// PAGE UNAUTHORIZED
+// L'utilisateur refusé à la connexion est redirigé vers cette page
+
+// DEBUT PAGE
 export default function Unauthorized() {
   return (
     <div style={{ padding: 40 }}>
@@ -17,3 +21,4 @@ export default function Unauthorized() {
     </div>
   );
 }
+// FIN PAGE

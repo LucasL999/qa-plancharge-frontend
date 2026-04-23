@@ -1,3 +1,6 @@
+// PAGE TEAM - PLAN DE CHARGE
+
+// Importations des bibliothèques et composants nécessaires
 import { Box, Grid } from "@mui/material";
 import Bandeau from "../component/bandeau";
 import Card3 from "../component/card3";
@@ -9,8 +12,10 @@ import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import InsertInvitationOutlinedIcon from '@mui/icons-material/InsertInvitationOutlined';
 import ThumbUpAltOutlinedIcon from '@mui/icons-material/ThumbUpAltOutlined';
 
+// DEBUT PAGE
 export default function Team() {
 
+  //BODY DE LA PAGE
   return (
     <div>
     <Bandeau title="Plan de charge" subtitle="Gestion du capacitaire QA" />
@@ -36,5 +41,5 @@ export default function Team() {
     </div>
   )
 };
-
+// FIN PAGE
 

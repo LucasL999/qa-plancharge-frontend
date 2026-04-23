@@ -1,3 +1,6 @@
+// PAGE CHANTIER 
+
+// Importations des bibliothèques et composants nécessaires
 import { alpha, Box, Divider } from "@mui/material";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -21,9 +24,10 @@ import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 
+//DEBUT PAGE
 export default function Chantier() {
 
-  const [openPopin, setOpenPopin] = useState(false);
+  const [openPopin, setOpenPopin] = useState(false); 
 
   const openPopinNewChantier = () => setOpenPopin(true);
   const closePopinNewChantier = () => setOpenPopin(false);
@@ -187,3 +191,4 @@ export default function Chantier() {
     </>
   );
 }
+// FIN PAGE

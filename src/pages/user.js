@@ -1,3 +1,6 @@
+// PAGE USER - Utilisateurs
+
+// Importations des bibliothèques et composants nécessaires
 import { Box, Button } from "@mui/material";
 import Bandeau from "../component/bandeau";
 import { alpha } from "@mui/material/styles";
@@ -7,13 +10,11 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import PopinNewUser from "../component/popinNewUser";
 import TableUser from "../component/tableUser";
 
-
-
-
+// DEBUT PAGE
 export default function User() {
 
-  const [openPopin, setOpenPopin] = useState(false);
-  const [reloadTable, setReloadTable] = useState(0);
+  const [openPopin, setOpenPopin] = useState(false); // Ouverture de la popin newUser 
+  const [reloadTable, setReloadTable] = useState(0); // Permet de reload la page après la création d'un nouvel utilisateur
   
   const openPopinNewUser = () => setOpenPopin(true);
   const closePopinNewUser = (shouldReload = false) => {
@@ -53,4 +54,4 @@ export default function User() {
     </div>
   )
 };
-
+// FIN PAGE

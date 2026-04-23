@@ -1,3 +1,6 @@
+// PAGE CALENDAR - Calendrier
+
+// Importations des bibliothèques et composants nécessaires
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
 import Bandeau from "../component/bandeau";
@@ -8,13 +11,15 @@ import { useEffect, useState } from "react";
 import { getWorkingDaysUntilYearEnd} from "../algo/joursOuvresAn";
 import { getWorkingDaysUntilMonthEnd } from "../algo/joursOuvresMois";
 
+// DEBUT PAGE
 export default function Calendar() {
 
-  const [workingDaysYear, setWorkingDaysYear] = useState(null);
-  const [workingDaysMonth, setWorkingDaysMonth] = useState(null);
+  const [workingDaysYear, setWorkingDaysYear] = useState(null); // pour recupérer les j-ouvrés annuels
+  const [workingDaysMonth, setWorkingDaysMonth] = useState(null);// pour recupérer les j-ouvrés mensuels
   const [month, setMonth] = useState(null);
   const [year, setYear] = useState(null);
 
+  // useEffect pour récupérer les jours ouvrés annuels au chargement de la page
   useEffect(() => {
     async function load(){
       const result = await getWorkingDaysUntilYearEnd(new Date());
@@ -23,6 +28,7 @@ export default function Calendar() {
     load();
   }, []);
 
+  // useEffect pour récupérer les jours ouvrés mensuels à chaque changement de mois ou d'année dans le calendrier
   useEffect(() => {
     if(month === null && year === null) return;
     async function load(){
@@ -66,4 +72,4 @@ export default function Calendar() {
     </div>
   )
 };
-
+// FIN PAGE

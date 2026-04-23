@@ -1,3 +1,6 @@
+// PAGE DASHBOARD - ACCUEIL
+
+// Importations des bibliothèques et composants nécessaires
 import { Box, Grid, } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -15,25 +18,28 @@ import Delta from "../component/delta";
 import Card1 from "../component/card1";
 import Card2 from "../component/card2";
 
+
+// DEBUT PAGE
 export default function Dashboard() {
 
-  const navigateDelta = useNavigate();
-  const navigateCapacite = useNavigate();
-  const navigateRAF = useNavigate();
-  const navigateCharge = useNavigate();
-  const navigateConsomme = useNavigate();
-  const navigateJours = useNavigate();
+  const navigateDelta = useNavigate(); // redirection de la kpi delta vers la page chantier
+  const navigateCapacite = useNavigate(); // redirection de la kpi capacité vers la page team
+  const navigateRAF = useNavigate(); // redirection de la kpi RAF vers la page chantier
+  const navigateCharge = useNavigate(); // redirection de la kpi charge globale vers la page chantier
+  const navigateConsomme = useNavigate(); // redirection de la kpi consommé vers la page chantier
+  const navigateJours = useNavigate(); // redirection de la kpi jours ouvrés vers la page calendar
 
+  // State pour les jours ouvrés restants dans l'année
   const [workingDays, setWorkingDays] = useState(null);
-  
-    useEffect(() => {
-      async function load(){
-        const result = await getWorkingDaysUntilYearEnd(new Date());
-        setWorkingDays(result);
-      }
-      load();
-    }, []);
+  useEffect(() => {
+    async function load(){
+      const result = await getWorkingDaysUntilYearEnd(new Date());
+      setWorkingDays(result);
+    }
+    load();
+  }, []);
 
+  //BODY DE LA PAGE
   return (
     <div>
     <Bandeau title="Dashboard" subtitle="KPI et alertes" />
@@ -41,10 +47,12 @@ export default function Dashboard() {
       <Grid container spacing={2} alignItems="center" justifyContent="center">
 
         {/* LIGNE 1 */}
+        {/* Delta */}
         <Grid item xs={12} md={4}>
           <Delta onClick={() => navigateDelta("/chantier")} />
         </Grid>
         <Grid item xs={12} md={8}>
+          {/* Capacité et RAF */}
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Card1 titre="Capacité QA disponible" value="1414" icon={<ThumbUpOffAltIcon sx={{fontSize: 50}} />} onClick={() => navigateCapacite("/team")} />
@@ -55,6 +63,7 @@ export default function Dashboard() {
       </Grid>
 
       {/* LIGNE 2 */}
+      {/* Charge globale, consommé et jours ouvrés */}
       <Grid item xs={12}>
         <Grid container alignItems="center" justifyContent="center">
           <Grid item xs={12} sm={4}>
@@ -72,3 +81,4 @@ export default function Dashboard() {
   </div>
   )
 };
+// FIN PAGE
