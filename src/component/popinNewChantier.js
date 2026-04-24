@@ -1,6 +1,6 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Checkbox, ListItemText, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { getStatuts, getPriorites } from '../services/chantierService';
+import { getStatuts, getPriorites, getQA } from '../services/chantierService';
 
 
 export default function PopinNewChantier({ open, onClose }) {
@@ -34,6 +34,21 @@ export default function PopinNewChantier({ open, onClose }) {
             }
         };
         fetchPriorite();
+    }, []);
+
+    const [qa, setQa] = useState([]);
+    const [selectedQa, setSelectedQa] = useState([]);
+
+    useEffect(() => {
+        const fetchQA = async () => {
+            try {
+                const res = await getQA();
+                setQa(res);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchQA();
     }, []);
 
 return (
@@ -103,8 +118,16 @@ return (
             {/* Ligne 2 */}
             <Grid size={6}>
                 <Field label="QA(s)">
-                    <Select fullWidth defaultValue="" sx={{borderRadius: "10px"}}>
-                        <MenuItem value="">QA</MenuItem>
+                    <Select fullWidth multiple value={selectedQa} onChange={(e) => {
+                        setSelectedQa(e.target.value)}} 
+                        renderValue={(selected) => qa.filter(q => selected.includes(String(q.id_user))).map(q => `${q.name} ${q.firstname}`).join(", ")} 
+                        sx={{borderRadius: "10px"}}>
+                        {qa.map((q) => (
+                            <MenuItem key={q.id_user} value={String(q.id_user)}>
+                                <Checkbox checked={selectedQa.includes(String(q.id_user))}/>
+                                <ListItemText primary={`${q.name} ${q.firstname}`}/>
+                            </MenuItem>
+                        ))}
                     </Select>
                 </Field>
             </Grid>
