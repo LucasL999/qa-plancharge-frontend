@@ -1,6 +1,6 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import {getRoles, updateUser} from "../services/userService";
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function PopinEditUser({ open, onClose, userData }) {
     const [roles, setRoles] = React.useState([]);
@@ -171,6 +171,7 @@ return (
                     </Select>
                 </Field>
             </Grid>
+            {selectedRole === 1 && (
             <Grid size={6}>
                 <Field label={<strong>Absences</strong>}>
                     <TextField
@@ -187,8 +188,8 @@ return (
                     />
                 </Field>
             </Grid>
-
-            
+            )}
+    
         </Grid>
       </DialogContent>
 

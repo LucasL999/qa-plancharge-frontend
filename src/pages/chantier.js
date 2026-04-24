@@ -12,6 +12,7 @@ import Card5 from "../component/card5";
 import Card6 from "../component/card6";
 import TableChantier from "../component/tableChantier";
 import PopinNewChantier from "../component/popinNewChantier";
+import ImportExcel from "../algo/importExcel";
 import { Grid, Button, TextField } from "@mui/material";
 
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -34,6 +35,13 @@ export default function Chantier() {
 
   const [statuts, setStatuts] = useState([]);
   const [error, setError] = useState(null);
+
+  // gère l'import du référentiel projet
+    const importExcel = ImportExcel({onDataExtracted: (titresChantiers) => 
+      {console.log("Titres reçus depuis Excel");
+
+      }})
+  
 
   return (
     <>
@@ -144,6 +152,7 @@ export default function Chantier() {
     {/* Bouton référentiel */}
     <Button
       variant="contained"
+      component="label"
       sx={{
       whiteSpace: "nowrap",
       borderRadius: "100px",
@@ -156,6 +165,8 @@ export default function Chantier() {
     >
       <FileDownloadOutlinedIcon sx={{ mr: 1 }} />
       Référentiel
+      <input hidden type="file" accept=".xlsx,.xls" onChange={importExcel.handleFileChange}/>
+
     </Button>
 
     {/* Bouton principal (CTA) */}
