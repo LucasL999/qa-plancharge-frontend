@@ -53,7 +53,13 @@ export default function PopinNewUser({ open, onClose }) {
             onClose(true);
 
         } catch (error) {
-            console.error("Erreur création user:", error);
+          if(error.response?.status === 409) {
+            alert("Cet email est déjà utilisé.");
+            return;
+          }else{
+            alert("Erreur lors de la création de l'utilisateur.");
+            console.error(error);
+          }
         }
     };
 

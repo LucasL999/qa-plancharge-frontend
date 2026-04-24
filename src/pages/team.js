@@ -6,7 +6,7 @@ import Bandeau from "../component/bandeau";
 import Card3 from "../component/card3";
 import Card4 from "../component/card4";
 import TableTeam from "../component/tableTeam";
-import { getAllTeam } from "../services/teamService";
+import { getAllTeam, getNbQA } from "../services/teamService";
 import { useEffect, useState } from "react"; 
 import { getWorkingDaysUntilYearEnd } from "../algo/joursOuvresAn";
 
@@ -20,6 +20,9 @@ export default function Team() {
   
   const [workingDays, setWorkingDays] = useState(null); 
   const [QAs, setQAs] = useState([]);
+  const [nbQA, setNbQA] = useState(0);
+  const [cafMoy, setCafMoy] = useState(18);
+
 
   // recupère les j-ouvrés annuels
   useEffect(() => {
@@ -44,17 +47,32 @@ useEffect(() => {
     fetchQAs();
   }, []);
 
+  //recupère le nb de QA
+  useEffect(() => {
+    const fetchNbQA = async () => {
+      try {
+        const nb = await getNbQA();
+        setNbQA(nb[0].count);
+      } catch(error){
+        console.error("Error fetching nb QA:", error)
+      }
+    };
+    fetchNbQA();
+  }, []);
+
   // calcule la capacité par QA
   const QAsWithCapacity = workingDays === null ? [] : QAs.map((qa) => ({
           ...qa,
           capacity: workingDays - (qa.nbused ?? 0),
         })); 
 
-//calcule le totale de la capacité
-const totalCapacity = QAsWithCapacity.reduce(
+  //calcule le totale de la capacité
+  const totalCapacity = QAsWithCapacity.reduce(
     (sum, qa) => sum + qa.capacity,
     0
   );
+
+  const capMensuel = nbQA * cafMoy;
 
 
   //BODY DE LA PAGE
@@ -64,13 +82,13 @@ const totalCapacity = QAsWithCapacity.reduce(
     <Box sx={{ paddingTop: "60px", }}>
       <Grid container spacing={2} alignItems="center" justifyContent="center">
         <Grid item xs={12} md={4}>
-          <Card3 title="Nombre de QA" value="7" icon={<PeopleOutlineOutlinedIcon />} />
+          <Card3 title="Nombre de QA" value={nbQA} icon={<PeopleOutlineOutlinedIcon />} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <Card3 title="CAF moyenne" value="18" icon={<TimelineOutlinedIcon />} />
+          <Card3 title="CAF moyenne" value={cafMoy} icon={<TimelineOutlinedIcon />} />
         </Grid>
         <Grid item xs={12} md={4}>
-          <Card3 title="Capacitaire mensuel" value="126" icon={<InsertInvitationOutlinedIcon />} />
+          <Card3 title="Capacitaire mensuel" value={capMensuel} icon={<InsertInvitationOutlinedIcon />} />
         </Grid>
         <Grid item xs={12} md={4}>
           <Card4 title="Capacité disponible" value={totalCapacity} icon={<ThumbUpAltOutlinedIcon />} />
