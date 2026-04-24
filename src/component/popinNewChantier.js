@@ -51,10 +51,19 @@ export default function PopinNewChantier({ open, onClose }) {
         fetchQA();
     }, []);
 
+    const handleClose = () => {
+      setSelectedStatut("");
+      setSelectedPriorite("");
+      setSelectedQa([]);
+      
+      onClose();
+    };
+
+
 return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       disablePortal
       PaperProps={{
         sx:{
@@ -314,7 +323,7 @@ return (
             borderRadius: "10px",
             width: "120px"
           }}
-          onClick={onClose}
+          onClick={handleClose}
         >
           Annuler
         </Button>
