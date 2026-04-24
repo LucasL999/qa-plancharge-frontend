@@ -52,7 +52,7 @@ export default function Chantier() {
           <Grid item xs={12} md={4}>
             <Card6
               title="RAF QA"
-              value="653"
+              value="653*"
               icon={<ErrorOutlineIcon sx={{ color: "#009951", fontSize: 35, fontWeight: "bold" }} />}
               unit="JH"
               color="#009951"
@@ -61,7 +61,7 @@ export default function Chantier() {
           <Grid item xs={12} md={4}>
             <Card5
               title="Consommé"
-              value="202,5"
+              value="202,5*"
               icon={<CheckCircleOutlineIcon sx={{ color: "#C00F0C", fontSize: 35 }} />}
               unit="JH"
               color="#9d0e0bdd"
@@ -70,7 +70,7 @@ export default function Chantier() {
           <Grid item xs={12} md={4}>
             <Card5
               title="Charge globale"
-              value="855,5"
+              value="855,5*"
               icon={<EqualizerIcon sx={{ color: "black", fontSize: 35 }} />}
               unit="JH"
               color="black"
