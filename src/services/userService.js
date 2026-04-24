@@ -75,3 +75,23 @@ export async function updateUser(userData) {
         throw error;
     }
 }
+
+export async function deleteUser(idUser) {
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/deleteUser/${idUser}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+        });
+        if (!response.ok) {
+            throw new Error('Failed to delete user');
+        }
+        return true;
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        throw error;
+    }
+}

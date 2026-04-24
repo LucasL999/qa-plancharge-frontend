@@ -102,7 +102,6 @@ return (
 
       <DialogContent sx={{ mt: 3 }}>
 
-        {/* PLANNING */}
         <Grid container spacing={2} sx={{ padding: "0 60px", paddingBottom: "40px" }}>
 
             {/* Ligne 1 */}

@@ -4,6 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useEffect, useState } from "react";
 import {getAllUsers} from "../services/userService";
 import PopinEditUser from "./popinEditUser";
+import PopinDeleteUser from "./popinDeleteUser";
 
 export default function TableUser() {
     const [users, setUsers] = useState([]);
@@ -35,6 +36,17 @@ export default function TableUser() {
         fetchAllUsers();
     };
 
+    const [openPopinDelete, setOpenPopinDelete] = useState(false);
+    const openPopinDeleteUser = (user) => {
+        setSelectedUser(user);
+        setOpenPopinDelete(true);
+    };
+    const closePopinDeleteUser = () => {
+        setOpenPopinDelete(false);
+        setSelectedUser(null);
+        fetchAllUsers();
+    };
+
   return (
     
 <TableContainer sx={{ boxShadow: 3, borderRadius: 2 }}>
@@ -60,7 +72,7 @@ export default function TableUser() {
                     <EditIcon sx={{ color: "#003CFF" }} onClick={() => openPopinEditUser(user)} />
                     </Tooltip>
                     <Tooltip title="Supprimer">
-                        <DeleteIcon sx={{ color: "#ff0000" }} />
+                        <DeleteIcon sx={{ color: "#ff0000" }} onClick={() => openPopinDeleteUser(user)} />
                     </Tooltip>
                 </Box>
               </TableCell>
@@ -69,6 +81,7 @@ export default function TableUser() {
         </TableBody>
       </Table>
       <PopinEditUser open={openPopinEdit} onClose={closePopinEditUser} userData={selectedUser} />
+      <PopinDeleteUser open={openPopinDelete} onClose={closePopinDeleteUser} userData={selectedUser}/>
     </TableContainer>
   );
 }
