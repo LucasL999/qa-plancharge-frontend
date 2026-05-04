@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 import PopinNewEvent from "./popinNewEvent";
+import PopinEditEvent from "./popinEditEvent"
+import {getEvents} from "../services/calendarService.js"
 
 export default function Schedule({ onMonthYearChange }) {
 
   const today = new Date();
-
+  const [events, setEvents] = useState([]);
   const [month, setMonth] = useState(today.getMonth());
   const [year, setYear] = useState(today.getFullYear());
 
@@ -18,6 +20,16 @@ export default function Schedule({ onMonthYearChange }) {
     setSelectedDate(date);
     setOpenPopin(true);
   };
+
+  const [openEditPopin, setOpenEditPopin] = useState(false);
+  const [selectedEventDate, setSelectedEventDate] = useState(null);
+ 
+  const openEditEvent = (day) => {
+    const date = new Date(year, month, day);
+    setSelectedEventDate(date);
+    setOpenEditPopin(true);
+  };
+
 
   const daysOfWeek = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
   const months = [
@@ -58,10 +70,41 @@ export default function Schedule({ onMonthYearChange }) {
       .catch(() => setFerie({}));
   }, [year]);
 
+  useEffect(() => { //pour les events
+        const fetchEvents = async () => {
+            try {
+                const res = await getEvents();
+                setEvents(res.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchEvents();
+    }, []);
+
   const formatDateKey = (date) =>
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
   const isFerie = (date) => ferie[formatDateKey(date)];
+
+  const hasEventOnDate = (date) => {
+    if (!Array.isArray(events)) return false;
+
+    // ✅ décalage volontaire de +1 jour
+    const shiftedDate = new Date(date);
+    shiftedDate.setDate(shiftedDate.getDate() - 1);
+
+    const key = formatDateKey(shiftedDate);
+
+    return events.some(event => {
+      if (!event.date_debut || !event.date_fin) return false;
+
+      const start = event.date_debut.split("T")[0];
+      const end = event.date_fin.split("T")[0];
+
+      return key >= start && key <= end;
+    });
+  };
 
   useEffect(() => {
     onMonthYearChange?.({ month, year });
@@ -74,6 +117,11 @@ export default function Schedule({ onMonthYearChange }) {
         open={openPopin}
         onClose={() => setOpenPopin(false)}
         date={selectedDate}
+      />
+      <PopinEditEvent
+        open={openEditPopin}
+        onClose={() => setOpenEditPopin(false)}
+        date={selectedEventDate}
       />
 
       {/* HEADER */}
@@ -118,10 +166,11 @@ export default function Schedule({ onMonthYearChange }) {
         {Array.from({ length: startDay }).map((_, i) => <div key={i} />)}
 
         {Array.from({ length: daysInMonth }, (_, i) => {
-          const dayNumber = i + 1;
+          const dayNumber = i +1 ;
           const date = new Date(year, month, dayNumber);
           const isWeekend = [0, 6].includes(date.getDay());
           const ferieName = isFerie(date);
+          const hasEvent = hasEventOnDate(date);
 
           let background = "#f5f5f5";
           let color = "black";
@@ -131,11 +180,19 @@ export default function Schedule({ onMonthYearChange }) {
             background = "#3b3b3b";
             color = "white";
           }
+          if (hasEvent){
+            background = "#c62828";
+            color = "white";
+          }
 
           return (
             <div
               key={dayNumber}
-              onClick={() => openPopinNewEvent(dayNumber)}
+              onClick={() => {if (hasEvent){
+                  openEditEvent(dayNumber + 1);
+                } else {
+                  openPopinNewEvent(dayNumber+1);
+                }}} 
               style={{
                 ...styles.dayCell,
                 background,

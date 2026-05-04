@@ -21,7 +21,7 @@ export default function Team() {
   const [workingDays, setWorkingDays] = useState(null); 
   const [QAs, setQAs] = useState([]);
   const [nbQA, setNbQA] = useState(0);
-  const [cafMoy, setCafMoy] = useState(18);
+  const cafMoy = 18;
 
 
   // recupère les j-ouvrés annuels

@@ -1,43 +1,18 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { useEffect, useState } from 'react';
-import {addEvent} from "../services/calendarService";
 import {jwtDecode} from "jwt-decode";
 
-export default function PopinNewEvent({ open, onClose, date }) {
+export default function PopinEditEvent({ open, onClose, date }) {
 
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
 
     useEffect(() => {
         if(date){
-            setStartDate(date.toISOString().split('T')[0]);
-            setEndDate(date.toISOString().split('T')[0]);
+          setStartDate(date.toISOString().split('T')[0]);
+          setEndDate(date.toISOString().split('T')[0]);
         }
     }, [date]);
-
-
-    const handleSubmit = async () => {
-        try {
-            const token = localStorage.getItem("access_token");
-            if(!token){
-              alert("Utilisateur non authentifié");
-              return;
-            } 
-            const decoded = jwtDecode(token);
-            const emailFromToken = decoded.email;
-            const eventData = {email: emailFromToken, date_debut: startDate, date_fin: endDate};
-            const result = await addEvent(eventData);
-            console.log("Event créé avec succès");
-
-            // reset form 
-            onClose(true);
-
-        } catch (error) {
-            alert("Erreur lors de la création de l'event.");
-            console.error(error);
-        }
-    };
-
 
 return (
     <Dialog
@@ -66,7 +41,7 @@ return (
           color: "white",
         }}
       >
-        Nouvelle absence
+        Modifier l'absence
       </DialogTitle>
       <Divider sx={{
           width: "100%",
@@ -88,7 +63,6 @@ return (
                         variant="outlined"
                         type="date"
                         value={startDate}
-                        onChange={(e) => setStartDate(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -105,7 +79,6 @@ return (
                         variant="outlined"
                         type="date"
                         value={endDate}
-                        onChange={(e) => setEndDate(e.target.value)}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -136,14 +109,27 @@ return (
         <Button
           variant="contained"
           sx={{
+            backgroundColor: "#63a7c1",
+            color: "black",
+            borderRadius: "10px",
+            width: "120px"
+          }}
+          onClick={onClose}
+        >
+          Modifier
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{
             backgroundColor: "#d7df21",
             color: "black",
             borderRadius: "10px",
             width: "120px"
           }}
-          onClick={handleSubmit}
+          onClick={onClose}
         >
-          Créer
+          Supprimer
         </Button>
       </DialogActions>
     </Dialog>
