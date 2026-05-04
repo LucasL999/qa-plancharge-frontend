@@ -1,6 +1,7 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { useEffect, useState } from 'react';
 import {jwtDecode} from "jwt-decode";
+import {deleteEvent} from "../services/calendarService"
 
 export default function PopinEditEvent({ open, onClose, date }) {
 
@@ -13,6 +14,21 @@ export default function PopinEditEvent({ open, onClose, date }) {
           setEndDate(date.toISOString().split('T')[0]);
         }
     }, [date]);
+
+    const handleDelete = async () => {
+      try {
+    
+        const result = await deleteEvent(startDate, endDate);
+        console.log("Event supprimé avec succès");
+        // reset
+        setStartDate("");
+        setEndDate("");
+        onClose(true);
+    
+      } catch (error) {
+        console.error("Erreur suppression event:", error);
+      }
+    };
 
 return (
     <Dialog
@@ -127,7 +143,7 @@ return (
             borderRadius: "10px",
             width: "120px"
           }}
-          onClick={onClose}
+          onClick={handleDelete}
         >
           Supprimer
         </Button>
