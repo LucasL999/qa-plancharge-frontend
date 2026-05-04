@@ -125,19 +125,6 @@ return (
         <Button
           variant="contained"
           sx={{
-            backgroundColor: "#63a7c1",
-            color: "black",
-            borderRadius: "10px",
-            width: "120px"
-          }}
-          onClick={onClose}
-        >
-          Modifier
-        </Button>
-
-        <Button
-          variant="contained"
-          sx={{
             backgroundColor: "#d7df21",
             color: "black",
             borderRadius: "10px",
