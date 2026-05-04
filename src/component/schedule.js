@@ -204,8 +204,10 @@ export default function Schedule({ onMonthYearChange }) {
               onClick={() => {
                 if (hasEvent) {
                   openEditEvent(dayNumber + 1);
-                } else {
-                  openPopinNewEvent(dayNumber + 1);
+                } else if(!isWeekend) {
+                  if(!ferieName){
+                    openPopinNewEvent(dayNumber + 1);
+                  }
                 }
               }}
               style={{
