@@ -12,6 +12,7 @@ import Card5 from "../component/card5";
 import Card6 from "../component/card6";
 import TableChantier from "../component/tableChantier";
 import PopinNewChantier from "../component/popinNewChantier";
+import PopinFiltre from "../component/popinFiltre";
 import ImportExcel from "../algo/importExcel";
 import { Grid, Button, TextField } from "@mui/material";
 
@@ -32,6 +33,11 @@ export default function Chantier() {
 
   const openPopinNewChantier = () => setOpenPopin(true);
   const closePopinNewChantier = () => setOpenPopin(false);
+
+  const [openPopinFiltre, setOpenPopinFiltre] = useState(false); 
+
+  const openPopinFiltres = () => setOpenPopinFiltre(true);
+  const closePopinFiltres = () => setOpenPopinFiltre(false);
 
   const [statuts, setStatuts] = useState([]);
   const [error, setError] = useState(null);
@@ -118,6 +124,7 @@ export default function Chantier() {
       {/* Bouton filtres */}
       <Button
         variant="contained"
+        onClick={openPopinFiltres}
         sx={{
           whiteSpace: "nowrap",
           borderRadius: "100px",
@@ -199,6 +206,7 @@ export default function Chantier() {
 
       {/* POPIN NOUVEAU CHANTIER */}
       <PopinNewChantier open={openPopin} onClose={closePopinNewChantier} />
+      <PopinFiltre open={openPopinFiltre} onClose={closePopinFiltres} />
     </>
   );
 }
