@@ -1,12 +1,30 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Checkbox, ListItemText, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { getStatuts, getPriorites, getQA } from '../services/chantierService';
+import { getStatuts, getPriorites, getQA, updateChantier, addChantier } from '../services/chantierService';
 
 
 export default function PopinNewChantier({ open, onClose }) {
 
     const [statuts, setStatuts] = useState([]);
     const [selectedStatut, setSelectedStatut] = useState("");
+
+    const [priorites, setPriorites] = useState([]);
+    const [selectedPriorite, setSelectedPriorite] = useState("");
+
+    const [qa, setQa] = useState([]);
+    const [selectedQa, setSelectedQa] = useState([]);
+
+    //const [chantier, setChantier] = useState([]);
+    const [selectedChantier, setSelectedChantier] = useState("");
+
+    const [selectedCP, setSelectedCP] = useState("");
+    const [selectedFin, setSelectedFin] = useState("");
+    const [selectedNature, setSelectedNature] = useState("");
+    const [selectedCap, setSelectedCap] = useState("");
+    const [selectedPrev, setSelectedPrev] = useState("");
+    const [selectedCons, setSelectedCons] = useState("");
+    const [selectedDateDebut, setSelectedDateDebut] = useState("");
+    const [selectedDateFin, setSelectedDateFin] = useState("");
 
     useEffect(() => {
         const fetchStatut = async () => {
@@ -21,9 +39,6 @@ export default function PopinNewChantier({ open, onClose }) {
     }, []);
 
 
-    const [priorites, setPriorites] = useState([]);
-    const [selectedPriorite, setSelectedPriorite] = useState("");
-
     useEffect(() => {
         const fetchPriorite = async () => {
             try {
@@ -36,9 +51,7 @@ export default function PopinNewChantier({ open, onClose }) {
         fetchPriorite();
     }, []);
 
-    const [qa, setQa] = useState([]);
-    const [selectedQa, setSelectedQa] = useState([]);
-
+    
     useEffect(() => {
         const fetchQA = async () => {
             try {
@@ -50,6 +63,71 @@ export default function PopinNewChantier({ open, onClose }) {
         };
         fetchQA();
     }, []);
+
+    const handleSubmit = async () => {
+        try{
+            if(!selectedChantier){
+                alert("Veuillez choisir le chantier.");
+                return;
+            }
+            if(selectedCons || selectedPrev){
+                if(!/^\d+$/.test(selectedCons) || !/^\d+$/.test(selectedPrev)){
+                    alert("Les champs 'Prévisionnel' et 'Consommé' doivent contenir uniquement des chiffres.");
+                    return;
+                }
+            }
+            if(selectedCap){
+                if(!/^\d+$/.test(selectedCap)){
+                    alert("Le champ 'Capacité' doit contenir uniquement des chiffres.");
+                    return;
+                }
+            }
+            if(selectedDateDebut && selectedDateFin){
+                if(selectedDateFin < selectedDateDebut){
+                    alert("La date de fin ne doit pas être inférieure à la date de début.");
+                    return;
+                }
+            }
+
+            const chantierData = {
+                chantier: selectedChantier,
+                priorite: selectedPriorite ? parseInt(selectedPriorite) : null,
+                statut: selectedStatut ? parseInt(selectedStatut) : null,
+                qa: selectedQa.map(id => parseInt(id)),
+                cp: selectedCP || null,
+                financement: selectedFin || null,
+                nature: selectedNature || null,
+                capacite: selectedCap ? parseInt(selectedCap) : null,
+                prev: selectedPrev ? parseInt(selectedPrev) : null,
+                cons: selectedCons ? parseInt(selectedCons) : null,
+                debut: selectedDateDebut || null,
+                fin: selectedDateFin || null,
+            }
+            const result = await addChantier(chantierData);
+            console.log("Chantier créé avec succès");
+
+            //reset
+            setSelectedChantier("");
+            setSelectedPriorite("");
+            setSelectedStatut("");
+            setSelectedQa([]);
+            setSelectedCP("");
+            setSelectedFin("");
+            setSelectedNature("");
+            setSelectedCap("");
+            setSelectedPrev("");
+            setSelectedCons("");
+            setSelectedDateDebut("");
+            setSelectedDateFin("");
+
+            handleClose();
+            onClose(true);
+            
+        } catch (error){
+            alert("Erreur lors de la création du chantier.");
+            console.error(error);
+        }
+    }
 
     const handleClose = () => {
       setSelectedStatut("");
@@ -106,11 +184,29 @@ return (
         <Grid container spacing={2} sx={{ padding: "0 60px", paddingBottom: "40px" }}>
 
             {/* Ligne 1 */}
+            {/*
             <Grid size={10}>
                 <Field label="Chantier">
                     <Select fullWidth defaultValue="" sx={{borderRadius: "10px"}}>
                         <MenuItem value="">Chantier</MenuItem>
                     </Select>
+                </Field>
+            </Grid>
+            */}
+            {/* en attendant l'importation des chantiers par excel */}
+            <Grid size={10}>
+                <Field label="Chantier">
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => {setSelectedChantier(e.target.value)}}
+                        sx={{
+                            "& fieldset": {
+                            borderRadius: "10px"
+                            },
+                            backgroundColor: "#fff"  
+                        }}    
+                    />
                 </Field>
             </Grid>
             <Grid size={2}>
@@ -165,6 +261,7 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        onChange={(e) => {setSelectedCP(e.target.value)}}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -179,6 +276,7 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        onChange={(e) => {setSelectedFin(e.target.value)}}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -195,6 +293,7 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        onChange={(e) => {setSelectedNature(e.target.value)}}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -209,6 +308,7 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        onChange={(e) => {setSelectedCap(e.target.value)}}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -233,6 +333,7 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        onChange={(e) => {setSelectedPrev(e.target.value)}}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -247,6 +348,7 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        onChange={(e) => {setSelectedCons(e.target.value)}}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -261,6 +363,7 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        disabled
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -286,6 +389,7 @@ return (
                         fullWidth
                         variant="outlined"
                         type="date"
+                        onChange={(e) => {setSelectedDateDebut(e.target.value)}}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -301,6 +405,7 @@ return (
                         fullWidth
                         variant="outlined"
                         type="date"
+                        onChange={(e) => {setSelectedDateFin(e.target.value)}}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -336,6 +441,7 @@ return (
             borderRadius: "10px",
             width: "120px"
           }}
+          onClick={handleSubmit}
         >
           Créer
         </Button>

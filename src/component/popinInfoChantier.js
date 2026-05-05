@@ -3,6 +3,16 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typogra
 
 export default function PopinInfoChantier({ open, onClose, chantier }) {
 
+    const formatDate = (date) => date ? date.split("T")[0] : "";
+
+    const afficheQA = (tableauQA) => {
+        if(!Array.isArray(tableauQA) || tableauQA.length === 0) {
+            return "N/A";
+        }
+
+        return tableauQA.map(qa => `${qa.firstname}`).join(", ");
+    };
+
     return (
     <Dialog
       open={open}
@@ -63,19 +73,19 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
                             <TableBody>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Chantier :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Chantier}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.titre}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Statut :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Statut}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.stat || "N/A"}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>QA :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.QA}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{afficheQA(chantier?.qas)}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Priorité :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Priorite}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.prio || "N/A"}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -101,19 +111,19 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
                             <TableBody>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Chef de projet :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.ChefDeProjet}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.cp || "N/A"}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Nature du projet :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.NatureDuProjet}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.nature || "N/A"}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Financement :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Financement}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.finance || "N/A"}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Capacité (%) :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Capacite}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.capacite || "N/A"}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -139,15 +149,15 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
                             <TableBody>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Prévisionnel :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Prev}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.prev || "N/A"}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Consommé :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Consomme}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.cons || "N/A"}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Reste à faire :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.RAF}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.prev-chantier?.cons || "N/A"}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -173,11 +183,11 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
                             <TableBody>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Date de début :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Debut}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{formatDate(chantier?.date_debut) || "N/A"}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Date de fin :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.Fin}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{formatDate(chantier?.date_fin) || "N/A"}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
