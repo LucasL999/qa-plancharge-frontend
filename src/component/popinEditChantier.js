@@ -1,5 +1,6 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider, Checkbox, ListItemText } from '@mui/material';
 import { useState, useEffect } from 'react';
+import {getStatuts, getPriorites, getQA, updateChantier} from "../services/chantierService.js";
 
 export default function PopinEditChantier({ open, onClose, chantier }) {
     
@@ -12,25 +13,140 @@ export default function PopinEditChantier({ open, onClose, chantier }) {
     const [raf, setRaf] = useState("");
     const [debut, setDebut] = useState("");
     const [fin, setFin] = useState("");
+    const [titre, setTitre] = useState("");
+
+    const [priorites, setPriorites] = useState([]);
+    const [selectedPriorite, setSelectedPriorite] = useState("");
+    const [statuts, setStatuts] = useState([]);
+    const [selectedStatut, setSelectedStatut] = useState("");
+    const [Qas, setQas] = useState([]);
+    const [selectedQas, setSelectedQas] = useState([]);
+    
+
+    const formatDate = (date) => date ? date.split("T")[0] : "";
+
+    useEffect(() => {
+        const fetchStatuts = async () => {
+            try {
+                const res = await getStatuts();
+                    setStatuts(res);
+                } catch (error) {
+                    console.error(error);
+                }
+        };
+        fetchStatuts();
+    }, []);
+
+    useEffect(() => {
+        const fetchQas = async () => {
+            try {
+                const res = await getQA();
+                    setQas(res);
+                } catch (error) {
+                    console.error(error);
+                }
+        };
+        fetchQas();
+    }, []);
+
+    useEffect(() => {
+        const fetchPriorites = async () => {
+            try {
+                const res = await getPriorites();
+                    setPriorites(res);
+                } catch (error) {
+                    console.error(error);
+                }
+        };
+        fetchPriorites();
+    }, []);
 
     useEffect(() => {
         if (chantier) {
-            setChefDeProjet(chantier.ChefDeProjet);
-            setFinancement(chantier.Financement);
-            setNatureDuProjet(chantier.NatureDuProjet);
-            setCapacite(chantier.Capacite);
-            setPrev(chantier.Prev);
-            setCons(chantier.Consomme);
-            setRaf(chantier.RAF);
-            setDebut(chantier.Debut);
-            setFin(chantier.Fin);
+            setChefDeProjet(chantier.cp);
+            setFinancement(chantier.finance);
+            setNatureDuProjet(chantier.nature);
+            setCapacite(chantier.capacite);
+            setPrev(chantier.prev);
+            setCons(chantier.cons);
+            setRaf(chantier.prev-chantier.cons || "N/A");
+            setDebut(formatDate(chantier.date_debut));
+            setFin(formatDate(chantier.date_fin));
+            setTitre(chantier.titre);
+            setSelectedStatut(chantier.id_statut);
+            setSelectedPriorite(chantier.id_priorite);
+            setSelectedQas(chantier.qas.map(q => String(q.id)));
         }
     }, [chantier]);
+
+    const handleSubmit = async () => {
+        try{
+            if(cons || prev){
+                if(!/^\d+$/.test(cons) || !/^\d+$/.test(prev)){
+                    alert("Les champs 'Prévisionnel' et 'Consommé' doivent contenir uniquement des chiffres.");
+                    return;
+                }
+            }
+            if(capacite){
+                if(!/^\d+$/.test(capacite)){
+                    alert("Le champ 'Capacité' doit contenir uniquement des chiffres.");
+                    return;
+                }
+            }
+            if(debut && fin){
+                    if(fin < debut){
+                        alert("La date de fin ne doit pas être inférieure à la date de début.");
+                        return;
+                    }
+                }
+    
+                const chantierData = {
+                    id: chantier.id_chantier,
+                    priorite: selectedPriorite ? parseInt(selectedPriorite) : null,
+                    statut: selectedStatut ? parseInt(selectedStatut) : null,
+                    qa: selectedQas.map(id => parseInt(id)),
+                    cp: chefDeProjet || null,
+                    financement: financement || null,
+                    nature: natureDuProjet || null,
+                    capacite: capacite ? parseInt(capacite) : null,
+                    prev: prev ? parseInt(prev) : null,
+                    cons: cons ? parseInt(cons) : null,
+                    debut: debut || null,
+                    fin: fin || null,
+                }
+                const result = await updateChantier(chantierData);
+                console.log("Chantier créé avec succès");
+                
+    
+                handleClose();
+                onClose();
+                
+            } catch (error){
+                alert("Erreur lors de la modification du chantier.");
+                console.error(error);
+            }
+        }
+    
+        const handleClose = () => {
+            setSelectedPriorite("");
+            setSelectedStatut("");
+            setSelectedQas([]);
+            setChefDeProjet("");
+            setFinancement("");
+            setNatureDuProjet("");
+            setCapacite("");
+            setPrev("");
+            setCons("");
+            setDebut("");
+            setFin("");
+          
+            onClose();
+        }; 
 
 return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       PaperProps={{
         sx:{
             position: "absolute",
@@ -74,31 +190,57 @@ return (
             {/* Ligne 1 */}
             <Grid size={10}>
                 <Field label="Chantier">
-                    <Select fullWidth defaultValue="" sx={{borderRadius: "10px"}}>
-                        <MenuItem value="">Chantier</MenuItem>
-                    </Select>
+                    <TextField
+                        fullWidth
+                        variant="outlined"
+                        value={titre}
+                        disabled
+                        sx={{
+                            "& fieldset": {
+                            borderRadius: "10px"
+                            },
+                            backgroundColor: "#fff"  
+                        }}    
+                    />
                 </Field>
             </Grid>
             <Grid size={2}>
                 <Field label="Priorité">
-                <Select fullWidth defaultValue="" sx={{borderRadius: "10px"}}>
-                    <MenuItem value="">Priorité</MenuItem>
-                </Select>
+                <Select fullWidth value={selectedPriorite} 
+                        onChange={(e) => {
+                            setSelectedPriorite(e.target.value);}} sx={{borderRadius: "10px"}}>
+                                {priorites.map((prio) => (
+                                    <MenuItem key={prio.id_priorite} value={String(prio.id_priorite)}>{prio.libelle}</MenuItem>
+                                ))}
+                    </Select>
                 </Field>
             </Grid>
 
             {/* Ligne 2 */}
             <Grid size={6}>
                 <Field label="QA(s)">
-                    <Select fullWidth defaultValue="" sx={{borderRadius: "10px"}}>
-                        <MenuItem value="">QA</MenuItem>
+                    <Select fullWidth multiple value={selectedQas} 
+                        onChange={(e) => {
+                            setSelectedQas(e.target.value.map(val => String(val)))}} 
+                        renderValue={(selected) => Qas.filter(q => selected.includes(String(q.id_user))).map(q => `${q.name} ${q.firstname}`).join(", ")} 
+                        sx={{borderRadius: "10px"}}>
+                        {Qas.map((q) => (
+                            <MenuItem key={q.id_user} value={String(q.id_user)}>
+                                <Checkbox checked={selectedQas.includes(String(q.id_user))}/>
+                                <ListItemText primary={`${q.name} ${q.firstname}`}/>
+                            </MenuItem>
+                        ))}
                     </Select>
                 </Field>
             </Grid>
             <Grid size={4}>
                 <Field label="Statut">
-                    <Select fullWidth defaultValue="" sx={{borderRadius: "10px"}}>
-                        <MenuItem value="">Statut</MenuItem>
+                    <Select fullWidth value={selectedStatut} 
+                        onChange={(e) => {
+                            setSelectedStatut(e.target.value);}} sx={{borderRadius: "10px"}}>
+                                {statuts.map((statu) => (
+                                    <MenuItem key={statu.id_statut} value={String(statu.id_statut)}>{statu.libelle}</MenuItem>
+                                ))}
                     </Select>
                 </Field>
             </Grid>
@@ -226,7 +368,7 @@ return (
                         fullWidth
                         variant="outlined"
                         value={raf}
-                        onChange={(e) => setRaf(e.target.value)}
+                        disabled
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -293,7 +435,7 @@ return (
             borderRadius: "10px",
             width: "120px"
           }}
-          onClick={onClose}
+          onClick={handleClose}
         >
           Annuler
         </Button>
@@ -306,8 +448,9 @@ return (
             borderRadius: "10px",
             width: "120px"
           }}
+          onClick={handleSubmit}
         >
-          Créer
+          Modifier
         </Button>
       </DialogActions>
     </Dialog>
@@ -315,21 +458,6 @@ return (
 }
 
 /* ---------- SOUS-COMPONENTS ---------- */
-
-function SectionTitle({ title }) {
-  return (
-    <Typography
-      sx={{
-        mt: 4,
-        mb: 2,
-        fontWeight: 600,
-        textAlign: "center"
-      }}
-    >
-      {title}
-    </Typography>
-  );
-}
 
 function Field({ label, children }) {
   return (

@@ -31,6 +31,7 @@ export default function TableTeam() {
       fetchChantier();
     }, []);
 
+
   const [openPopinInfo, setOpenPopinInfo] = useState(false); // pour la popin d'info chantier
   const [openPopinEdit, setOpenPopinEdit] = useState(false); // pour la popin d'édition chantier
   const [selectedChantier, setSelectedChantier] = useState(null);
@@ -38,8 +39,11 @@ export default function TableTeam() {
   const [rowsPerPage, setRowsPerPage] = useState(4); // pour la pagination
 
   const closePopinInfoChantier = () => setOpenPopinInfo(false);
-  const closePopinEditChantier = () => setOpenPopinEdit(false);
-
+  const closePopinEditChantier = () => {
+    setOpenPopinEdit(false);
+    setSelectedChantier(null);
+    fetchChantier();
+  }
 
   function openPopinInfoChantier(chantier) {
     setSelectedChantier(chantier);
