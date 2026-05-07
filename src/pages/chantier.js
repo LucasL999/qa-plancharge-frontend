@@ -26,6 +26,8 @@ import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 
+import {getPrev, getCons} from "../services/chantierService.js"
+
 //DEBUT PAGE
 export default function Chantier() {
 
@@ -39,15 +41,47 @@ export default function Chantier() {
   const openPopinFiltres = () => setOpenPopinFiltre(true);
   const closePopinFiltres = () => setOpenPopinFiltre(false);
 
-  const [statuts, setStatuts] = useState([]);
-  const [error, setError] = useState(null);
-
   // gère l'import du référentiel projet
-    const importExcel = ImportExcel({onDataExtracted: (titresChantiers) => 
-      {console.log("Titres reçus depuis Excel");
+  const importExcel = ImportExcel({onDataExtracted: (titresChantiers) => 
+    {console.log("Titres reçus depuis Excel");
 
-      }})
+    }})
+
+  const [prev, setPrev] = useState("");
+  const [cons, setCons] = useState("");
+  const [raf, setRaf] = useState("");  
+
+  const fetchPrev = async () => {
+        try {
+          const res = await getPrev();
+          setPrev(res[0].sum);
+        } catch (error) {
+          console.error(error);
+        }
+    };
+
+    const fetchCons = async () => {
+        try {
+          const res = await getCons();
+          setCons(res[0].sum);
+        } catch (error) {
+          console.error(error);
+        }
+    };
   
+      useEffect(() => {
+        fetchPrev();
+      }, []);
+
+      useEffect(() => {
+        fetchCons();
+      }, []);
+
+      useEffect(() => {
+        setRaf(prev-cons);
+      }, [prev, cons]);
+
+
 
   return (
     <>
@@ -58,7 +92,7 @@ export default function Chantier() {
           <Grid item xs={12} md={4}>
             <Card6
               title="RAF QA"
-              value="653*"
+              value={raf}
               icon={<ErrorOutlineIcon sx={{ color: "#009951", fontSize: 35, fontWeight: "bold" }} />}
               unit="JH"
               color="#009951"
@@ -67,7 +101,7 @@ export default function Chantier() {
           <Grid item xs={12} md={4}>
             <Card5
               title="Consommé"
-              value="202,5*"
+              value={cons}
               icon={<CheckCircleOutlineIcon sx={{ color: "#C00F0C", fontSize: 35 }} />}
               unit="JH"
               color="#9d0e0bdd"
@@ -76,7 +110,7 @@ export default function Chantier() {
           <Grid item xs={12} md={4}>
             <Card5
               title="Charge globale"
-              value="855,5*"
+              value={prev}
               icon={<EqualizerIcon sx={{ color: "black", fontSize: 35 }} />}
               unit="JH"
               color="black"

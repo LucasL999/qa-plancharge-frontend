@@ -336,7 +336,11 @@ return (
                         fullWidth
                         variant="outlined"
                         value={prev}
-                        onChange={(e) => setPrev(e.target.value)}
+                        onChange={(e) => {
+                            const newPrev = Number(e.target.value);
+                            setPrev(newPrev);
+                            setRaf(newPrev-cons);
+                        }}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -352,7 +356,11 @@ return (
                         fullWidth
                         variant="outlined"
                         value={cons}
-                        onChange={(e) => setCons(e.target.value)}
+                        onChange={(e) => {
+                            const newCons = Number(e.target.value);
+                            setCons(newCons);
+                            setRaf(prev-newCons);
+                        }}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"

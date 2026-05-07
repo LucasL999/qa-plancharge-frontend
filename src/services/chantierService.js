@@ -113,3 +113,39 @@ export async function updateChantier(data) {
         throw error;
     }
 }
+
+export async function getPrev() {
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/prev`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch prévisionnel');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching prévisionnel:', error);
+        throw error;
+    }
+}
+
+export async function getCons() {
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/cons`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch consommé');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching consommé:', error);
+        throw error;
+    }
+}

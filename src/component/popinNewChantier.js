@@ -23,6 +23,7 @@ export default function PopinNewChantier({ open, onClose }) {
     const [selectedCap, setSelectedCap] = useState("");
     const [selectedPrev, setSelectedPrev] = useState("");
     const [selectedCons, setSelectedCons] = useState("");
+    const [raf, setRaf] = useState("");
     const [selectedDateDebut, setSelectedDateDebut] = useState("");
     const [selectedDateFin, setSelectedDateFin] = useState("");
 
@@ -333,7 +334,11 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
-                        onChange={(e) => {setSelectedPrev(e.target.value)}}
+                        onChange={(e) => {
+                            const newPrev = Number(e.target.value);
+                            setSelectedPrev(newPrev); 
+                            setRaf(newPrev-selectedCons);
+                        }}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -348,7 +353,11 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
-                        onChange={(e) => {setSelectedCons(e.target.value)}}
+                        onChange={(e) => {
+                            const newCons = Number(e.target.value);
+                            setSelectedCons(newCons); 
+                            setRaf(selectedPrev-newCons);
+                        }}
                         sx={{
                             "& fieldset": {
                             borderRadius: "10px"
@@ -363,6 +372,7 @@ return (
                     <TextField
                         fullWidth
                         variant="outlined"
+                        value={raf}
                         disabled
                         sx={{
                             "& fieldset": {
