@@ -116,11 +116,11 @@ export default function TableTeam({ onChantierUpdated }) {
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.cp || "N/A"}</TableCell>
                 <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.prio || "N/A"}</TableCell>
-                <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.prev || "N/A"}</TableCell>
-                <TableCell align="center" sx={{ fontSize: "16px", color: getColorByRAF(chantier.prev-chantier.cons ?? "N/A"), fontWeight: "bold" }}>
-                  {chantier.prev-chantier.cons ?? "N/A"}
+                <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.prev || "0"}</TableCell>
+                <TableCell align="center" sx={{ fontSize: "16px", color: getColorByRAF(chantier.prev-chantier.cons ?? 0), fontWeight: "bold" }}>
+                  {chantier.prev-chantier.cons ?? "0"}
                 </TableCell>
-                <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.cons ?? "N/A"}</TableCell>
+                <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.cons ?? "0"}</TableCell>
                 <TableCell align="center" sx={{ color: "#003CFF" }} onClick={(event) => { event.stopPropagation(); openPopinEditChantier(chantier); }}>
                   <EditOutlinedIcon/>
                 </TableCell>

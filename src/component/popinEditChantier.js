@@ -67,9 +67,9 @@ export default function PopinEditChantier({ open, onClose, chantier }) {
             setFinancement(chantier.finance);
             setNatureDuProjet(chantier.nature);
             setCapacite(chantier.capacite);
-            setPrev(chantier.prev);
-            setCons(chantier.cons);
-            setRaf(chantier.prev-chantier.cons || "N/A");
+            setPrev(chantier.prev || 0);
+            setCons(chantier.cons || 0);
+            setRaf(chantier.prev-chantier.cons || 0);
             setDebut(formatDate(chantier.date_debut));
             setFin(formatDate(chantier.date_fin));
             setTitre(chantier.titre);

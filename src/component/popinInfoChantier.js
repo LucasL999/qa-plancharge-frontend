@@ -149,15 +149,15 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
                             <TableBody>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Prévisionnel :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.prev || "N/A"}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.prev || 0}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Consommé :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.cons || "N/A"}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.cons || 0}</TableCell>
                                 </TableRow>
                                 <TableRow>
                                     <TableCell sx={{fontWeight:"bold"}}>Reste à faire :</TableCell>
-                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.prev-chantier?.cons || "N/A"}</TableCell>
+                                    <TableCell sx={{color:"#5DA1BC"}} align="right">{chantier?.prev-chantier?.cons || 0}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
