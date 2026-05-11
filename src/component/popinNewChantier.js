@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { getStatuts, getPriorites, getQA, updateChantier, addChantier } from '../services/chantierService';
 
 
-export default function PopinNewChantier({ open, onClose }) {
+export default function PopinNewChantier({ open, onClose, onCreated }) {
 
     const [statuts, setStatuts] = useState([]);
     const [selectedStatut, setSelectedStatut] = useState("");
@@ -122,6 +122,7 @@ export default function PopinNewChantier({ open, onClose }) {
             setSelectedDateFin("");
 
             handleClose();
+            onCreated?.(); // Notifie le parent que le chantier a été créé
             onClose(true);
             
         } catch (error){

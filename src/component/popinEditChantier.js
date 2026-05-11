@@ -75,7 +75,7 @@ export default function PopinEditChantier({ open, onClose, chantier }) {
             setTitre(chantier.titre);
             setSelectedStatut(chantier.id_statut);
             setSelectedPriorite(chantier.id_priorite);
-            setSelectedQas(chantier.qas.map(q => String(q.id)));
+            setSelectedQas((chantier.qas || []).map(q => String(q.id)));
         }
     }, [chantier]);
 

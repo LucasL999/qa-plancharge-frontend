@@ -15,7 +15,7 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import PopinInfoChantier from "./popinInfoChantier"; 
 import PopinEditChantier from "./popinEditChantier";
 
-export default function TableTeam() {
+export default function TableTeam({ onChantierUpdated }) {
   const [chantiers, setChantiers] = useState([]);
     
     const fetchChantier = async () => {
@@ -36,13 +36,14 @@ export default function TableTeam() {
   const [openPopinEdit, setOpenPopinEdit] = useState(false); // pour la popin d'édition chantier
   const [selectedChantier, setSelectedChantier] = useState(null);
   const [page, setPage] = useState(0); // pour la pagination
-  const [rowsPerPage, setRowsPerPage] = useState(4); // pour la pagination
+  const [rowsPerPage, setRowsPerPage] = useState(6); // pour la pagination
 
   const closePopinInfoChantier = () => setOpenPopinInfo(false);
-  const closePopinEditChantier = () => {
+  const closePopinEditChantier = async () => {
     setOpenPopinEdit(false);
     setSelectedChantier(null);
-    fetchChantier();
+    await fetchChantier();
+    onChantierUpdated?.(); // Notifie le parent que le chantier a été mis à jour
   }
 
   function openPopinInfoChantier(chantier) {
@@ -116,10 +117,10 @@ export default function TableTeam() {
                 <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.cp || "N/A"}</TableCell>
                 <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.prio || "N/A"}</TableCell>
                 <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.prev || "N/A"}</TableCell>
-                <TableCell align="center" sx={{ fontSize: "16px", color: getColorByRAF(chantier.prev-chantier.cons || "N/A"), fontWeight: "bold" }}>
-                  {chantier.prev-chantier.cons || "N/A"}
+                <TableCell align="center" sx={{ fontSize: "16px", color: getColorByRAF(chantier.prev-chantier.cons ?? "N/A"), fontWeight: "bold" }}>
+                  {chantier.prev-chantier.cons ?? "N/A"}
                 </TableCell>
-                <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.cons || "N/A"}</TableCell>
+                <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.cons ?? "N/A"}</TableCell>
                 <TableCell align="center" sx={{ color: "#003CFF" }} onClick={(event) => { event.stopPropagation(); openPopinEditChantier(chantier); }}>
                   <EditOutlinedIcon/>
                 </TableCell>
@@ -134,7 +135,7 @@ export default function TableTeam() {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[4]}
+          rowsPerPageOptions={[6]}
           labelRowsPerPage="Chantiers par page"
         />
       </TableContainer>

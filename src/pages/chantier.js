@@ -5,8 +5,6 @@ import { alpha, Box, Divider } from "@mui/material";
 import { useState } from "react";
 import { useEffect } from "react";
 
-import { getStatuts } from "../services/chantierService";
-
 import Bandeau from "../component/bandeau";
 import Card5 from "../component/card5";
 import Card6 from "../component/card6";
@@ -30,6 +28,8 @@ import {getPrev, getCons} from "../services/chantierService.js"
 
 //DEBUT PAGE
 export default function Chantier() {
+
+  const [refreshTableKey, setRefreshTableKey] = useState(0); // clé pour forcer le rafraîchissement de la table
 
   const [openPopin, setOpenPopin] = useState(false); 
 
@@ -80,6 +80,18 @@ export default function Chantier() {
       useEffect(() => {
         setRaf(prev-cons);
       }, [prev, cons]);
+
+      const refreshKpis = async () => {
+      await Promise.all([
+        fetchPrev(),
+        fetchCons()
+      ]);
+    };
+
+    const refreshAll = async () => {
+      await refreshKpis();
+      setRefreshTableKey(prevKey => prevKey + 1); // Incrémente la clé pour forcer le rafraîchissement de la table
+    };
 
 
 
@@ -235,11 +247,11 @@ export default function Chantier() {
       </Box>
 
       <Box sx={{ paddingLeft: "100px", paddingRight: "100px", paddingTop: "30px", display: "flex", justifyContent: "center" }}>
-        <TableChantier />
+        <TableChantier key={refreshTableKey} onChantierUpdated={refreshKpis} />
       </Box>
 
       {/* POPIN NOUVEAU CHANTIER */}
-      <PopinNewChantier open={openPopin} onClose={closePopinNewChantier} />
+      <PopinNewChantier open={openPopin} onClose={closePopinNewChantier} onCreated={refreshAll} />
       <PopinFiltre open={openPopinFiltre} onClose={closePopinFiltres} />
     </>
   );
