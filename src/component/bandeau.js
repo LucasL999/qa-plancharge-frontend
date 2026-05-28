@@ -1,12 +1,28 @@
 import { useState } from "react";
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Divider, Typography, Badge } from "@mui/material";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import { useEffect } from "react";
 
 import PopinAlertes from "./popinAlertes"; // ✅ import
+import {getNbAlertes} from "../services/chantierService.js"
 
 export default function Bandeau({ title, subtitle }) {
 
   const [open, setOpen] = useState(false);
+  const [alertes, setAlertes] = useState(0); // État pour stocker le nombre d'alertes
+
+  useEffect(() => {
+    const fetchNbAlertes = async () => {
+      try {
+        const data = await getNbAlertes();
+        setAlertes(data[0].count); // Met à jour l'état avec le nombre d'alertes
+      } catch (error) {
+        console.error('Error fetching Nb alertes:', error);
+      }
+    };
+
+    fetchNbAlertes();
+  }, []);
 
   return (
     <>
@@ -22,18 +38,28 @@ export default function Bandeau({ title, subtitle }) {
       >
 
         {/* Icône notif */}
+        <Box sx={{ position: "absolute", top: "50%", left: "92%", transform: "translate(-50%, -50%)" }}>
+        <Badge badgeContent={alertes} color="error" overlap="circular" 
+          anchorOrigin={{vertical: "top", horizontal: "right"}}
+          sx={{"& .MuiBadge-badge": {
+            top: -9,
+            right: -12,
+            fontSize: '14px',
+            height: '20px',
+            minWidth: '20px',
+          }}}>
         <NotificationsOutlinedIcon
           onClick={() => setOpen(true)}
           sx={{
             position: "absolute",
-            top: "50%",
-            left: "92%",
             transform: "translate(-50%, -50%)",
             fontSize: 55,
             color: "#D4DA17",
             cursor: "pointer",
           }}
         />
+        </Badge>
+        </Box>
 
         {/* Titre */}
         <Typography

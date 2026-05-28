@@ -149,3 +149,39 @@ export async function getCons() {
         throw error;
     }
 }
+
+export async function getAlertes() {
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/alertes`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch alertes');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching alertes:', error);
+        throw error;
+    }
+}
+
+export async function getNbAlertes() {
+    try {
+        const token = localStorage.getItem('access_token');
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/Nbalertes`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch Nb alertes');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching Nb alertes:', error);
+        throw error;
+    }
+}
