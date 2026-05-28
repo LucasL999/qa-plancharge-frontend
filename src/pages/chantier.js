@@ -41,6 +41,19 @@ export default function Chantier() {
   const openPopinFiltres = () => setOpenPopinFiltre(true);
   const closePopinFiltres = () => setOpenPopinFiltre(false);
 
+  const [search, setSearch] = useState("");
+
+  const [filtres, setFiltres] = useState({
+    statuts: [],
+    priorites: [],
+    qa: []
+  });
+
+  //gère la récupération des filtres
+  const handleApplyFiltres = (newFiltres) => {
+    setFiltres(newFiltres);
+  }
+
   // gère l'import du référentiel projet
   const importExcel = ImportExcel({onDataExtracted: (titresChantiers) => 
     {console.log("Titres reçus depuis Excel");
@@ -148,6 +161,8 @@ export default function Chantier() {
       <TextField
         placeholder="Rechercher un chantier"
         variant="outlined"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         sx={{
           flexGrow: 1, // prend l’espace disponible
           minWidth: { xs: "100%", md: 300 },
@@ -247,12 +262,12 @@ export default function Chantier() {
       </Box>
 
       <Box sx={{ paddingLeft: "100px", paddingRight: "100px", paddingTop: "30px", display: "flex", justifyContent: "center" }}>
-        <TableChantier key={refreshTableKey} onChantierUpdated={refreshKpis} />
+        <TableChantier key={refreshTableKey} onChantierUpdated={refreshKpis} filtres={filtres} search={search} />
       </Box>
 
       {/* POPIN NOUVEAU CHANTIER */}
       <PopinNewChantier open={openPopin} onClose={closePopinNewChantier} onCreated={refreshAll} />
-      <PopinFiltre open={openPopinFiltre} onClose={closePopinFiltres} />
+      <PopinFiltre open={openPopinFiltre} onClose={closePopinFiltres} onApply={handleApplyFiltres} />
     </>
   );
 }

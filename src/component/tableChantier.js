@@ -15,9 +15,20 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import PopinInfoChantier from "./popinInfoChantier"; 
 import PopinEditChantier from "./popinEditChantier";
 
-export default function TableTeam({ onChantierUpdated }) {
+export default function TableTeam({ onChantierUpdated, filtres, search }) {
   const [chantiers, setChantiers] = useState([]);
-    
+
+  const filteredChantiers = chantiers.filter(chantier => {
+    if(search && !chantier.titre.toLowerCase().includes(search.toLowerCase())) {return false;}
+    if(filtres?.statuts?.length > 0 && !filtres.statuts.includes(String(chantier.id_statut))) {return false;}
+    if(filtres?.priorites?.length > 0 && !filtres.priorites.includes(String(chantier.id_priorite))) {return false;}
+    if(filtres?.qa?.length > 0) {
+      const hasMatchingQa = chantier.qas?.some(q => filtres.qa.includes(String(q.id)));
+      if(!hasMatchingQa) {return false;}
+    }
+    return true;
+  });
+
     const fetchChantier = async () => {
       try {
         const res = await getChantier();
@@ -93,15 +104,15 @@ export default function TableTeam({ onChantierUpdated }) {
               <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Statut</TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Chef de projet</TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Priorité</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Prévisionnel</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Reste à faire</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Prévisionnel</TableCell> 
               <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Consommé</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Reste à faire</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {chantiers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((chantier) => (
+            {filteredChantiers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((chantier) => (
               <TableRow
                 key={chantier.titre}
                 hover
@@ -116,11 +127,11 @@ export default function TableTeam({ onChantierUpdated }) {
                 </TableCell>
                 <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.cp || "N/A"}</TableCell>
                 <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.prio || "N/A"}</TableCell>
-                <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.prev || "0"}</TableCell>
-                <TableCell align="center" sx={{ fontSize: "16px", color: getColorByRAF(chantier.prev-chantier.cons ?? 0), fontWeight: "bold" }}>
-                  {chantier.prev-chantier.cons ?? "0"}
+                <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.prev || 0}</TableCell>
+                <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.cons ?? 0}</TableCell>
+                <TableCell align="center" sx={{ fontSize: "18px", color: getColorByRAF(chantier.prev-chantier.cons ?? 0), fontWeight: "bold" }}>
+                  {chantier.prev-chantier.cons ?? 0}
                 </TableCell>
-                <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.cons ?? "0"}</TableCell>
                 <TableCell align="center" sx={{ color: "#003CFF" }} onClick={(event) => { event.stopPropagation(); openPopinEditChantier(chantier); }}>
                   <EditOutlinedIcon/>
                 </TableCell>
@@ -130,7 +141,7 @@ export default function TableTeam({ onChantierUpdated }) {
         </Table>
         <TablePagination
           component="div"
-          count={chantiers.length}
+          count={filteredChantiers.length}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
