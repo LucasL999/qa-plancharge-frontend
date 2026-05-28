@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 
-export default function Card5( {title, value, icon, unit, color} ) {
+export default function Card6( {title, value, icon, unit, color} ) {
     return(
     <Box sx={{
         width: 240,
@@ -11,7 +11,6 @@ export default function Card5( {title, value, icon, unit, color} ) {
         margin: "20px",
         display: "flex",
         flexDirection: "column",
-        gap: "20px",
         
     }}>
       <div style={{display: "flex", alignItems: "center", gap: "8px", color: {color}, }}>
@@ -23,7 +22,7 @@ export default function Card5( {title, value, icon, unit, color} ) {
         </Typography>
       </div>
       <Box>
-        <Typography variant="h4" sx={{ color: {color}, fontSize: "60px", paddingLeft: "20px", 
+        <Typography variant="h4" sx={{ color: {color}, fontSize: "80px", paddingLeft: "20px", 
         }}>
             {value} 
             <span style={{ fontSize: "18px",  }}> {unit} </span>

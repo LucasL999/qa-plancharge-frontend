@@ -1,0 +1,236 @@
+// ==============================
+// IMPORTS
+// ==============================
+
+// React
+import React, { useState, useEffect } from "react";
+
+// Material UI Components
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    Paper,
+} from "@mui/material";
+
+// Material UI Icons
+import CloseIcon from "@mui/icons-material/Close";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+
+// React Router
+import { useNavigate } from "react-router-dom";
+
+// Service permettant de récupérer les alertes
+import { getAlertes } from "../services/chantierService.js";
+
+
+// ==============================
+// COMPOSANT PRINCIPAL
+// ==============================
+
+export default function PopinAlertes({ open, onClose }) {
+
+    // ==============================
+    // STATES
+    // ==============================
+
+    // Liste des alertes récupérées depuis l'API
+    const [alertes, setAlertes] = useState([]);
+
+    // Hook de navigation React Router
+    const navigateChantier = useNavigate();
+
+
+    // ==============================
+    // CHARGEMENT DES ALERTES
+    // ==============================
+
+    useEffect(() => {
+
+        // Fonction appelée pour récupérer les alertes
+        const fetchAlertes = async () => {
+
+            try {
+
+                // Appel API
+                const data = await getAlertes();
+
+                // Stockage des alertes dans le state
+                setAlertes(data);
+
+            } catch (error) {
+
+                // Gestion des erreurs
+                console.error(
+                    "Erreur lors de la récupération des alertes :",
+                    error
+                );
+            }
+        };
+
+        // On charge les alertes uniquement
+        // lorsque la popin est ouverte
+        if (open) {
+            fetchAlertes();
+        }
+
+    }, [open]);
+
+
+    // ==============================
+    // RENDER
+    // ==============================
+
+    return (
+
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth="sm"
+            fullWidth
+        >
+
+            {/* ==============================
+                HEADER DE LA POPIN
+            ============================== */}
+
+            <DialogTitle
+                sx={{
+                    textAlign: "center",
+                    fontSize: "30px",
+                    position: "relative",
+                }}
+            >
+                Alertes
+
+                {/* Bouton de fermeture */}
+                <IconButton
+                    aria-label="fermer"
+                    onClick={onClose}
+                    sx={{
+                        position: "absolute",
+                        right: 8,
+                        top: 8,
+                    }}
+                >
+                    <CloseIcon />
+                </IconButton>
+
+            </DialogTitle>
+
+
+            {/* ==============================
+                CONTENU DE LA POPIN
+            ============================== */}
+
+            <DialogContent>
+
+                <TableContainer
+                    component={Paper}
+                    sx={{
+                        // Ajout d'une ombre uniquement
+                        // lorsqu'il n'y a aucune alerte
+                        boxShadow:
+                            alertes.length === 0
+                                ? "5px 5px 5px rgba(0,0,0,0.1)"
+                                : undefined,
+                    }}
+                >
+
+                    <Table>
+
+                        <TableBody>
+
+                            {/* ==============================
+                                CAS : AUCUNE ALERTE
+                            ============================== */}
+
+                            {alertes.length === 0 ? (
+
+                                <TableRow>
+
+                                    <TableCell
+                                        colSpan={1}
+                                        align="center"
+                                        sx={{ padding: 4 }}
+                                    >
+                                        Aucune alerte
+                                    </TableCell>
+
+                                </TableRow>
+
+                            ) : (
+
+                                /* ==============================
+                                   CAS : LISTE DES ALERTES
+                                ============================== */
+
+                                alertes.map((alerte) => (
+
+                                    <TableRow
+                                        key={alerte.id}
+                                        sx={{
+                                            backgroundColor: "#fe9b9b",
+                                        }}
+                                    >
+
+                                        <TableCell
+                                            sx={{
+                                                border: "1px solid black",
+                                            }}
+
+                                            // Au clic sur une alerte :
+                                            // 1. Redirection vers le chantier
+                                            // 2. Fermeture de la popin
+                                            onClick={() => {
+
+                                                navigateChantier(
+                                                    `/chantier?id=${alerte.id_chantier}`
+                                                );
+
+                                                onClose();
+                                            }}
+
+                                            style={{
+                                                cursor: "pointer",
+                                            }}
+                                        >
+
+                                            {/* Icône d'alerte */}
+                                            <WarningAmberIcon
+                                                sx={{
+                                                    verticalAlign: "middle",
+                                                    marginRight: 2,
+                                                    fontWeight: "bold",
+                                                    fontSize: 30,
+                                                    color: "#ff0000",
+                                                }}
+                                            />
+
+                                            {/* Message de l'alerte */}
+                                            {alerte.message}
+
+                                        </TableCell>
+
+                                    </TableRow>
+
+                                ))
+                            )}
+
+                        </TableBody>
+
+                    </Table>
+
+                </TableContainer>
+
+            </DialogContent>
+
+        </Dialog>
+    );
+}
