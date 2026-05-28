@@ -1,17 +1,16 @@
 import { useState } from "react";
-import { alpha } from "@mui/material/styles";
-import { Box, Divider, Typography, Dialog, DialogTitle, DialogContent } from "@mui/material";
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
+import { Box, Divider, Typography } from "@mui/material";
+import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 
-export default function Bandeau({title, subtitle}) {
+import PopinAlertes from "./popinAlertes"; // ✅ import
+
+export default function Bandeau({ title, subtitle }) {
 
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      {/* Bandeau bleu */}
+      {/* Bandeau */}
       <Box
         sx={{
           position: "relative",
@@ -21,41 +20,40 @@ export default function Bandeau({title, subtitle}) {
           paddingBottom: "12px",
         }}
       >
-     
-      <NotificationsOutlinedIcon
-        onClick={() => setOpen(true)}
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "92%",
-          transform: "translate(-50%, -50%)",
-          fontSize: 55,
-          color: "#D4DA17",
-          cursor: "pointer",
+
+        {/* Icône notif */}
+        <NotificationsOutlinedIcon
+          onClick={() => setOpen(true)}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "92%",
+            transform: "translate(-50%, -50%)",
+            fontSize: 55,
+            color: "#D4DA17",
+            cursor: "pointer",
           }}
         />
 
+        {/* Titre */}
         <Typography
-          variant="h1"
           align="center"
           sx={{
             fontSize: "50px",
             fontWeight: "bold",
-            margin: 0,
             color: "#F5F7F9",
           }}
         >
           {title}
         </Typography>
 
+        {/* Sous-titre */}
         <Typography
-          variant="body1"
           align="center"
           sx={{
             fontSize: "13px",
             fontWeight: "bold",
             marginTop: "15px",
-            marginBottom: 0,
             color: "#F5F7F9",
           }}
         >
@@ -63,55 +61,13 @@ export default function Bandeau({title, subtitle}) {
         </Typography>
       </Box>
 
-      {/* Divider à la limite du bleu */}
-      <Divider
-        sx={{
-          width: "100%",
-          borderBottomWidth: 1,
-          margin: 0,
-          border: "1px solid #8d8d8d",
-        }}
-      />
+      <Divider sx={{ width: "100%", border: "1px solid #8d8d8d" }} />
 
-
-      {/* Pop-in pour les notifications */}
-      <Dialog
+      {/* ✅ Popin séparée */}
+      <PopinAlertes
         open={open}
         onClose={() => setOpen(false)}
-        maxWidth="sm"
-        fullWidth
->
-      {/* ✅ Titre + croix */}
-      <DialogTitle
-        sx={{
-          textAlign: "center",
-          fontSize: "30px",
-          position: "relative",
-        }}
-      >
-        Alertes
-
-        {/* ✅ Croix en haut à droite */}
-        <IconButton
-          aria-label="fermer"
-          onClick={() => setOpen(false)}
-          sx={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-
-      <DialogContent>
-        <Typography>
-          Alerte 1
-        </Typography>
-      </DialogContent>
-    </Dialog>
+      />
     </>
   );
 }
