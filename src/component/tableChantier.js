@@ -15,12 +15,13 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import PopinInfoChantier from "./popinInfoChantier"; 
 import PopinEditChantier from "./popinEditChantier";
 
-export default function TableTeam({ onChantierUpdated, filtres, search }) {
+export default function TableTeam({ onChantierUpdated, filtres, search, selectedId }) {
   const [chantiers, setChantiers] = useState([]);
 
   const normalize = (str) => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
   const filteredChantiers = chantiers.filter(chantier => {
+    if(selectedId && chantier.id_chantier !== selectedId){return false;}
     if(search && !normalize(chantier.titre).includes(normalize(search))) {return false;}
     if(filtres?.statuts?.length > 0 && !filtres.statuts.includes(String(chantier.id_statut))) {return false;}
     if(filtres?.priorites?.length > 0 && !filtres.priorites.includes(String(chantier.id_priorite))) {return false;}

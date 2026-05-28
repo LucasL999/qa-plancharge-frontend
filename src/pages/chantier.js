@@ -25,12 +25,13 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 
 import {getPrev, getCons} from "../services/chantierService.js"
+import {useLocation} from "react-router-dom";
 
 //DEBUT PAGE
 export default function Chantier() {
 
   const [refreshTableKey, setRefreshTableKey] = useState(0); // clé pour forcer le rafraîchissement de la table
-
+  const [refreshAlertes, setRefreshAlertes] = useState(0); // clé pour forcer le rafraîchissement des alertes
   const [openPopin, setOpenPopin] = useState(false); 
 
   const openPopinNewChantier = () => setOpenPopin(true);
@@ -40,6 +41,10 @@ export default function Chantier() {
 
   const openPopinFiltres = () => setOpenPopinFiltre(true);
   const closePopinFiltres = () => setOpenPopinFiltre(false);
+
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const chantierId = params.get("id");
 
   const [search, setSearch] = useState("");
 
@@ -104,13 +109,14 @@ export default function Chantier() {
     const refreshAll = async () => {
       await refreshKpis();
       setRefreshTableKey(prevKey => prevKey + 1); // Incrémente la clé pour forcer le rafraîchissement de la table
+      setRefreshAlertes(prevKey => prevKey + 1); // Incrémente la clé pour forcer le rafraîchissement des alertes
     };
 
 
 
   return (
     <>
-      <Bandeau title="Chantiers" subtitle="Gestion des chantiers QA" />
+      <Bandeau title="Chantiers" subtitle="Gestion des chantiers QA" refreshTrigger={refreshAlertes} />
 
       <Box sx={{ paddingTop: "26px", paddingLeft: "100px", height: "180px" }}>
         <Grid container spacing={2} alignItems="center">
@@ -262,7 +268,7 @@ export default function Chantier() {
       </Box>
 
       <Box sx={{ paddingLeft: "100px", paddingRight: "100px", paddingTop: "30px", display: "flex", justifyContent: "center" }}>
-        <TableChantier key={refreshTableKey} onChantierUpdated={refreshKpis} filtres={filtres} search={search} />
+        <TableChantier key={refreshTableKey} onChantierUpdated={refreshAll} filtres={filtres} search={search} selectedId={chantierId} />
       </Box>
 
       {/* POPIN NOUVEAU CHANTIER */}

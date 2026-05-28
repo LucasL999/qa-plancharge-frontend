@@ -115,12 +115,11 @@ export default function PopinEditChantier({ open, onClose, chantier }) {
                     fin: fin || null,
                 }
                 const result = await updateChantier(chantierData);
-                console.log("Chantier créé avec succès");
+                console.log("Chantier updated avec succès");
                 
     
                 handleClose();
                 onClose();
-                
             } catch (error){
                 alert("Erreur lors de la modification du chantier.");
                 console.error(error);

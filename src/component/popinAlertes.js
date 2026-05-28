@@ -16,9 +16,12 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import React from "react";
 import {getAlertes} from "../services/chantierService.js"
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function PopinAlertes({ open, onClose }) {
   const [alertes, setAlertes] = useState([]);
+
+  const navigateChantier = useNavigate();
 
   useEffect(() => {
     const fetchAlertes = async () => {
@@ -70,7 +73,7 @@ export default function PopinAlertes({ open, onClose }) {
       <TableBody>
         {alertes.map((alerte) => (
           <TableRow key={alerte.id} sx={{ backgroundColor:'#fe9b9b'}}>
-            <TableCell sx={{border: '1px solid black'}}>
+            <TableCell sx={{border: '1px solid black'}} onClick={() => {navigateChantier(`/chantier?id=${alerte.id_chantier}`); onClose();}} style={{ cursor: 'pointer' }}>
                 <WarningAmberIcon sx={{ verticalAlign: 'middle', marginRight: 2, fontWeight: 'bold', fontSize: 30, color: '#ff0000' }} />
                 {alerte.message}
             </TableCell>

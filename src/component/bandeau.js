@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import PopinAlertes from "./popinAlertes"; // ✅ import
 import {getNbAlertes} from "../services/chantierService.js"
 
-export default function Bandeau({ title, subtitle }) {
+export default function Bandeau({ title, subtitle, refreshTrigger }) {
 
   const [open, setOpen] = useState(false);
   const [alertes, setAlertes] = useState(0); // État pour stocker le nombre d'alertes
@@ -22,7 +22,7 @@ export default function Bandeau({ title, subtitle }) {
     };
 
     fetchNbAlertes();
-  }, []);
+  }, [refreshTrigger]);
 
   return (
     <>

@@ -41,6 +41,7 @@ export default function Navbar({ onLogout }) {
         style={{
           display: "block",
           margin: "0 auto",
+          marginBottom: "18px",
           width: "40%",
           height: "auto",
         }}
