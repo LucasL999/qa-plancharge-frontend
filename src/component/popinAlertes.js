@@ -92,7 +92,15 @@ export default function PopinAlertes({ open, onClose }) {
         <Dialog
             open={open}
             onClose={onClose}
-            maxWidth="sm"
+            disablePortal
+            PaperProps={{
+                sx:{
+                    position: "absolute",
+                    top: 19,
+                    left: "31%",
+                }
+            }}
+            maxWidth="md"
             fullWidth
         >
 
@@ -103,8 +111,12 @@ export default function PopinAlertes({ open, onClose }) {
             <DialogTitle
                 sx={{
                     textAlign: "center",
-                    fontSize: "30px",
+                    fontSize: "32px",
                     position: "relative",
+                    backgroundColor: "#0178A5",
+                    paddingTop: "31px",
+                    paddingBottom: "31px",
+                    color: "#fff",
                 }}
             >
                 Alertes
@@ -129,7 +141,12 @@ export default function PopinAlertes({ open, onClose }) {
                 CONTENU DE LA POPIN
             ============================== */}
 
-            <DialogContent>
+            <DialogContent
+                sx={{
+                    marginTop: 3,
+                    marginBottom: 3,
+                }}
+            >
 
                 <TableContainer
                     component={Paper}
@@ -177,23 +194,18 @@ export default function PopinAlertes({ open, onClose }) {
                                         key={alerte.id}
                                         sx={{
                                             backgroundColor: "#fe9b9b",
+                                            marginBottom: 1,
                                         }}
                                     >
 
                                         <TableCell
-                                            sx={{
-                                                border: "1px solid black",
-                                            }}
-
                                             // Au clic sur une alerte :
                                             // 1. Redirection vers le chantier
                                             // 2. Fermeture de la popin
                                             onClick={() => {
-
                                                 navigateChantier(
                                                     `/chantier?id=${alerte.id_chantier}`
                                                 );
-
                                                 onClose();
                                             }}
 
