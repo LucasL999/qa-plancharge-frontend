@@ -22,6 +22,7 @@ import {
 // Material UI Icons
 import CloseIcon from "@mui/icons-material/Close";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
 
 // React Router
 import { useNavigate } from "react-router-dom";
@@ -55,7 +56,6 @@ export default function PopinAlertes({ open, onClose }) {
 
         // Fonction appelée pour récupérer les alertes
         const fetchAlertes = async () => {
-
             try {
 
                 // Appel API
@@ -73,6 +73,7 @@ export default function PopinAlertes({ open, onClose }) {
                 );
             }
         };
+
 
         // On charge les alertes uniquement
         // lorsque la popin est ouverte
@@ -92,7 +93,15 @@ export default function PopinAlertes({ open, onClose }) {
         <Dialog
             open={open}
             onClose={onClose}
-            maxWidth="sm"
+            disablePortal
+            PaperProps={{
+                sx:{
+                    position: "absolute",
+                    top: 19,
+                    left: "31%",
+                }
+            }}
+            maxWidth="md"
             fullWidth
         >
 
@@ -103,8 +112,12 @@ export default function PopinAlertes({ open, onClose }) {
             <DialogTitle
                 sx={{
                     textAlign: "center",
-                    fontSize: "30px",
+                    fontSize: "32px",
                     position: "relative",
+                    backgroundColor: "#0178A5",
+                    paddingTop: "31px",
+                    paddingBottom: "31px",
+                    color: "#fff",
                 }}
             >
                 Alertes
@@ -129,7 +142,12 @@ export default function PopinAlertes({ open, onClose }) {
                 CONTENU DE LA POPIN
             ============================== */}
 
-            <DialogContent>
+            <DialogContent
+                sx={{
+                    marginTop: 3,
+                    marginBottom: 3,
+                }}
+            >
 
                 <TableContainer
                     component={Paper}
@@ -175,30 +193,32 @@ export default function PopinAlertes({ open, onClose }) {
 
                                     <TableRow
                                         key={alerte.id}
-                                        sx={{
-                                            backgroundColor: "#fe9b9b",
+                                        sx={{                                            
+                                            marginBottom: 1,
                                         }}
                                     >
 
                                         <TableCell
-                                            sx={{
-                                                border: "1px solid black",
-                                            }}
-
                                             // Au clic sur une alerte :
                                             // 1. Redirection vers le chantier
                                             // 2. Fermeture de la popin
                                             onClick={() => {
-
                                                 navigateChantier(
                                                     `/chantier?id=${alerte.id_chantier}`
                                                 );
-
                                                 onClose();
                                             }}
 
-                                            style={{
+                                            sx={{
                                                 cursor: "pointer",
+                                                backgroundColor: "#fe9b9b",
+                                                fontSize: "16px",
+                                                display: "flex",
+                                                alignItems: "center",
+
+                                                "&:hover .arrow-icon": {
+                                                    transform: "translateX(5px) ",
+                                                },
                                             }}
                                         >
 
@@ -206,15 +226,27 @@ export default function PopinAlertes({ open, onClose }) {
                                             <WarningAmberIcon
                                                 sx={{
                                                     verticalAlign: "middle",
-                                                    marginRight: 2,
+                                                    marginRight: 4,
                                                     fontWeight: "bold",
-                                                    fontSize: 30,
+                                                    fontSize: 35,
                                                     color: "#ff0000",
                                                 }}
                                             />
 
                                             {/* Message de l'alerte */}
                                             {alerte.message}
+
+                                            {/* Icône de redirection */}
+                                            <ArrowCircleRightOutlinedIcon
+                                            className="arrow-icon"
+                                                sx={{
+                                                    verticalAlign: "middle",
+                                                    marginLeft: "auto",
+                                                    fontSize: 25,
+                                                    color: "#393b3b",
+                                                    transition: "transform 0.2s ease",
+                                                }}
+                                            />
 
                                         </TableCell>
 

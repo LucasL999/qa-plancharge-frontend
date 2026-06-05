@@ -45,8 +45,8 @@ export default function Bandeau({ title, subtitle, refreshTrigger }) {
             top: -9,
             right: -12,
             fontSize: '14px',
-            height: '20px',
-            minWidth: '20px',
+            height: '18px',
+            minWidth: '18px',
           }}}>
         <NotificationsOutlinedIcon
           onClick={() => setOpen(true)}

@@ -15,6 +15,11 @@ export default function Card4({title, value, icon}) {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        transition: "transform 0.2s",
+        "&:hover": {
+          transform: "translateY(-4px)",
+          boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)",
+        },
         
     }}>
       <div style={{display: "flex", alignItems: "center", gap: "8px", color: "#009951", }}>

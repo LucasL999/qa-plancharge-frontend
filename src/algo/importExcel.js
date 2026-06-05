@@ -1,35 +1,82 @@
-// ImportExcel.js
+// ==============================
+// IMPORTS
+// ==============================
+
 import * as XLSX from "xlsx";
+
+
+// ==============================
+// COMPOSANT PRINCIPAL
+// ==============================
 
 export default function ImportExcel({ onDataExtracted }) {
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    // ==============================
+    // GESTION DU CHARGEMENT FICHIER
+    // ==============================
 
-    const reader = new FileReader();
+    const handleFileChange = (e) => {
 
-    reader.onload = (event) => {
-      const data = new Uint8Array(event.target.result);
-      const workbook = XLSX.read(data, { type: "array" });
+        // Récupération du fichier sélectionné
+        const file = e.target.files[0];
 
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
+        // Aucun fichier sélectionné
+        if (!file) return;
 
-      const json = XLSX.utils.sheet_to_json(sheet);
+        // Création du FileReader
+        const reader = new FileReader();
 
-      // ✅ exemple : colonne "TitreChantier"
-      const chantiers = json
-        .map(row => row.TitreChantier)
-        .filter(Boolean);
 
-      // 🔥 on remonte les données au parent
-      onDataExtracted(chantiers);
+        // ==============================
+        // LECTURE DU FICHIER
+        // ==============================
+
+        reader.onload = (event) => {
+
+            // Conversion du fichier en tableau binaire
+            const data = new Uint8Array(event.target.result);
+
+            // Lecture du workbook Excel
+            const workbook = XLSX.read(data, {
+                type: "array",
+            });
+
+            // Récupération de la première feuille
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+
+            // Conversion de la feuille en JSON
+            const json = XLSX.utils.sheet_to_json(sheet);
+
+
+            // ==============================
+            // EXTRACTION DES CHANTIERS
+            // ==============================
+
+            // Extraction de la colonne "TitreChantier"
+            const chantiers = json
+                .map((row) => row.TitreChantier)
+                .filter(Boolean);
+
+
+            // ==============================
+            // ENVOI DES DONNÉES AU PARENT
+            // ==============================
+
+            onDataExtracted(chantiers);
+        };
+
+
+        // Lecture du fichier Excel
+        reader.readAsArrayBuffer(file);
     };
 
-    reader.readAsArrayBuffer(file);
-  };
 
-  // ⛔ composant "logique" → pas d’affichage
-  return { handleFileChange };
+    // ==============================
+    // COMPOSANT LOGIQUE UNIQUEMENT
+    // ==============================
+
+    return {
+        handleFileChange,
+    };
 }

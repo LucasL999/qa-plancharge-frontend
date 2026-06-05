@@ -1,9 +1,11 @@
 import { Box, Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
-export default function Card3({title, value, icon, unit}) {
+export default function Card3({title, value, icon, unit, onClick}) {
     return(
-        <Box sx={{
+        <Box
+          onClick={onClick} 
+          sx={{
         width: 240,
         height: 155,
         backgroundColor: alpha("#6B6B6B", 0.05),
@@ -20,7 +22,7 @@ export default function Card3({title, value, icon, unit}) {
           transform: "translateY(-4px)",
           boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)",
         },
-        
+        cursor: "pointer"
     }}>
       <div style={{display: "flex", alignItems: "center", gap: "8px", color: "#0178A5", }}>
         <div>
