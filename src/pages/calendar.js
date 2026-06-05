@@ -15,6 +15,7 @@ import Schedule from "../component/schedule";
 
 // Hooks React
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Fonctions de calcul des jours ouvrés
 import { getWorkingDaysUntilYearEnd } from "../algo/joursOuvresAn";
@@ -24,6 +25,11 @@ import { getWorkingDaysUntilMonthEnd } from "../algo/joursOuvresMois";
 // COMPOSANT PRINCIPAL : Calendar
 // -----------------------------------------------------------------------------
 export default function Calendar() {
+
+  // ---------------------------------------------------------------------------
+  // NAVIGATION HANDLERS (redirection vers modules métiers)
+  // ---------------------------------------------------------------------------
+  const navigateJours = useNavigate();
 
   // États liés aux jours ouvrés
   const [workingDaysYear, setWorkingDaysYear] = useState(null); // Jours ouvrés restants dans l'année
@@ -85,7 +91,7 @@ export default function Calendar() {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Card3 title="Annuel" value={workingDaysYear} icon="" unit="J-ouvrés"/>
+            <Card3 title="Annuel" value={workingDaysYear} icon="" unit="J-ouvrés" onClick={() => navigateJours("/team")}/>
           </Grid>
 
         </Grid>

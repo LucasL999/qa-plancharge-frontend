@@ -24,6 +24,7 @@ import { getWorkingDaysUntilYearEnd } from "../algo/joursOuvresAn";
 
 // React
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Icônes MUI
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
@@ -35,6 +36,11 @@ import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 // PAGE TEAM
 // -----------------------------------------------------------------------------
 export default function Team() {
+
+  // ---------------------------------------------------------------------------
+  // NAVIGATION HANDLERS (redirection vers modules métiers)
+  // ---------------------------------------------------------------------------
+  const navigateJours = useNavigate();
 
   // ---------------------------------------------------------------------------
   // STATE - CAPACITÉ / DONNÉES MÉTIER
@@ -120,18 +126,10 @@ export default function Team() {
         <Grid container spacing={2} alignItems="center" justifyContent="center">
 
           <Grid item xs={12} md={4}>
-            <Card3
-              title="Nombre de QA"
-              value={nbQA}
-              icon={<PeopleOutlineOutlinedIcon />}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <Card3
-              title="CAF moyen"
-              value={cafMoy}
-              icon={<TimelineOutlinedIcon />}
+            <Card4
+              title="Capacité disponible"
+              value={totalCapacity}
+              icon={<ThumbUpAltOutlinedIcon />}
             />
           </Grid>
 
@@ -144,10 +142,27 @@ export default function Team() {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Card4
-              title="Capacité disponible"
-              value={totalCapacity}
-              icon={<ThumbUpAltOutlinedIcon />}
+            <Card3
+              title="CAF moyenne"
+              value={cafMoy}
+              icon={<TimelineOutlinedIcon />}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card3
+              title="Nombre de QA"
+              value={nbQA}
+              icon={<PeopleOutlineOutlinedIcon />}
+            />
+          </Grid>                            
+
+          <Grid item xs={12} md={4}>
+            <Card3
+              title="J-ouvrés annuels"
+              value={workingDays}
+              icon={<InsertInvitationOutlinedIcon />}
+              onClick={() => navigateJours("/calendar")}
             />
           </Grid>
 
