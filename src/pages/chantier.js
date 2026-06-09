@@ -29,6 +29,7 @@ import PopinFiltre from "../component/popinFiltre";
 // Import métier / services
 import ImportExcel from "../algo/importExcel";
 import { getPrev, getCons } from "../services/chantierService.js";
+import { exportExcel } from "../services/exportExcelService.js";
 
 // Icônes MUI
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -152,6 +153,25 @@ export default function Chantier() {
   };
 
   // ---------------------------------------------------------------------------
+  // EXPORT EXCEL
+  // ---------------------------------------------------------------------------
+  const handleExportExcel = async () => {
+    try {
+      const blob = await exportExcel();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "chantiers.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Erreur lors de l'export Excel", error);
+    }
+  };
+
+  // ---------------------------------------------------------------------------
   // RENDER
   // -----------------------------------------------------------------------------
   return (
@@ -258,7 +278,13 @@ export default function Chantier() {
 
         {/* export excel */}
         <Button
-          variant="contained"
+          variant="contained"          
+          onClick={(e) => {
+            e.preventDefault(); // ✅ bloque comportement navigateur
+            e.stopPropagation(); // ✅ sécurité supplémentaire
+            handleExportExcel();
+          }}
+
           sx={{
             whiteSpace: "nowrap",
             borderRadius: "100px",
