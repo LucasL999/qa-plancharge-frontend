@@ -70,6 +70,30 @@ export async function getEvents() {
   }
 }
 
+export async function getEventsOther() {
+  try {
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/eventsOther`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch events");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    throw error;
+  }
+}
+
 // -----------------------------------------------------------------------------
 // API - SUPPRESSION D'UN ÉVÉNEMENT
 // -----------------------------------------------------------------------------

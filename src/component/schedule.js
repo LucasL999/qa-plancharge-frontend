@@ -3,12 +3,13 @@ import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutl
 import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 import PopinNewEvent from "./popinNewEvent";
 import PopinEditEvent from "./popinEditEvent";
-import { getEvents } from "../services/calendarService.js";
+import { getEvents, getEventsOther } from "../services/calendarService.js";
 
 export default function Schedule({ onMonthYearChange }) {
 
   const today = new Date();
   const [events, setEvents] = useState([]);
+  const [eventsOther, setEventsOther] = useState([]);
   const [month, setMonth] = useState(today.getMonth());
   const [year, setYear] = useState(today.getFullYear());
 
@@ -28,8 +29,18 @@ export default function Schedule({ onMonthYearChange }) {
     }
   };
 
+  const fetchEventsOther = async () => {
+    try {
+      const res = await getEventsOther();
+      setEventsOther(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchEvents();
+    fetchEventsOther();
   }, []);
 
   /* ================= POPINS ================= */
@@ -117,6 +128,31 @@ export default function Schedule({ onMonthYearChange }) {
     });
   };
 
+  const eventOther = (date) => {
+  if (!Array.isArray(eventsOther)) return false;
+
+  const shiftedDate = new Date(date);
+  shiftedDate.setDate(shiftedDate.getDate() - 1);
+
+  const key = formatDateKey(shiftedDate);
+
+  // ✅ 1. récupérer les events du jour
+  const matchedEvents = eventsOther.filter(event => {
+    if (!event.date_debut || !event.date_fin) return false;
+
+    const start = event.date_debut.split("T")[0];
+    const end = event.date_fin.split("T")[0];
+
+    return key >= start && key <= end;
+  });
+
+  // ✅ 2. récupérer les prénoms
+  const firstnames = matchedEvents.map(e => e.firstname).join(", ");
+
+  // ✅ 4. retourner boolean (comme avant)
+  return matchedEvents.length > 0;
+};
+
   useEffect(() => {
     onMonthYearChange?.({ month, year });
   }, [month, year]);
@@ -184,6 +220,7 @@ export default function Schedule({ onMonthYearChange }) {
           const isWeekend = [0, 6].includes(date.getDay());
           const ferieName = isFerie(date);
           const hasEvent = hasEventOnDate(date);
+          const hasEventOther = eventOther(date);
 
           let background = "#f5f5f5";
           let color = "black";
@@ -204,8 +241,8 @@ export default function Schedule({ onMonthYearChange }) {
               onClick={() => {
                 if (hasEvent) {
                   openEditEvent(dayNumber + 1);
-                } else if(!isWeekend) {
-                  if(!ferieName){
+                } else if (!isWeekend) {
+                  if (!ferieName) {
                     openPopinNewEvent(dayNumber + 1);
                   }
                 }
@@ -214,6 +251,7 @@ export default function Schedule({ onMonthYearChange }) {
                 ...styles.dayCell,
                 background,
                 color,
+                position: "relative", // ✅ IMPORTANT pour position absolute
                 border:
                   dayNumber === today.getDate() &&
                   month === today.getMonth() &&
@@ -222,9 +260,27 @@ export default function Schedule({ onMonthYearChange }) {
                     : "none"
               }}
             >
-              {dayNumber}
+            {/* numéro du jour */}
+            {dayNumber}
+
+            {/* ✅ baguette ici */}
+            {hasEventOther && (
+            <div
+              style={{
+                position: "absolute",
+                bottom: "4px",
+                left: "4px",
+                right: "4px",
+                height: "6px",
+                borderRadius: "2px",
+                backgroundColor: "#0178A5"
+              }}
+              
+            />
+            )}
             </div>
           );
+
         })}
       </div>
     </div>
