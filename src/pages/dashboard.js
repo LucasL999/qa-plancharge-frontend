@@ -99,7 +99,7 @@ export default function Dashboard() {
       ? []
       : totalCapacity.map(qa => ({
           ...qa,
-          capacity: workingDays - (qa.nbused ?? 0),
+          capacity: workingDays - (qa.nbrestant ?? 0),
         }));
 
   const total = Capacity.reduce((sum, qa) => sum + qa.capacity, 0);

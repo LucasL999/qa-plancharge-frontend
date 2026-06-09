@@ -15,7 +15,7 @@ export default function PopinEditUser({ open, onClose, userData }) {
         setPrenom(userData?.firstname || "");
         setEmail(userData?.email || "");
         setSelectedRole(userData?.role || "")
-        setAbsences(userData?.nbused || 0);
+        setAbsences(userData?.nbrestant || 0);
     }, [userData]);
 
     useEffect(() => {
