@@ -103,7 +103,7 @@ export default function Team() {
       ? []
       : QAs.map(qa => ({
           ...qa,
-          capacity: workingDays - (qa.nbrestant ?? 0),
+          capacity: workingDays - (qa.nbannual ?? 0),
         }));
 
   // capacité totale
