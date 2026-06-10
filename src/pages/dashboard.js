@@ -140,8 +140,8 @@ export default function Dashboard() {
 
   // Delta global = capacité - charge prévue
   useEffect(() => {
-    setDelta(total - prev);
-  });
+    setDelta(total - raf);
+  }, [total, raf]);
 
   // ---------------------------------------------------------------------------
   // RENDER
