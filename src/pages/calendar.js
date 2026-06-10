@@ -34,10 +34,40 @@ export default function Calendar() {
   // États liés aux jours ouvrés
   const [workingDaysYear, setWorkingDaysYear] = useState(null); // Jours ouvrés restants dans l'année
   const [workingDaysMonth, setWorkingDaysMonth] = useState(null); // Jours ouvrés restants dans le mois
+  const [displayWorkingDaysYear, setDisplayWorkingDaysYear] = useState(0); // Valeur animée pour l'affichage annuel
+  const [displayWorkingDaysMonth, setDisplayWorkingDaysMonth] = useState(0); // Valeur animée pour l'affichage mensuel
 
   // États liés à la sélection du calendrier
   const [month, setMonth] = useState(null);
   const [year, setYear] = useState(null);
+
+  // Fonction d'animation pour les compteurs de KPI
+  const animateValue = (start, end, setter, duration = 850) => {
+    if (start === end) return;
+
+    let startTime = null;
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+
+      const progress = timestamp - startTime;
+      const t = Math.min(progress / duration, 1);
+      const eased = easeOutCubic(t);
+
+      const value = Math.floor(start + (end - start) * eased);
+      setter(value);
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setter(end);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  };
 
   // -----------------------------------------------------------------------------
   // Chargement initial : calcul des jours ouvrés annuels au montage du composant
@@ -48,7 +78,9 @@ export default function Calendar() {
       setWorkingDaysYear(result);
     }
     load();
-  }, []);
+    const end = Number(workingDaysYear || 0);
+    animateValue(365, end, setDisplayWorkingDaysYear);
+  }, [workingDaysYear]);
 
   // -----------------------------------------------------------------------------
   // Mise à jour des jours ouvrés mensuels lors d'un changement de mois ou d'année
@@ -72,7 +104,9 @@ export default function Calendar() {
     }
 
     load();
-  }, [month, year]);
+    const end = Number(workingDaysMonth || 0);
+    animateValue(0, end, setDisplayWorkingDaysMonth);
+  }, [month, year, workingDaysMonth]);
 
   // -----------------------------------------------------------------------------
   // RENDER
@@ -87,11 +121,11 @@ export default function Calendar() {
         <Grid container spacing={2} alignItems="center" justifyContent="flex-end" marginRight="30px">
 
           <Grid item xs={12} md={4}>
-            <Card3 title="Mensuel" value={workingDaysMonth} icon="" unit="J-ouvrés" />
+            <Card3 title="Mensuel" value={displayWorkingDaysMonth} icon="" unit="J-ouvrés" />
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Card3 title="Annuel" value={workingDaysYear} icon="" unit="J-ouvrés" onClick={() => navigateJours("/team")} />
+            <Card3 title="Annuel" value={displayWorkingDaysYear} icon="" unit="J-ouvrés" onClick={() => navigateJours("/team")} />
           </Grid>
 
         </Grid>
