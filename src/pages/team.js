@@ -1,13 +1,13 @@
- // -----------------------------------------------------------------------------
- // PAGE TEAM - PLAN DE CHARGE
- // -----------------------------------------------------------------------------
- // Cette page présente la capacité de charge des QA :
- // - nombre de QA
- // - CAF moyen
- // - capacité mensuelle théorique
- // - capacité disponible réelle
- // - détail par QA dans un tableau
- // -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// PAGE TEAM - PLAN DE CHARGE
+// -----------------------------------------------------------------------------
+// Cette page présente la capacité de charge des QA :
+// - nombre de QA
+// - CAF moyen
+// - capacité mensuelle théorique
+// - capacité disponible réelle
+// - détail par QA dans un tableau
+// -----------------------------------------------------------------------------
 
 // UI Material UI
 import { Box, Grid } from "@mui/material";
@@ -102,9 +102,9 @@ export default function Team() {
     workingDays === null
       ? []
       : QAs.map(qa => ({
-          ...qa,
-          capacity: workingDays - (qa.nbannual ?? 0),
-        }));
+        ...qa,
+        capacity: workingDays - (qa.nbannual ?? 0),
+      }));
 
   // capacité totale
   const totalCapacity = QAsWithCapacity.reduce(
@@ -155,7 +155,7 @@ export default function Team() {
               value={nbQA}
               icon={<PeopleOutlineOutlinedIcon />}
             />
-          </Grid>                            
+          </Grid>
 
           <Grid item xs={12} md={4}>
             <Card3

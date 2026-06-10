@@ -4,7 +4,7 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import { useEffect } from "react";
 
 import PopinAlertes from "./popinAlertes"; // ✅ import
-import {getNbAlertes} from "../services/chantierService.js"
+import { getNbAlertes } from "../services/chantierService.js"
 
 export default function Bandeau({ title, subtitle, refreshTrigger }) {
 
@@ -39,26 +39,28 @@ export default function Bandeau({ title, subtitle, refreshTrigger }) {
 
         {/* Icône notif */}
         <Box sx={{ position: "absolute", top: "50%", left: "92%", transform: "translate(-50%, -50%)" }}>
-        <Badge badgeContent={alertes} color="error" overlap="circular" 
-          anchorOrigin={{vertical: "top", horizontal: "right"}}
-          sx={{"& .MuiBadge-badge": {
-            top: -9,
-            right: -12,
-            fontSize: '14px',
-            height: '18px',
-            minWidth: '18px',
-          }}}>
-        <NotificationsOutlinedIcon
-          onClick={() => setOpen(true)}
-          sx={{
-            position: "absolute",
-            transform: "translate(-50%, -50%)",
-            fontSize: 55,
-            color: "#D4DA17",
-            cursor: "pointer",
-          }}
-        />
-        </Badge>
+          <Badge badgeContent={alertes} color="error" overlap="circular"
+            anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            sx={{
+              "& .MuiBadge-badge": {
+                top: -9,
+                right: -12,
+                fontSize: '14px',
+                height: '18px',
+                minWidth: '18px',
+              }
+            }}>
+            <NotificationsOutlinedIcon
+              onClick={() => setOpen(true)}
+              sx={{
+                position: "absolute",
+                transform: "translate(-50%, -50%)",
+                fontSize: 55,
+                color: "#D4DA17",
+                cursor: "pointer",
+              }}
+            />
+          </Badge>
         </Box>
 
         {/* Titre */}

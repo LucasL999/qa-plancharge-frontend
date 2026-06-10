@@ -63,6 +63,7 @@ export default function Dashboard() {
   const [cons, setCons] = useState("");
   const [raf, setRaf] = useState("");
   const [delta, setDelta] = useState("");
+  const [displayDelta, setDisplayDelta] = useState(0);
 
   // ---------------------------------------------------------------------------
   // EFFECT - chargement jours ouvrés annuels
@@ -98,9 +99,9 @@ export default function Dashboard() {
     workingDays === null
       ? []
       : totalCapacity.map(qa => ({
-          ...qa,
-          capacity: workingDays - (qa.nbrestant ?? 0),
-        }));
+        ...qa,
+        capacity: workingDays - (qa.nbrestant ?? 0),
+      }));
 
   const total = Capacity.reduce((sum, qa) => sum + qa.capacity, 0);
 
@@ -143,6 +144,42 @@ export default function Dashboard() {
     setDelta(total - raf);
   }, [total, raf]);
 
+  useEffect(() => {
+    const end = Number(delta) || 0;
+    const start = displayDelta;
+
+    if (start === end) return;
+
+    const duration = 800;
+    let startTime = null;
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+
+      const progress = timestamp - startTime;
+      const t = Math.min(progress / duration, 1);
+
+      const eased = easeOutCubic(t);
+
+      // ✅ interpolation propre (pas de casse)
+      const value = Math.floor(start + (end - start) * eased);
+
+      setDisplayDelta(value);
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setDisplayDelta(end);
+      }
+    };
+
+    requestAnimationFrame(animate);
+
+  }, [delta]);
+
+
   // ---------------------------------------------------------------------------
   // RENDER
   // -----------------------------------------------------------------------------
@@ -157,7 +194,7 @@ export default function Dashboard() {
           {/* LIGNE 1 - Delta + Capacité + RAF */}
           {/* ----------------------------------------------------------------- */}
           <Grid item xs={12} md={4}>
-            <Delta value={delta} onClick={() => navigateDelta("/chantier")} />
+            <Delta value={displayDelta} onClick={() => navigateDelta("/chantier")} />
           </Grid>
 
           <Grid item xs={12} md={8}>

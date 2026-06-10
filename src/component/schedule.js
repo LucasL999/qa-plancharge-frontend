@@ -129,29 +129,29 @@ export default function Schedule({ onMonthYearChange }) {
   };
 
   const eventOther = (date) => {
-  if (!Array.isArray(eventsOther)) return false;
+    if (!Array.isArray(eventsOther)) return false;
 
-  const shiftedDate = new Date(date);
-  shiftedDate.setDate(shiftedDate.getDate() - 1);
+    const shiftedDate = new Date(date);
+    shiftedDate.setDate(shiftedDate.getDate() - 1);
 
-  const key = formatDateKey(shiftedDate);
+    const key = formatDateKey(shiftedDate);
 
-  // ✅ 1. récupérer les events du jour
-  const matchedEvents = eventsOther.filter(event => {
-    if (!event.date_debut || !event.date_fin) return false;
+    // ✅ 1. récupérer les events du jour
+    const matchedEvents = eventsOther.filter(event => {
+      if (!event.date_debut || !event.date_fin) return false;
 
-    const start = event.date_debut.split("T")[0];
-    const end = event.date_fin.split("T")[0];
+      const start = event.date_debut.split("T")[0];
+      const end = event.date_fin.split("T")[0];
 
-    return key >= start && key <= end;
-  });
+      return key >= start && key <= end;
+    });
 
-  // ✅ 2. récupérer les prénoms
-  const firstnames = matchedEvents.map(e => e.firstname).join(", ");
+    // ✅ 2. récupérer les prénoms
+    const firstnames = matchedEvents.map(e => e.firstname).join(", ");
 
-  // ✅ 4. retourner boolean (comme avant)
-  return matchedEvents.length > 0;
-};
+    // ✅ 4. retourner boolean (comme avant)
+    return matchedEvents.length > 0;
+  };
 
   useEffect(() => {
     onMonthYearChange?.({ month, year });
@@ -254,30 +254,30 @@ export default function Schedule({ onMonthYearChange }) {
                 position: "relative", // ✅ IMPORTANT pour position absolute
                 border:
                   dayNumber === today.getDate() &&
-                  month === today.getMonth() &&
-                  year === today.getFullYear()
+                    month === today.getMonth() &&
+                    year === today.getFullYear()
                     ? "2px solid #D4DA17"
                     : "none"
               }}
             >
-            {/* numéro du jour */}
-            {dayNumber}
+              {/* numéro du jour */}
+              {dayNumber}
 
-            {/* ✅ baguette ici */}
-            {hasEventOther && (
-            <div
-              style={{
-                position: "absolute",
-                bottom: "4px",
-                left: "4px",
-                right: "4px",
-                height: "6px",
-                borderRadius: "2px",
-                backgroundColor: "#0178A5"
-              }}
-              
-            />
-            )}
+              {/* ✅ baguette ici */}
+              {hasEventOther && (
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "4px",
+                    left: "4px",
+                    right: "4px",
+                    height: "6px",
+                    borderRadius: "2px",
+                    backgroundColor: "#0178A5"
+                  }}
+
+                />
+              )}
             </div>
           );
 

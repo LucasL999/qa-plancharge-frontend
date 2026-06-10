@@ -1,45 +1,45 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { useEffect, useState } from 'react';
-import {jwtDecode} from "jwt-decode";
-import {deleteEvent} from "../services/calendarService"
+import { jwtDecode } from "jwt-decode";
+import { deleteEvent } from "../services/calendarService"
 
 export default function PopinEditEvent({ open, onClose, date }) {
 
-    const [startDate, setStartDate] = useState("");
-    const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-    useEffect(() => {
-        if(date){
-          setStartDate(date.toISOString().split('T')[0]);
-          setEndDate(date.toISOString().split('T')[0]);
-        }
-    }, [date]);
+  useEffect(() => {
+    if (date) {
+      setStartDate(date.toISOString().split('T')[0]);
+      setEndDate(date.toISOString().split('T')[0]);
+    }
+  }, [date]);
 
-    const handleDelete = async () => {
-      try {
-    
-        const result = await deleteEvent(startDate, endDate);
-        console.log("Event supprimé avec succès");
-        // reset
-        setStartDate("");
-        setEndDate("");
-        onClose(true);
-    
-      } catch (error) {
-        console.error("Erreur suppression event:", error);
-      }
-    };
+  const handleDelete = async () => {
+    try {
 
-return (
+      const result = await deleteEvent(startDate, endDate);
+      console.log("Event supprimé avec succès");
+      // reset
+      setStartDate("");
+      setEndDate("");
+      onClose(true);
+
+    } catch (error) {
+      console.error("Erreur suppression event:", error);
+    }
+  };
+
+  return (
     <Dialog
       open={open}
       onClose={onClose}
       disablePortal
       PaperProps={{
-        sx:{
-            position: "absolute",
-            top: 17,
-            left: "31%",
+        sx: {
+          position: "absolute",
+          top: 17,
+          left: "31%",
         }
       }}
       maxWidth="md"
@@ -60,50 +60,50 @@ return (
         Modifier l'absence
       </DialogTitle>
       <Divider sx={{
-          width: "100%",
-          borderBottomWidth: 1,
-          margin: 0,
-          border: "1px solid #8d8d8d",
-        }} />
+        width: "100%",
+        borderBottomWidth: 1,
+        margin: 0,
+        border: "1px solid #8d8d8d",
+      }} />
 
       <DialogContent sx={{ mt: 3 }}>
 
         {/* PLANNING */}
         <Grid container spacing={2} sx={{ padding: "0 60px", paddingBottom: "40px" }}>
 
-            {/* Ligne 1 */}
-            <Grid size={5}>
-                <Field label={<strong>Date de début</strong>}>
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        type="date"
-                        value={startDate}
-                        sx={{
-                            "& fieldset": {
-                            borderRadius: "10px"
-                            },
-                            backgroundColor: "#fff"  
-                        }}    
-                    />
-                </Field>
-            </Grid>
-            <Grid size={5}>
-                <Field label={<strong>Date de fin</strong>}>
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        type="date"
-                        value={endDate}
-                        sx={{
-                            "& fieldset": {
-                            borderRadius: "10px"
-                            },
-                            backgroundColor: "#fff"  
-                        }}    
-                    />
-                </Field>
-            </Grid>
+          {/* Ligne 1 */}
+          <Grid size={5}>
+            <Field label={<strong>Date de début</strong>}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                type="date"
+                value={startDate}
+                sx={{
+                  "& fieldset": {
+                    borderRadius: "10px"
+                  },
+                  backgroundColor: "#fff"
+                }}
+              />
+            </Field>
+          </Grid>
+          <Grid size={5}>
+            <Field label={<strong>Date de fin</strong>}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                type="date"
+                value={endDate}
+                sx={{
+                  "& fieldset": {
+                    borderRadius: "10px"
+                  },
+                  backgroundColor: "#fff"
+                }}
+              />
+            </Field>
+          </Grid>
         </Grid>
       </DialogContent>
 

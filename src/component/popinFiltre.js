@@ -143,7 +143,7 @@ export default function PopinFiltre({ open, onClose, onApply }) {
                 ))}
               </Select>
             </Field>
-          </Grid>  
+          </Grid>
 
           {/* Statuts */}
           <Grid size={6}>
@@ -197,7 +197,7 @@ export default function PopinFiltre({ open, onClose, onApply }) {
             </Field>
           </Grid>
 
-          
+
 
         </Grid>
       </DialogContent>

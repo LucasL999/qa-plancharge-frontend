@@ -95,7 +95,7 @@ export default function PopinAlertes({ open, onClose }) {
             onClose={onClose}
             disablePortal
             PaperProps={{
-                sx:{
+                sx: {
                     position: "absolute",
                     top: 19,
                     left: "31%",
@@ -193,7 +193,7 @@ export default function PopinAlertes({ open, onClose }) {
 
                                     <TableRow
                                         key={alerte.id}
-                                        sx={{                                            
+                                        sx={{
                                             marginBottom: 1,
                                         }}
                                     >
@@ -238,7 +238,7 @@ export default function PopinAlertes({ open, onClose }) {
 
                                             {/* Icône de redirection */}
                                             <ArrowCircleRightOutlinedIcon
-                                            className="arrow-icon"
+                                                className="arrow-icon"
                                                 sx={{
                                                     verticalAlign: "middle",
                                                     marginLeft: "auto",

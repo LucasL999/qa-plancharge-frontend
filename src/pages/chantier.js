@@ -1,13 +1,13 @@
- // -----------------------------------------------------------------------------
- // PAGE CHANTIER
- // -----------------------------------------------------------------------------
- // Cette page gère :
- // - l’affichage des KPIs chantier (RAF, consommé, charge globale)
- // - la recherche et les filtres
- // - l’import/export Excel
- // - la création de chantier
- // - l’affichage du tableau principal
- // -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// PAGE CHANTIER
+// -----------------------------------------------------------------------------
+// Cette page gère :
+// - l’affichage des KPIs chantier (RAF, consommé, charge globale)
+// - la recherche et les filtres
+// - l’import/export Excel
+// - la création de chantier
+// - l’affichage du tableau principal
+// -----------------------------------------------------------------------------
 
 // Import UI Material UI
 import { alpha, Box, Divider, Grid, Button, TextField, Typography } from "@mui/material";
@@ -79,6 +79,9 @@ export default function Chantier() {
   const [prev, setPrev] = useState("");
   const [cons, setCons] = useState("");
   const [raf, setRaf] = useState("");
+  const [displayRAF, setDisplayRAF] = useState(0);
+  const [displayCons, setDisplayCons] = useState(0);
+  const [displayPrev, setDisplayPrev] = useState(0);
 
   // ---------------------------------------------------------------------------
   // POPIN HANDLERS
@@ -139,6 +142,111 @@ export default function Chantier() {
     setRaf(prev - cons);
   }, [prev, cons]);
 
+  useEffect(() => {
+    const end = Number(raf) || 0;
+    const start = displayRAF;
+
+    if (start === end) return;
+
+    const duration = 800;
+    let startTime = null;
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+
+      const progress = timestamp - startTime;
+      const t = Math.min(progress / duration, 1);
+
+      const eased = easeOutCubic(t);
+
+      // ✅ interpolation propre (pas de casse)
+      const value = Math.floor(start + (end - start) * eased);
+
+      setDisplayRAF(value);
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setDisplayRAF(end);
+      }
+    };
+
+    requestAnimationFrame(animate);
+
+  }, [raf]);
+
+  useEffect(() => {
+    const end = Number(cons) || 0;
+    const start = displayCons;
+
+    if (start === end) return;
+
+    const duration = 800;
+    let startTime = null;
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+
+      const progress = timestamp - startTime;
+      const t = Math.min(progress / duration, 1);
+
+      const eased = easeOutCubic(t);
+
+      // ✅ interpolation propre (pas de casse)
+      const value = Math.floor(start + (end - start) * eased);
+
+      setDisplayCons(value);
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setDisplayCons(end);
+      }
+    };
+
+    requestAnimationFrame(animate);
+
+  }, [cons]);
+
+  useEffect(() => {
+    const end = Number(prev) || 0;
+    const start = displayPrev;
+
+    if (start === end) return;
+
+    const duration = 800;
+    let startTime = null;
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+
+      const progress = timestamp - startTime;
+      const t = Math.min(progress / duration, 1);
+
+      const eased = easeOutCubic(t);
+
+      // ✅ interpolation propre (pas de casse)
+      const value = Math.floor(start + (end - start) * eased);
+
+      setDisplayPrev(value);
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setDisplayPrev(end);
+      }
+    };
+
+    requestAnimationFrame(animate);
+
+  }, [prev]);
+
   // ---------------------------------------------------------------------------
   // REFRESH HELPERS
   // ---------------------------------------------------------------------------
@@ -189,7 +297,7 @@ export default function Chantier() {
           <Grid item xs={12} md={4}>
             <Card6
               title="RAF QA"
-              value={raf}
+              value={displayRAF}
               icon={<ErrorOutlineIcon sx={{ color: "#009951", fontSize: 35, fontWeight: "bold" }} />}
               unit="JH"
               color="#009951"
@@ -199,7 +307,7 @@ export default function Chantier() {
           <Grid item xs={12} md={4}>
             <Card5
               title="Consommé"
-              value={cons}
+              value={displayCons}
               icon={<CheckCircleOutlineIcon sx={{ color: "#C00F0C", fontSize: 35 }} />}
               unit="JH"
               color="#9d0e0bdd"
@@ -209,7 +317,7 @@ export default function Chantier() {
           <Grid item xs={12} md={4}>
             <Card5
               title="Charge globale"
-              value={prev}
+              value={displayPrev}
               icon={<EqualizerIcon sx={{ color: "black", fontSize: 35 }} />}
               unit="JH"
               color="black"
@@ -281,7 +389,7 @@ export default function Chantier() {
 
         {/* export excel */}
         <Button
-          variant="contained"          
+          variant="contained"
           onClick={(e) => {
             e.preventDefault(); // ✅ bloque comportement navigateur
             e.stopPropagation(); // ✅ sécurité supplémentaire

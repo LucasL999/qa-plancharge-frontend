@@ -87,11 +87,11 @@ export default function Calendar() {
         <Grid container spacing={2} alignItems="center" justifyContent="flex-end" marginRight="30px">
 
           <Grid item xs={12} md={4}>
-            <Card3 title="Mensuel" value={workingDaysMonth} icon="" unit="J-ouvrés"/>
+            <Card3 title="Mensuel" value={workingDaysMonth} icon="" unit="J-ouvrés" />
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Card3 title="Annuel" value={workingDaysYear} icon="" unit="J-ouvrés" onClick={() => navigateJours("/team")}/>
+            <Card3 title="Annuel" value={workingDaysYear} icon="" unit="J-ouvrés" onClick={() => navigateJours("/team")} />
           </Grid>
 
         </Grid>

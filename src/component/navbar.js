@@ -99,7 +99,7 @@ export default function Navbar({ onLogout }) {
           fontSize: "16px",
           fontFamily: "Roboto, sans-serif",
           cursor: "pointer",
-          color: "black",
+          color: "red",
         }}
       >
         <LogoutIcon sx={{ marginRight: "8px" }} />
