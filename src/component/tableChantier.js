@@ -50,7 +50,7 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
   const [openPopinEdit, setOpenPopinEdit] = useState(false); // pour la popin d'édition chantier
   const [selectedChantier, setSelectedChantier] = useState(null);
   const [page, setPage] = useState(0); // pour la pagination
-  const [rowsPerPage, setRowsPerPage] = useState(6); // pour la pagination
+  const [rowsPerPage, setRowsPerPage] = useState(5); // pour la pagination
 
   const closePopinInfoChantier = () => setOpenPopinInfo(false);
   const closePopinEditChantier = async () => {

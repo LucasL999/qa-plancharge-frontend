@@ -10,7 +10,7 @@
  // -----------------------------------------------------------------------------
 
 // Import UI Material UI
-import { alpha, Box, Divider, Grid, Button, TextField } from "@mui/material";
+import { alpha, Box, Divider, Grid, Button, TextField, Typography } from "@mui/material";
 
 // React hooks
 import { useState, useEffect } from "react";
@@ -296,7 +296,7 @@ export default function Chantier() {
           }}
         >
           <FileUploadOutlinedIcon sx={{ mr: 1 }} />
-          EXCEL
+          Excel
         </Button>
 
         {/* import référentiel */}
@@ -314,7 +314,15 @@ export default function Chantier() {
           }}
         >
           <FileDownloadOutlinedIcon sx={{ mr: 1 }} />
-          Référentiel
+          <Typography
+            sx={{
+              fontFamily: "Roboto, sans-serif",
+              fontWeight: 400,
+              fontSize: "0.875rem",
+            }}
+          >
+            Référentiel
+          </Typography>
           <input hidden type="file" accept=".xlsx,.xls" onChange={importExcel.handleFileChange} />
         </Button>
 

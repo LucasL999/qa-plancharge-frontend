@@ -13,8 +13,8 @@ import logo from "../img/logo.png";
 export default function Navbar({ onLogout }) {
   const navItems = [
     { label: "Dashboard", path: "/", icon: <HomeFilledIcon /> },
-    { label: "Plan de charge", path: "/team", icon: <GroupsIcon /> },
     { label: "Chantiers", path: "/chantier", icon: <ConstructionIcon /> },
+    { label: "Plan de charge", path: "/team", icon: <GroupsIcon /> },
     { label: "Calendrier", path: "/calendar", icon: <CalendarMonthIcon /> },
     { label: "Utilisateurs", path: "/user", icon: <PersonIcon /> },
   ];
