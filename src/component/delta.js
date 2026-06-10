@@ -4,8 +4,10 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 export default function Delta({ value, onClick }) {
 
-  const color = value >= 0 ? "#009951" : "#FF0000";
-  const backgroundColor = value >= 0 ? alpha("#CFF7D3", 0.5) : alpha("#FF0000", 0.1);
+  const isReady = value !== undefined && value !== null;
+
+  const color = isReady ? value >= 0 ? "#009951" : "#FF0000" : "transparent";
+  const backgroundColor = isReady ? value >= 0 ? alpha("#CFF7D3", 0.5) : alpha("#FF0000", 0.1) : "transparent";
 
   return (
     <Box
