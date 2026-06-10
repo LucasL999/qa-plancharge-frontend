@@ -74,7 +74,7 @@ export default function Navbar({ onLogout }) {
               paddingLeft: "20px",
               textDecoration: "none",
               color: isActive ? "#0178A5" : "#333333",
-              backgroundColor: isActive ? "#EAF4F8" : "transparent",
+              backgroundColor: isActive ? "#dceff7" : "transparent",
             })}
           >
             {({ isActive }) => (

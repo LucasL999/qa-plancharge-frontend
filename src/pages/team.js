@@ -122,8 +122,8 @@ export default function Team() {
     <div>
       <Bandeau title="Plan de charge" subtitle="Gestion du capacitaire QA" />
 
-      <Box sx={{ paddingTop: "60px" }}>
-        <Grid container spacing={2} alignItems="center" justifyContent="center">
+      <Box sx={{ paddingTop: "40px" }}>
+        <Grid container spacing={3.5} alignItems="center" justifyContent="center">
 
           <Grid item xs={12} md={4}>
             <Card4
@@ -169,7 +169,7 @@ export default function Team() {
         </Grid>
       </Box>
 
-      <Box sx={{ paddingTop: "40px", paddingBottom: "40px", margin: "0 60px" }}>
+      <Box sx={{ paddingTop: "40px", margin: "0 100px" }}>
         <TableTeam qas={QAsWithCapacity} />
       </Box>
     </div>

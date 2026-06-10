@@ -84,7 +84,7 @@ export default function User() {
       </Box>
 
       {/* TABLE USERS */}
-      <Box sx={{ paddingTop: "40px", paddingBottom: "40px", margin: "0 60px" }}>
+      <Box sx={{ paddingTop: "40px", margin: "0 60px" }}>
         <TableUser key={reloadTable} />
       </Box>
 

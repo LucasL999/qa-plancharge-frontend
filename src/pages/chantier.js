@@ -221,7 +221,7 @@ export default function Chantier() {
 
       {/* séparation */}
       <Box sx={{ paddingTop: "50px", display: "flex", justifyContent: "center", marginBottom: "30px" }}>
-        <Divider sx={{ width: "90%" }} />
+        <Divider sx={{ width: "88%" }} />
       </Box>
 
       {/* BARRE D'ACTIONS */}
@@ -244,13 +244,15 @@ export default function Chantier() {
           sx={{
             flexGrow: 1,
             minWidth: { xs: "100%", md: 300 },
+            width: "600px",
             backgroundColor: "#DFDFDF",
             borderRadius: "100px",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
+            marginLeft: "50px",
             "& fieldset": { border: "none" },
             "& .MuiOutlinedInput-root": {
               fontSize: "18px",
-              paddingLeft: "12px",
+              paddingLeft: "16px",
             },
           }}
           InputProps={{
@@ -266,6 +268,7 @@ export default function Chantier() {
             whiteSpace: "nowrap",
             borderRadius: "100px",
             height: "60px",
+            width: "180px",
             textTransform: "none",
             backgroundColor: "#DFDFDF",
             color: "black",
@@ -289,6 +292,7 @@ export default function Chantier() {
             whiteSpace: "nowrap",
             borderRadius: "100px",
             height: "60px",
+            width: "180px",
             textTransform: "none",
             backgroundColor: alpha("#0178A5", 0.7),
             color: "black",
@@ -307,6 +311,7 @@ export default function Chantier() {
             whiteSpace: "nowrap",
             borderRadius: "100px",
             height: "60px",
+            width: "180px",
             textTransform: "none",
             backgroundColor: alpha("#0178A5", 0.7),
             color: "black",
@@ -334,7 +339,9 @@ export default function Chantier() {
             ml: { md: "auto" },
             whiteSpace: "nowrap",
             borderRadius: "100px",
+            marginRight: "50px",
             height: "60px",
+            width: "180px",
             textTransform: "none",
             backgroundColor: alpha("#D4DA17", 0.8),
             color: "black",
@@ -345,11 +352,6 @@ export default function Chantier() {
           Créer un chantier
         </Button>
 
-      </Box>
-
-      {/* séparation */}
-      <Box sx={{ display: "flex", justifyContent: "center", marginTop: "30px" }}>
-        <Divider sx={{ width: "90%", marginBottom: "15px" }} />
       </Box>
 
       {/* TABLE */}
