@@ -52,9 +52,11 @@ export default function Dashboard() {
   // STATE - CAPACITÉ
   // ---------------------------------------------------------------------------
   const [totalCapacity, setTotalCapacity] = useState([]);
+  const [displayTotalCapacity, setDisplayTotalCapacity] = useState(0);
 
   // Jours ouvrés restants dans l’année
   const [workingDays, setWorkingDays] = useState(null);
+  const [displayWorkingDays, setDisplayWorkingDays] = useState(0);
 
   // ---------------------------------------------------------------------------
   // STATE - KPI CHANTIER
@@ -64,6 +66,9 @@ export default function Dashboard() {
   const [raf, setRaf] = useState("");
   const [delta, setDelta] = useState("");
   const [displayDelta, setDisplayDelta] = useState(0);
+  const [displayRaf, setDisplayRaf] = useState(0);
+  const [displayPrev, setDisplayPrev] = useState(0);
+  const [displayCons, setDisplayCons] = useState(0);
 
   // ---------------------------------------------------------------------------
   // EFFECT - chargement jours ouvrés annuels
@@ -126,31 +131,9 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    fetchPrev();
-  }, []);
-
-  useEffect(() => {
-    fetchCons();
-  }, []);
-
-  // RAF = charge prévue - consommé
-  useEffect(() => {
-    setRaf(prev - cons);
-  }, [prev, cons]);
-
-  // Delta global = capacité - charge prévue
-  useEffect(() => {
-    setDelta(total - raf);
-  }, [total, raf]);
-
-  useEffect(() => {
-    const end = Number(delta) || 0;
-    const start = displayDelta;
-
+  const animateValue = (start, end, setter, duration = 850) => {
     if (start === end) return;
 
-    const duration = 800;
     let startTime = null;
 
     const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
@@ -160,24 +143,56 @@ export default function Dashboard() {
 
       const progress = timestamp - startTime;
       const t = Math.min(progress / duration, 1);
-
       const eased = easeOutCubic(t);
 
-      // ✅ interpolation propre (pas de casse)
       const value = Math.floor(start + (end - start) * eased);
-
-      setDisplayDelta(value);
+      setter(value);
 
       if (t < 1) {
         requestAnimationFrame(animate);
       } else {
-        setDisplayDelta(end);
+        setter(end);
       }
     };
 
     requestAnimationFrame(animate);
+  };
 
-  }, [delta]);
+  useEffect(() => {
+    const end = Number(total || 0);
+    animateValue(displayTotalCapacity, end, setDisplayTotalCapacity);
+  }, [total]);
+
+  useEffect(() => {
+    const end = Number(workingDays || 0);
+    animateValue(365, end, setDisplayWorkingDays);
+  }, [workingDays]);
+
+  useEffect(() => {
+    fetchPrev();
+    const end = Number(prev || 0);
+    animateValue(displayPrev, end, setDisplayPrev);
+  }, [prev]);
+
+  useEffect(() => {
+    fetchCons();
+    const end = Number(cons || 0);
+    animateValue(displayCons, end, setDisplayCons);
+  }, [cons]);
+
+  // RAF = charge prévue - consommé
+  useEffect(() => {
+    setRaf(prev - cons);
+    const end = Number(raf || 0);
+    animateValue(displayRaf, end, setDisplayRaf); 
+  }, [prev, cons, raf]);
+
+  // Delta global = capacité - charge prévue
+  useEffect(() => {
+    setDelta(total - raf);
+    const end = Number(delta || 0);
+    animateValue(displayDelta, end, setDisplayDelta);
+  }, [total, raf, delta]);
 
 
   // ---------------------------------------------------------------------------
@@ -203,14 +218,14 @@ export default function Dashboard() {
 
                 <Card1
                   titre="Capacité QA disponible"
-                  value={total}
+                  value={displayTotalCapacity}
                   icon={<ThumbUpOffAltIcon sx={{ fontSize: 50 }} />}
                   onClick={() => navigateCapacite("/team")}
                 />
 
                 <Card1
                   titre="Reste à faire QA (RAFQA)"
-                  value={raf}
+                  value={displayRaf}
                   icon={<ErrorOutlineIcon sx={{ fontSize: 50 }} />}
                   onClick={() => navigateRAF("/chantier")}
                 />
@@ -230,7 +245,7 @@ export default function Dashboard() {
             <Grid item xs={12} sm={4}>
               <Card2
                 titre="Charge globale"
-                value={prev}
+                value={displayPrev}
                 icon={<EqualizerIcon sx={{ fontSize: 40 }} />}
                 unit="JH"
                 onClick={() => navigateCharge("/chantier")}
@@ -240,7 +255,7 @@ export default function Dashboard() {
             <Grid item xs={12} sm={4}>
               <Card2
                 titre="Consommé"
-                value={cons}
+                value={displayCons}
                 icon={<CheckCircleOutlineIcon sx={{ fontSize: 40 }} />}
                 unit="JH"
                 onClick={() => navigateConsomme("/chantier")}
@@ -250,7 +265,7 @@ export default function Dashboard() {
             <Grid item xs={12} sm={4}>
               <Card2
                 titre="J-ouvrés annuels"
-                value={workingDays}
+                value={displayWorkingDays}
                 icon={<LightModeIcon sx={{ fontSize: 40 }} />}
                 unit="Jours restants"
                 onClick={() => navigateJours("/calendar")}

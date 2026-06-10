@@ -129,123 +129,52 @@ export default function Chantier() {
   // ---------------------------------------------------------------------------
   // EFFECTS - chargement initial KPIs
   // ---------------------------------------------------------------------------
+  const animateValue = (start, end, setter, duration = 800) => {
+    if (start === end) return;
+
+    let startTime = null;
+
+    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+
+      const progress = timestamp - startTime;
+      const t = Math.min(progress / duration, 1);
+      const eased = easeOutCubic(t);
+
+      const value = Math.floor(start + (end - start) * eased);
+      setter(value);
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setter(end);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  };
+
   useEffect(() => {
     fetchPrev();
-  }, []);
+    const end = Number(prev || 0);
+    animateValue(displayPrev, end, setDisplayPrev);
+  }, [prev]);
 
   useEffect(() => {
     fetchCons();
-  }, []);
+    const end = Number(cons || 0);
+    animateValue(displayCons, end, setDisplayCons);
+  }, [cons]);
 
   // recalcul RAF dès que prev ou cons changent
   useEffect(() => {
     setRaf(prev - cons);
-  }, [prev, cons]);
+    const end = Number(raf || 0);
+    animateValue(displayRAF, end, setDisplayRAF);
+  }, [prev, cons, raf]);
 
-  useEffect(() => {
-    const end = Number(raf) || 0;
-    const start = displayRAF;
-
-    if (start === end) return;
-
-    const duration = 800;
-    let startTime = null;
-
-    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-
-    const animate = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-
-      const progress = timestamp - startTime;
-      const t = Math.min(progress / duration, 1);
-
-      const eased = easeOutCubic(t);
-
-      // ✅ interpolation propre (pas de casse)
-      const value = Math.floor(start + (end - start) * eased);
-
-      setDisplayRAF(value);
-
-      if (t < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        setDisplayRAF(end);
-      }
-    };
-
-    requestAnimationFrame(animate);
-
-  }, [raf]);
-
-  useEffect(() => {
-    const end = Number(cons) || 0;
-    const start = displayCons;
-
-    if (start === end) return;
-
-    const duration = 800;
-    let startTime = null;
-
-    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-
-    const animate = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-
-      const progress = timestamp - startTime;
-      const t = Math.min(progress / duration, 1);
-
-      const eased = easeOutCubic(t);
-
-      // ✅ interpolation propre (pas de casse)
-      const value = Math.floor(start + (end - start) * eased);
-
-      setDisplayCons(value);
-
-      if (t < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        setDisplayCons(end);
-      }
-    };
-
-    requestAnimationFrame(animate);
-
-  }, [cons]);
-
-  useEffect(() => {
-    const end = Number(prev) || 0;
-    const start = displayPrev;
-
-    if (start === end) return;
-
-    const duration = 800;
-    let startTime = null;
-
-    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-
-    const animate = (timestamp) => {
-      if (!startTime) startTime = timestamp;
-
-      const progress = timestamp - startTime;
-      const t = Math.min(progress / duration, 1);
-
-      const eased = easeOutCubic(t);
-
-      // ✅ interpolation propre (pas de casse)
-      const value = Math.floor(start + (end - start) * eased);
-
-      setDisplayPrev(value);
-
-      if (t < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        setDisplayPrev(end);
-      }
-    };
-
-    requestAnimationFrame(animate);
-
-  }, [prev]);
 
   // ---------------------------------------------------------------------------
   // REFRESH HELPERS
