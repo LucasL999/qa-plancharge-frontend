@@ -42,9 +42,9 @@ export default function Delta({ value, onClick }) {
         }}>
           {value}
         </Typography>
-        <Typography variant="body1" sx={{ color: color, gap: "8px", display: "flex", alignItems: "center", fontSize: "18px", }}>
+        <Typography variant="body1" sx={{ color: color, gap: "8px", display: "flex", alignItems: "center", fontSize: "16px", }}>
           <InfoOutlinedIcon sx={{ fontSize: 20 }} />
-          Différence entre capacité disponible et RAF
+          Différence entre la capacité QA disponible et le RAF
         </Typography>
       </Box>
     </Box>

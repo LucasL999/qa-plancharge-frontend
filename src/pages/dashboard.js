@@ -373,7 +373,7 @@ export default function Dashboard() {
                 },
               }}>
               <Card2
-                titre="Consommé"
+                titre="Charge consommée"
                 value={displayCons}
                 icon={<CheckCircleOutlineIcon sx={{ fontSize: 40 }} />}
                 unit="JH"

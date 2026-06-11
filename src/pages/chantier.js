@@ -225,7 +225,7 @@ export default function Chantier() {
 
           <Grid item xs={12} md={4}>
             <Card6
-              title="RAF QA"
+              title="Reste à faire (RAF)"
               value={displayRAF}
               icon={<ErrorOutlineIcon sx={{ color: "#009951", fontSize: 35, fontWeight: "bold" }} />}
               unit="JH"
@@ -235,7 +235,7 @@ export default function Chantier() {
 
           <Grid item xs={12} md={4}>
             <Card5
-              title="Consommé"
+              title="Charge consommée"
               value={displayCons}
               icon={<CheckCircleOutlineIcon sx={{ color: "#C00F0C", fontSize: 35 }} />}
               unit="JH"
