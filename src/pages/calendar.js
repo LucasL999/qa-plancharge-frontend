@@ -7,6 +7,7 @@
 // Importations des bibliothèques UI (Material UI)
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
+import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 
 // Import des composants internes
 import Bandeau from "../component/bandeau";
@@ -124,8 +125,33 @@ export default function Calendar() {
             <Card3 title="Mensuel" value={displayWorkingDaysMonth} icon="" unit="J-ouvrés" />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4}
+            sx={{
+              position: "relative",
+
+              "& .arrow": {
+                opacity: 0,
+                transform: "translateX(-10px)",
+                transition: "all 0.3s ease",
+              },
+
+              "&:hover .arrow": {
+                opacity: 1,
+                transform: "translateX(0)",
+              },
+            }}>
             <Card3 title="Annuel" value={displayWorkingDaysYear} icon="" unit="J-ouvrés" onClick={() => navigateJours("/team")} />
+            <ArrowCircleRightOutlinedIcon
+              className="arrow"
+              sx={{
+                position: "absolute",
+                right: 30,
+                top: "40%",
+                transform: "translateY(-50%)",
+                fontSize: 30,
+                color: "#0178A5",
+              }}
+            />
           </Grid>
 
         </Grid>

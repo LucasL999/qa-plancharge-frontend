@@ -35,7 +35,7 @@ export default function Card1({ titre, value, icon, onClick }) {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "flex-end", // ✅ alignement à droite
+          justifyContent: "flex-start", // ✅ alignement à droite
           alignItems: "baseline",
           whiteSpace: "nowrap",
           paddingRight: "20px",
@@ -50,6 +50,7 @@ export default function Card1({ titre, value, icon, onClick }) {
             fontVariantNumeric: "tabular-nums",
             letterSpacing: "-0.5px",
             textAlign: "right",
+            marginTop: "10px"
           }}
         >
           {value}

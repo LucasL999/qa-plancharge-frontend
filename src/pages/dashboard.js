@@ -21,6 +21,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 
 // Services / algorithmes métier
 import { getWorkingDaysUntilYearEnd } from "../algo/joursOuvresAn";
@@ -184,7 +185,7 @@ export default function Dashboard() {
   useEffect(() => {
     setRaf(prev - cons);
     const end = Number(raf || 0);
-    animateValue(displayRaf, end, setDisplayRaf); 
+    animateValue(displayRaf, end, setDisplayRaf);
   }, [prev, cons, raf]);
 
   // Delta global = capacité - charge prévue
@@ -208,27 +209,106 @@ export default function Dashboard() {
           {/* ----------------------------------------------------------------- */}
           {/* LIGNE 1 - Delta + Capacité + RAF */}
           {/* ----------------------------------------------------------------- */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4}
+            sx={{
+              position: "relative",
+
+              "& .arrow": {
+                opacity: 0,
+                transform: "translateX(-10px)",
+                transition: "all 0.3s ease",
+              },
+
+              "&:hover .arrow": {
+                opacity: 1,
+                transform: "translateX(0)",
+              },
+            }}>
             <Delta value={displayDelta} onClick={() => navigateDelta("/chantier")} />
+            <ArrowCircleRightOutlinedIcon
+              className="arrow"
+              sx={{
+                position: "absolute",
+                right: 30,
+                top: "45%",
+                transform: "translateY(-50%)",
+                fontSize: 50,
+                color: "#009951",
+              }}
+            />
           </Grid>
 
           <Grid item xs={12} md={8}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
 
-                <Card1
-                  titre="Capacité QA disponible"
-                  value={displayTotalCapacity}
-                  icon={<ThumbUpOffAltIcon sx={{ fontSize: 50 }} />}
-                  onClick={() => navigateCapacite("/team")}
-                />
+                <Box
+                  sx={{
+                    position: "relative",
 
-                <Card1
-                  titre="Reste à faire QA (RAFQA)"
-                  value={displayRaf}
-                  icon={<ErrorOutlineIcon sx={{ fontSize: 50 }} />}
-                  onClick={() => navigateRAF("/chantier")}
-                />
+                    "& .arrow": {
+                      opacity: 0,
+                      transform: "translateX(-10px)",
+                      transition: "all 0.3s ease",
+                    },
+
+                    "&:hover .arrow": {
+                      opacity: 1,
+                      transform: "translateX(0)",
+                    },
+                  }}>
+                  <Card1
+                    titre="Capacité QA disponible"
+                    value={displayTotalCapacity}
+                    icon={<ThumbUpOffAltIcon sx={{ fontSize: 40 }} />}
+                    onClick={() => navigateCapacite("/team")}
+                  />
+                  <ArrowCircleRightOutlinedIcon
+                    className="arrow"
+                    sx={{
+                      position: "absolute",
+                      right: 30,
+                      top: "40%",
+                      transform: "translateY(-50%)",
+                      fontSize: 40,
+                      color: "#0178A5",
+                    }}
+                  />
+                </Box>
+
+                <Box
+                  sx={{
+                    position: "relative",
+
+                    "& .arrow": {
+                      opacity: 0,
+                      transform: "translateX(-10px)",
+                      transition: "all 0.3s ease",
+                    },
+
+                    "&:hover .arrow": {
+                      opacity: 1,
+                      transform: "translateX(0)",
+                    },
+                  }}>
+                  <Card1
+                    titre="Reste à faire QA (RAFQA)"
+                    value={displayRaf}
+                    icon={<ErrorOutlineIcon sx={{ fontSize: 40 }} />}
+                    onClick={() => navigateRAF("/chantier")}
+                  />
+                  <ArrowCircleRightOutlinedIcon
+                    className="arrow"
+                    sx={{
+                      position: "absolute",
+                      right: 30,
+                      top: "40%",
+                      transform: "translateY(-50%)",
+                      fontSize: 40,
+                      color: "#0178A5",
+                    }}
+                  />
+                </Box>
 
               </Grid>
             </Grid>
@@ -237,12 +317,26 @@ export default function Dashboard() {
         </Grid>
 
         {/* ----------------------------------------------------------------- */}
-        {/* LIGNE 2 - KPIs principaux */}
+        {/* LIGNE 2 - KPIs secondaires */}
         {/* ----------------------------------------------------------------- */}
         <Grid item xs={12}>
           <Grid container alignItems="center" justifyContent="center">
 
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={4}
+              sx={{
+                position: "relative",
+
+                "& .arrow": {
+                  opacity: 0,
+                  transform: "translateX(-10px)",
+                  transition: "all 0.3s ease",
+                },
+
+                "&:hover .arrow": {
+                  opacity: 1,
+                  transform: "translateX(0)",
+                },
+              }}>
               <Card2
                 titre="Charge globale"
                 value={displayPrev}
@@ -250,9 +344,34 @@ export default function Dashboard() {
                 unit="JH"
                 onClick={() => navigateCharge("/chantier")}
               />
+              <ArrowCircleRightOutlinedIcon
+                className="arrow"
+                sx={{
+                  position: "absolute",
+                  right: 30,
+                  top: "45%",
+                  transform: "translateY(-50%)",
+                  fontSize: 30,
+                  color: "#6B6B6B",
+                }}
+              />
             </Grid>
 
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={4}
+              sx={{
+                position: "relative",
+
+                "& .arrow": {
+                  opacity: 0,
+                  transform: "translateX(-10px)",
+                  transition: "all 0.3s ease",
+                },
+
+                "&:hover .arrow": {
+                  opacity: 1,
+                  transform: "translateX(0)",
+                },
+              }}>
               <Card2
                 titre="Consommé"
                 value={displayCons}
@@ -260,15 +379,51 @@ export default function Dashboard() {
                 unit="JH"
                 onClick={() => navigateConsomme("/chantier")}
               />
+              <ArrowCircleRightOutlinedIcon
+                className="arrow"
+                sx={{
+                  position: "absolute",
+                  right: 30,
+                  top: "45%",
+                  transform: "translateY(-50%)",
+                  fontSize: 30,
+                  color: "#6B6B6B",
+                }}
+              />
             </Grid>
 
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={4}
+              sx={{
+                position: "relative",
+
+                "& .arrow": {
+                  opacity: 0,
+                  transform: "translateX(-10px)",
+                  transition: "all 0.3s ease",
+                },
+
+                "&:hover .arrow": {
+                  opacity: 1,
+                  transform: "translateX(0)",
+                },
+              }}>
               <Card2
                 titre="J-ouvrés annuels"
                 value={displayWorkingDays}
                 icon={<LightModeIcon sx={{ fontSize: 40 }} />}
                 unit="Jours restants"
                 onClick={() => navigateJours("/calendar")}
+              />
+              <ArrowCircleRightOutlinedIcon
+                className="arrow"
+                sx={{
+                  position: "absolute",
+                  right: 30,
+                  top: "45%",
+                  transform: "translateY(-50%)",
+                  fontSize: 30,
+                  color: "#6B6B6B",
+                }}
               />
             </Grid>
 

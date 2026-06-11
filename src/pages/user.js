@@ -65,14 +65,42 @@ export default function User() {
           variant="contained"
           onClick={openPopinNewUser}
           sx={{
+            position: "relative",
+            isolation: "isolate", // important
+            overflow: "hidden",
             ml: { md: "auto" },
             whiteSpace: "nowrap",
             borderRadius: "100px",
             height: "60px",
+            width: "180px",
             textTransform: "none",
-            backgroundColor: alpha("#D4DA17", 0.8),
             color: "black",
             px: 3,
+            backgroundColor: "transparent", // on désactive le bg MUI
+
+            // fond de base
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              backgroundColor: "rgba(212,218,23,0.8)",
+              zIndex: -2,
+            },
+
+            // couche animée
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              transform: "translateX(-100%)",
+              backgroundColor: "#c2c91a",
+              transition: "transform 0.3s ease",
+              zIndex: -1,
+            },
+
+            "&:hover::before": {
+              transform: "translateX(0)",
+            },
           }}
         >
           <PersonAddIcon sx={{ mr: 1 }} />
