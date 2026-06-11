@@ -159,7 +159,7 @@ export default function Schedule({ onMonthYearChange }) {
 
   /* ================= RENDER ================= */
   return (
-    <div style={styles.calendar}>
+    <div style={{...styles.calendar, boxShadow: "0px 0px 4px rgba(0,0,0,0.25)"}}>
 
       <PopinNewEvent
         open={openPopin}
@@ -174,7 +174,7 @@ export default function Schedule({ onMonthYearChange }) {
       />
 
       {/* HEADER */}
-      <div style={styles.header}>
+      <div style={{...styles.header}}>
         <button onClick={prevMonth} style={{ background: "none", border: "none", cursor: "pointer" }}>
           <ArrowBackIosOutlinedIcon />
         </button>
