@@ -303,6 +303,9 @@ export default function Chantier() {
           onClick={openPopinFiltres}
           sx={{
             whiteSpace: "nowrap",
+            position: "relative",
+            isolation: "isolate",
+            overflow: "hidden",
             borderRadius: "100px",
             height: "60px",
             width: "180px",
@@ -310,6 +313,31 @@ export default function Chantier() {
             backgroundColor: "#DFDFDF",
             color: "black",
             px: 3,
+            backgroundColor: "transparent",
+
+            // fond de base
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              backgroundColor: "rgba(223, 223, 223, 1)",
+              zIndex: -2,
+            },
+
+            // couche animée
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              transform: "translateX(-100%)",
+              backgroundColor: "#cccccc",
+              transition: "transform 0.3s ease",
+              zIndex: -1,
+            },
+
+            "&:hover::before": {
+              transform: "translateX(0)",
+            },
           }}
         >
           <FilterAltOutlinedIcon sx={{ mr: 1 }} />
@@ -327,13 +355,41 @@ export default function Chantier() {
 
           sx={{
             whiteSpace: "nowrap",
+            position: "relative",
+            isolation: "isolate",
+            overflow: "hidden",
             borderRadius: "100px",
             height: "60px",
             width: "180px",
             textTransform: "none",
-            backgroundColor: alpha("#0178A5", 0.7),
             color: "black",
             px: 3,
+            backgroundColor: "transparent",
+
+
+            // fond de base
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              backgroundColor: "rgba(1, 120, 165, 0.8)",
+              zIndex: -2,
+            },
+
+            // couche animée
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              transform: "translateX(-100%)",
+              backgroundColor: "#0178A5",
+              transition: "transform 0.3s ease",
+              zIndex: -1,
+            },
+
+            "&:hover::before": {
+              transform: "translateX(0)",
+            },
           }}
         >
           <FileUploadOutlinedIcon sx={{ mr: 1 }} />
@@ -346,13 +402,40 @@ export default function Chantier() {
           component="label"
           sx={{
             whiteSpace: "nowrap",
+            position: "relative",
+            isolation: "isolate",
+            overflow: "hidden",
             borderRadius: "100px",
             height: "60px",
             width: "180px",
             textTransform: "none",
-            backgroundColor: alpha("#0178A5", 0.7),
             color: "black",
             px: 3,
+            backgroundColor: "transparent",
+
+            // fond de base
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              backgroundColor: "rgba(1, 120, 165, 0.8)",
+              zIndex: -2,
+            },
+
+            // couche animée
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              transform: "translateX(-100%)",
+              backgroundColor: "#0178A5",
+              transition: "transform 0.3s ease",
+              zIndex: -1,
+            },
+
+            "&:hover::before": {
+              transform: "translateX(0)",
+            },
           }}
         >
           <FileDownloadOutlinedIcon sx={{ mr: 1 }} />
