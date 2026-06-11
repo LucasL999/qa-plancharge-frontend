@@ -280,9 +280,12 @@ export default function Chantier() {
           onChange={(e) => setSearch(e.target.value)}
           sx={{
             flexGrow: 1,
+            position: "relative",
+            isolation: "isolate",
+            overflow: "hidden",
             minWidth: { xs: "100%", md: 300 },
             width: "600px",
-            backgroundColor: "#DFDFDF",
+            backgroundColor: "transparent",
             borderRadius: "100px",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
             marginLeft: "50px",
@@ -290,6 +293,30 @@ export default function Chantier() {
             "& .MuiOutlinedInput-root": {
               fontSize: "18px",
               paddingLeft: "16px",
+            },
+
+            // fond de base
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              backgroundColor: "rgba(223, 223, 223, 1)",
+              zIndex: -2,
+            },
+
+            // couche animée
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              transform: "translateX(-100%)",
+              backgroundColor: "#cccccc",
+              transition: "transform 0.3s ease",
+              zIndex: -1,
+            },
+
+            "&:hover::before": {
+              transform: "translateX(0)",
             },
           }}
           InputProps={{
