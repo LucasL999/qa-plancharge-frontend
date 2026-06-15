@@ -104,7 +104,7 @@ export default function User() {
           }}
         >
           <PersonAddIcon sx={{ mr: 1 }} />
-          Créer un utilisateur
+          Nouvel utilisateur
         </Button>
 
         <PopinNewUser open={openPopin} onClose={closePopinNewUser} />

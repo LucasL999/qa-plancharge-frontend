@@ -1,16 +1,19 @@
 import { Box, Typography } from "@mui/material";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 
 export default function Card6({ title, value, icon, unit, color }) {
   return (
     <Box sx={{
-      width: 240,
-      height: 155,
+      width: 250,
+      height: 175,
       backgroundColor: "transparent",
       paddingTop: "15px",
       paddingLeft: "15px",
       margin: "20px",
       display: "flex",
       flexDirection: "column",
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+      borderRadius: "10px",
 
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: "8px", color: { color }, }}>
@@ -23,7 +26,7 @@ export default function Card6({ title, value, icon, unit, color }) {
       </div>
       <Box>
         <Typography variant="h4" sx={{
-          color: { color }, fontSize: "80px", paddingLeft: "20px",
+          color: { color }, fontSize: "80px", paddingLeft: "12px", marginTop: "20px",
         }}>
           {value}
           <span style={{ fontSize: "18px", }}> {unit} </span>

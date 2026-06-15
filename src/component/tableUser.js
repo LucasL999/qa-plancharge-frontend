@@ -52,11 +52,11 @@ export default function TableUser() {
     <TableContainer sx={{ boxShadow: 3, borderRadius: 2 }}>
       <Table sx={{ minWidth: 650, borderRadius: 10 }} aria-label="simple table">
         <TableHead>
-          <TableRow>
-            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px" }} >Utilisateur</TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px" }} >Email</TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px" }} >Rôle</TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px" }} >Actions</TableCell>
+          <TableRow sx={{backgroundColor: "rgba(1, 120, 165, 0.8)"}}>
+            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Utilisateur</TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Email</TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Rôle</TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Actions</TableCell>
           </TableRow>
         </TableHead>
 

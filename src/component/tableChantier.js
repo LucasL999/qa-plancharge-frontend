@@ -102,14 +102,14 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
       <TableContainer sx={{ boxShadow: 3, borderRadius: 2 }}>
         <Table sx={{ minWidth: 650, borderRadius: 10, }}>
           <TableHead>
-            <TableRow>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Chantier</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Statut</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Chef de projet</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Priorité</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Prévisionnel</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Consommé</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Reste à faire</TableCell>
+            <TableRow sx={{backgroundColor: "rgba(1, 120, 165, 0.8)"}}>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Chantier</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Statut</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Chef de projet</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Priorité</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Prévisionnel</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Consommé</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Reste à faire</TableCell>
               <TableCell />
             </TableRow>
           </TableHead>

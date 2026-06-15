@@ -220,7 +220,7 @@ export default function Chantier() {
       />
 
       {/* KPIs */}
-      <Box sx={{ paddingTop: "26px", paddingLeft: "100px", height: "180px" }}>
+      <Box sx={{ paddingTop: "26px", paddingLeft: "80px", height: "180px" }}>
         <Grid container spacing={2} alignItems="center">
 
           <Grid item xs={12} md={4}>
@@ -257,7 +257,7 @@ export default function Chantier() {
       </Box>
 
       {/* séparation */}
-      <Box sx={{ paddingTop: "50px", display: "flex", justifyContent: "center", marginBottom: "30px" }}>
+      <Box sx={{ paddingTop: "60px", display: "flex", justifyContent: "center", marginBottom: "30px" }}>
         <Divider sx={{ width: "88%" }} />
       </Box>
 
@@ -523,7 +523,7 @@ export default function Chantier() {
           }}
         >
           <AddOutlinedIcon sx={{ mr: 1 }} />
-          Créer un chantier
+          Nouveau Chantier
         </Button>
 
       </Box>

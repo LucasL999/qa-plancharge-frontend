@@ -12,7 +12,8 @@ export default function Card5({ title, value, icon, unit, color }) {
       display: "flex",
       flexDirection: "column",
       gap: "20px",
-
+      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+      borderRadius: "10px",
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: "8px", color: { color }, }}>
         <div>
@@ -24,7 +25,7 @@ export default function Card5({ title, value, icon, unit, color }) {
       </div>
       <Box>
         <Typography variant="h4" sx={{
-          color: { color }, fontSize: "60px", paddingLeft: "20px",
+          color: { color }, fontSize: "60px", paddingLeft: "12px",
         }}>
           {value}
           <span style={{ fontSize: "18px", }}> {unit} </span>

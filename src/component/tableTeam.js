@@ -8,10 +8,10 @@ export default function TableTeam({ qas }) {
     <TableContainer sx={{ boxShadow: 3, borderRadius: 2 }}>
       <Table sx={{ minWidth: 650, borderRadius: 10 }} aria-label="simple table">
         <TableHead>
-          <TableRow>
-            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px" }} >QA</TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px" }} >Capacité disponible</TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px" }} >Absences restantes</TableCell>
+          <TableRow sx={{backgroundColor: "rgba(1, 120, 165, 0.8)"}}>
+            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >QA</TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Capacité disponible</TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Absences restantes</TableCell>
           </TableRow>
         </TableHead>
 
