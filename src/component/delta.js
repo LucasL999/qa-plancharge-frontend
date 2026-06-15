@@ -14,9 +14,9 @@ export default function Delta({ value, onClick }) {
 
   useEffect(() => {
     if (value >= 0) {
-      setText("La capacité QA couvre le RAF avec une marge de " + value);
+      setText("La capacité QA couvre le RAF avec une marge de " + value +".");
     } else {
-      setText("La capacité QA ne couvre plus le RAF");
+      setText("La capacité QA ne couvre plus le RAF.");
     }
   }, [value]);
   return (
