@@ -72,6 +72,7 @@ export default function User() {
             borderRadius: "100px",
             height: "60px",
             width: "180px",
+            fontSize: 20,
             textTransform: "none",
             color: "black",
             px: 3,
@@ -103,7 +104,7 @@ export default function User() {
           }}
         >
           <PersonAddIcon sx={{ mr: 1 }} />
-          Nouvel utilisateur
+          Utilisateur
         </Button>
 
         <PopinNewUser open={openPopin} onClose={closePopinNewUser} />
