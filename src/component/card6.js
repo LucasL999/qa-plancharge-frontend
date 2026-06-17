@@ -4,8 +4,8 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 export default function Card6({ title, value, icon, unit, color }) {
   return (
     <Box sx={{
-      width: 250,
-      height: 175,
+      width: 280,
+      height: 155,
       backgroundColor: "transparent",
       paddingTop: "15px",
       paddingLeft: "15px",
@@ -26,7 +26,7 @@ export default function Card6({ title, value, icon, unit, color }) {
       </div>
       <Box>
         <Typography variant="h4" sx={{
-          color: { color }, fontSize: "80px", paddingLeft: "12px", marginTop: "20px",
+          color: { color }, fontSize: "80px", paddingLeft: "12px",
         }}>
           {value}
           <span style={{ fontSize: "18px", }}> {unit} </span>

@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 // Icônes MUI
-import EqualizerIcon from "@mui/icons-material/Equalizer";
+import DataUsageIcon from '@mui/icons-material/DataUsage';
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -340,7 +340,7 @@ export default function Dashboard() {
               <Card2
                 titre="Charge globale"
                 value={displayPrev}
-                icon={<EqualizerIcon sx={{ fontSize: 40 }} />}
+                icon={<DataUsageIcon sx={{ fontSize: 40 }} />}
                 unit="JH"
                 onClick={() => navigateCharge("/chantier")}
               />

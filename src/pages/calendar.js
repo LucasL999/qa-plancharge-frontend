@@ -8,6 +8,9 @@
 import { Box } from "@mui/material";
 import { Grid } from "@mui/material";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+
 
 // Import des composants internes
 import Bandeau from "../component/bandeau";
@@ -122,7 +125,7 @@ export default function Calendar() {
         <Grid container spacing={2} alignItems="center" justifyContent="flex-end" marginRight="30px">
 
           <Grid item xs={12} md={4}>
-            <Card3 title="Mensuel" value={displayWorkingDaysMonth} icon="" unit="J-ouvrés" />
+            <Card3 title="Mensuel" value={displayWorkingDaysMonth} icon={<DarkModeIcon />} unit="J-ouvrés" />
           </Grid>
 
           <Grid item xs={12} md={4}
@@ -140,7 +143,7 @@ export default function Calendar() {
                 transform: "translateX(0)",
               },
             }}>
-            <Card3 title="Annuel" value={displayWorkingDaysYear} icon="" unit="J-ouvrés" onClick={() => navigateJours("/team")} />
+            <Card3 title="Annuel" value={displayWorkingDaysYear} icon={<LightModeIcon />} unit="J-ouvrés" onClick={() => navigateJours("/team")} />
             <ArrowCircleRightOutlinedIcon
               className="arrow"
               sx={{

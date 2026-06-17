@@ -9,7 +9,6 @@
 
 // UI Material UI
 import { Box, Button } from "@mui/material";
-import { alpha } from "@mui/material/styles";
 
 // React
 import { useState } from "react";

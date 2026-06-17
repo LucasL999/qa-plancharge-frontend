@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 export default function Card5({ title, value, icon, unit, color }) {
   return (
     <Box sx={{
-      width: 240,
+      width: 225,
       height: 155,
       backgroundColor: "transparent",
       paddingTop: "15px",
@@ -25,7 +25,7 @@ export default function Card5({ title, value, icon, unit, color }) {
       </div>
       <Box>
         <Typography variant="h4" sx={{
-          color: { color }, fontSize: "60px", paddingLeft: "12px",
+          color: { color }, fontSize: "55px", paddingLeft: "12px", paddingTop: "5px"
         }}>
           {value}
           <span style={{ fontSize: "18px", }}> {unit} </span>

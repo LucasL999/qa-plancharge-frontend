@@ -103,7 +103,7 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
         <Table sx={{ minWidth: 650, borderRadius: 10, }}>
           <TableHead>
             <TableRow sx={{backgroundColor: "rgba(1, 120, 165, 0.8)"}}>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Chantier</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>CHANTIER</TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Statut</TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Chef de projet</TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Priorité</TableCell>

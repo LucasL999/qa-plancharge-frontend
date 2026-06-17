@@ -17,6 +17,8 @@ import Bandeau from "../component/bandeau";
 import Card3 from "../component/card3";
 import Card4 from "../component/card4";
 import TableTeam from "../component/tableTeam";
+import LightModeIcon from "@mui/icons-material/LightMode";
+
 
 // Services métier
 import { getAllTeam, getNbQA } from "../services/teamService";
@@ -231,7 +233,7 @@ export default function Team() {
             <Card3
               title="J-ouvrés annuels"
               value={displayWorkingDays}
-              icon={<InsertInvitationOutlinedIcon />}
+              icon={<LightModeIcon />}
               onClick={() => navigateJours("/calendar")}
             />
 

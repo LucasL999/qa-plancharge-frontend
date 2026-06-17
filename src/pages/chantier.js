@@ -34,7 +34,7 @@ import { exportExcel } from "../services/exportExcelService.js";
 // Icônes MUI
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import EqualizerIcon from "@mui/icons-material/Equalizer";
+import DataUsageIcon from '@mui/icons-material/DataUsage';
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
@@ -247,7 +247,7 @@ export default function Chantier() {
             <Card5
               title="Charge globale"
               value={displayPrev}
-              icon={<EqualizerIcon sx={{ color: "black", fontSize: 35 }} />}
+              icon={<DataUsageIcon sx={{ color: "black", fontSize: 35 }} />}
               unit="JH"
               color="black"
             />
@@ -336,6 +336,7 @@ export default function Chantier() {
             borderRadius: "100px",
             height: "60px",
             width: "180px",
+            fontSize: 20,
             textTransform: "none",
             backgroundColor: "#DFDFDF",
             color: "black",
@@ -388,6 +389,7 @@ export default function Chantier() {
             borderRadius: "100px",
             height: "60px",
             width: "180px",
+            fontSize: 20,
             textTransform: "none",
             color: "black",
             px: 3,
@@ -470,7 +472,7 @@ export default function Chantier() {
             sx={{
               fontFamily: "Roboto, sans-serif",
               fontWeight: 400,
-              fontSize: "0.875rem",
+              fontSize: 20,
             }}
           >
             Référentiel
@@ -492,6 +494,7 @@ export default function Chantier() {
             marginRight: "50px",
             height: "60px",
             width: "180px",
+            fontSize: 20,
             textTransform: "none",
             color: "black",
             px: 3,
@@ -523,7 +526,7 @@ export default function Chantier() {
           }}
         >
           <AddOutlinedIcon sx={{ mr: 1 }} />
-          Nouveau Chantier
+          Chantier
         </Button>
 
       </Box>
