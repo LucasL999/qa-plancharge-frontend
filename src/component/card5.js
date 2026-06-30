@@ -14,6 +14,11 @@ export default function Card5({ title, value, icon, unit, color }) {
       gap: "20px",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
       borderRadius: "10px",
+      transition: "transform 0.2s",
+      "&:hover": {
+        transform: "translateY(-4px)",
+        boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)",
+      },
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: "8px", color: { color }, }}>
         <div>
