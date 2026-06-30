@@ -53,10 +53,29 @@ export default function ImportExcel({ onDataExtracted }) {
             // EXTRACTION DES CHANTIERS
             // ==============================
 
-            // Extraction de la colonne "TitreChantier"
-            const chantiers = json
-                .map((row) => row.TitreChantier)
-                .filter(Boolean);
+            // Récupération des colonnes du fichier
+            const colonnes = Object.keys(json[0] || {});
+
+            // Recherche de la colonne "chantier"
+            const colonneChantier = colonnes.find(
+                (col) =>
+                    col.trim().toLowerCase() === "chantier"
+            );
+
+            // Si la colonne n'existe pas
+            if (!colonneChantier) {
+                alert('La colonne "chantier" est introuvable.');
+                return;
+            }
+
+            // Extraction des chantiers
+            const chantiers = [
+                ...new Set(
+                    json
+                        .map((row) => row[colonneChantier])
+                        .filter(Boolean)
+                ),
+            ];
 
 
             // ==============================

@@ -117,7 +117,7 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
           <TableBody>
             {filteredChantiers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((chantier) => (
               <TableRow
-                key={chantier.titre}
+                key={chantier.id_chantier}
                 hover
                 sx={{ cursor: "pointer", "&.MuiTableRow-hover:hover": { backgroundColor: alpha("#5DA1BC", 0.2) } }}
                 onClick={() => openPopinInfoChantier(chantier)}

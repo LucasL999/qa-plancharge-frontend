@@ -54,7 +54,7 @@ export default function Bandeau({ title, subtitle, refreshTrigger }) {
       >
 
         {/* Icône notif */}
-        <Box sx={{ position: "absolute", top: "50%", right: 24, transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: 3, }}>
+        <Box sx={{ position: "absolute", top: "50%", right: 24, transform: "translateY(-50%)", display: "flex", alignItems: "flex-start", gap: 3, }}>
           <Badge badgeContent={alertes} color="error" overlap="circular"
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
             sx={{
@@ -77,6 +77,7 @@ export default function Bandeau({ title, subtitle, refreshTrigger }) {
             sx={{
               display: "flex",
               alignItems: "center",
+              flexDirection: "column",
               gap: 1,
             }}
           >
@@ -87,7 +88,7 @@ export default function Bandeau({ title, subtitle, refreshTrigger }) {
               }}
             />
 
-            <Typography variant="body1">
+            <Typography variant="body2" sx={{ mt: 0.5, }}>
               {email?.replace(/@.*/, "@...")}
             </Typography>
           </Box>

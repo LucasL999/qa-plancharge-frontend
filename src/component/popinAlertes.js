@@ -17,6 +17,8 @@ import {
     TableContainer,
     TableRow,
     Paper,
+    Tabs,
+    Tab,
 } from "@mui/material";
 
 // Material UI Icons
@@ -28,7 +30,7 @@ import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOu
 import { useNavigate } from "react-router-dom";
 
 // Service permettant de récupérer les alertes
-import { getAlertes } from "../services/chantierService.js";
+import { getAlertes, getHistorique } from "../services/chantierService.js";
 
 
 // ==============================
@@ -41,11 +43,12 @@ export default function PopinAlertes({ open, onClose }) {
     // STATES
     // ==============================
 
-    // Liste des alertes récupérées depuis l'API
-    const [alertes, setAlertes] = useState([]);
-
     // Hook de navigation React Router
     const navigateChantier = useNavigate();
+
+    const [tab, setTab] = useState(0);
+    const [alertesActives, setAlertesActives] = useState([]);
+    const [historique, setHistorique] = useState([]);
 
 
     // ==============================
@@ -59,10 +62,12 @@ export default function PopinAlertes({ open, onClose }) {
             try {
 
                 // Appel API
-                const data = await getAlertes();
+                const active = await getAlertes();
+                const histo = await getHistorique();
 
                 // Stockage des alertes dans le state
-                setAlertes(data);
+                setAlertesActives(active);
+                setHistorique(histo);
 
             } catch (error) {
 
@@ -83,6 +88,7 @@ export default function PopinAlertes({ open, onClose }) {
 
     }, [open]);
 
+    const dataToDisplay = tab === 0 ? alertesActives : historique;
 
     // ==============================
     // RENDER
@@ -137,6 +143,15 @@ export default function PopinAlertes({ open, onClose }) {
 
             </DialogTitle>
 
+            <Tabs
+                value={tab}
+                onChange={(e, value) => setTab(value)}
+                centered
+            >
+                <Tab label="Alertes" />
+                <Tab label="Historique" />
+            </Tabs>
+
 
             {/* ==============================
                 CONTENU DE LA POPIN
@@ -148,76 +163,66 @@ export default function PopinAlertes({ open, onClose }) {
                     marginBottom: 3,
                 }}
             >
-
                 <TableContainer
                     component={Paper}
                     sx={{
-                        // Ajout d'une ombre uniquement
-                        // lorsqu'il n'y a aucune alerte
                         boxShadow:
-                            alertes.length === 0
+                            dataToDisplay.length === 0
                                 ? "5px 5px 5px rgba(0,0,0,0.1)"
                                 : undefined,
                     }}
                 >
-
                     <Table>
-
                         <TableBody>
 
                             {/* ==============================
-                                CAS : AUCUNE ALERTE
-                            ============================== */}
+                    CAS : AUCUNE DONNÉE
+                ============================== */}
 
-                            {alertes.length === 0 ? (
+                            {dataToDisplay.length === 0 ? (
 
                                 <TableRow>
-
                                     <TableCell
-                                        colSpan={1}
                                         align="center"
                                         sx={{ padding: 4 }}
                                     >
-                                        Aucune alerte
+                                        {tab === 0
+                                            ? "Aucune alerte active"
+                                            : "Aucun historique"}
                                     </TableCell>
-
                                 </TableRow>
 
                             ) : (
 
                                 /* ==============================
-                                   CAS : LISTE DES ALERTES
+                                    LISTE DES ALERTES
                                 ============================== */
 
-                                alertes.map((alerte) => (
+                                dataToDisplay.map((alerte) => (
 
                                     <TableRow
-                                        key={alerte.id}
-                                        sx={{
-                                            marginBottom: 1,
-                                        }}
+                                        key={alerte.id_alerte}
                                     >
-
                                         <TableCell
-                                            // Au clic sur une alerte :
-                                            // 1. Redirection vers le chantier
-                                            // 2. Fermeture de la popin
                                             onClick={() => {
                                                 navigateChantier(
                                                     `/chantier?id=${alerte.id_chantier}`
                                                 );
                                                 onClose();
                                             }}
-
                                             sx={{
                                                 cursor: "pointer",
-                                                backgroundColor: "#fe9b9b",
+                                                backgroundColor:
+                                                    tab === 0
+                                                        ? "#fe9b9b"
+                                                        : "#f5f5f5",
+
                                                 fontSize: "16px",
                                                 display: "flex",
                                                 alignItems: "center",
 
                                                 "&:hover .arrow-icon": {
-                                                    transform: "translateX(5px) ",
+                                                    transform: "translateX(5px)",
                                                 },
                                             }}
                                         >
@@ -225,42 +230,83 @@ export default function PopinAlertes({ open, onClose }) {
                                             {/* Icône d'alerte */}
                                             <WarningAmberIcon
                                                 sx={{
-                                                    verticalAlign: "middle",
                                                     marginRight: 4,
-                                                    fontWeight: "bold",
                                                     fontSize: 35,
-                                                    color: "#ff0000",
+                                                    color:
+                                                        tab === 0
+                                                            ? "#ff0000"
+                                                            : "#808080",
                                                 }}
                                             />
 
-                                            {/* Message de l'alerte */}
-                                            {alerte.message}
+                                            {/* Message + date de création dans l'historique */}
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: "column",
+                                                }}
+                                            >
+                                                <span>
+                                                    {alerte.message}
+                                                </span>
+
+                                                {tab === 1 && (
+                                                    <span
+                                                        style={{
+                                                            fontSize: "12px",
+                                                            color: "#666",
+                                                            marginTop: "4px",
+                                                        }}
+                                                    >
+                                                        Créée le{" "}
+                                                        {new Date(alerte.datecreation)
+                                                            .toLocaleDateString("fr-FR", {
+                                                                day: "2-digit",
+                                                                month: "2-digit",
+                                                                year: "numeric",
+                                                            })}
+                                                    </span>
+                                                )}
+                                                {tab === 0 && (
+                                                    <span
+                                                        style={{
+                                                            fontSize: "12px",
+                                                            color: "#666",
+                                                            marginTop: "4px",
+                                                        }}
+                                                    >
+                                                        Créée le{" "}
+                                                        {new Date(alerte.datecreation)
+                                                            .toLocaleDateString("fr-FR", {
+                                                                day: "2-digit",
+                                                                month: "2-digit",
+                                                                year: "numeric",
+                                                            })}
+                                                    </span>
+                                                )}
+                                            </div>
 
                                             {/* Icône de redirection */}
                                             <ArrowCircleRightOutlinedIcon
                                                 className="arrow-icon"
                                                 sx={{
-                                                    verticalAlign: "middle",
                                                     marginLeft: "auto",
                                                     fontSize: 25,
                                                     color: "#393b3b",
-                                                    transition: "transform 0.2s ease",
+                                                    transition:
+                                                        "transform 0.2s ease",
                                                 }}
                                             />
 
                                         </TableCell>
-
                                     </TableRow>
 
                                 ))
                             )}
 
                         </TableBody>
-
                     </Table>
-
                 </TableContainer>
-
             </DialogContent>
 
         </Dialog>
