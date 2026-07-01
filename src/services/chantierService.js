@@ -298,3 +298,28 @@ export async function getNbAlertes() {
     throw error;
   }
 }
+
+export async function deleteChantier(id_chantier) {
+  try {
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/deleteChantier/${id_chantier}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to delete chantier");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error deleting chantier:", error);
+    throw error;
+  }
+}

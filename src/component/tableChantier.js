@@ -10,10 +10,12 @@ import {
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import { getChantier } from "../services/chantierService.js"
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import PopinInfoChantier from "./popinInfoChantier";
 import PopinEditChantier from "./popinEditChantier";
+import PopinDeleteChantier from "./popinDeleteChantier";
 
 export default function TableTeam({ onChantierUpdated, filtres, search, selectedId }) {
   const [chantiers, setChantiers] = useState([]);
@@ -48,11 +50,13 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
 
   const [openPopinInfo, setOpenPopinInfo] = useState(false); // pour la popin d'info chantier
   const [openPopinEdit, setOpenPopinEdit] = useState(false); // pour la popin d'édition chantier
+  const [openPopinDelete, setOpenPopinDelete] = useState(false);
   const [selectedChantier, setSelectedChantier] = useState(null);
   const [page, setPage] = useState(0); // pour la pagination
   const [rowsPerPage, setRowsPerPage] = useState(5); // pour la pagination
 
   const closePopinInfoChantier = () => setOpenPopinInfo(false);
+  const closePopinDeleteChantier = () => setOpenPopinDelete(false);
   const closePopinEditChantier = async () => {
     setOpenPopinEdit(false);
     setSelectedChantier(null);
@@ -69,6 +73,11 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
     setSelectedChantier(chantier);
     setOpenPopinEdit(true);
   }
+
+  function openPopinDeleteChantier(chantier) {
+    setSelectedChantier(chantier);
+    setOpenPopinDelete(true);
+  } 
 
   function getColorByStatut(statut) { // fonction pour déterminer la couleur du statut
     switch (statut) {
@@ -111,6 +120,7 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
               <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Consommé</TableCell>
               <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Reste à faire</TableCell>
               <TableCell />
+              <TableCell />
             </TableRow>
           </TableHead>
 
@@ -136,7 +146,10 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
                   {chantier.prev - chantier.cons ?? 0}
                 </TableCell>
                 <TableCell align="center" sx={{ color: "#003CFF" }} onClick={(event) => { event.stopPropagation(); openPopinEditChantier(chantier); }}>
-                  <EditOutlinedIcon />
+                  <EditIcon />
+                </TableCell>
+                <TableCell align="center" sx={{ color: "#ff0000" }} onClick={(event) => {event.stopPropagation(); openPopinDeleteChantier(chantier); }}>
+                  <DeleteIcon />
                 </TableCell>
               </TableRow>
             ))}
@@ -163,6 +176,11 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
       <PopinEditChantier
         open={openPopinEdit}
         onClose={closePopinEditChantier}
+        chantier={selectedChantier}
+      />
+      <PopinDeleteChantier
+        open={openPopinDelete}
+        onClose={closePopinDeleteChantier}
         chantier={selectedChantier}
       />
     </>
