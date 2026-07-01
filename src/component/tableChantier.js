@@ -56,7 +56,12 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
   const [rowsPerPage, setRowsPerPage] = useState(5); // pour la pagination
 
   const closePopinInfoChantier = () => setOpenPopinInfo(false);
-  const closePopinDeleteChantier = () => setOpenPopinDelete(false);
+  const closePopinDeleteChantier = async () => {
+    setSelectedChantier(null);
+    setOpenPopinDelete(false);
+    await fetchChantier();
+    onChantierUpdated?.();
+  }
   const closePopinEditChantier = async () => {
     setOpenPopinEdit(false);
     setSelectedChantier(null);
