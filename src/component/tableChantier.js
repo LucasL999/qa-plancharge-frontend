@@ -17,7 +17,7 @@ import PopinInfoChantier from "./popinInfoChantier";
 import PopinEditChantier from "./popinEditChantier";
 import PopinDeleteChantier from "./popinDeleteChantier";
 
-export default function TableTeam({ onChantierUpdated, filtres, search, selectedId }) {
+export default function TableTeam({ onChantierUpdated, onChantierModifie, onChantierSupprime, filtres, search, selectedId }) {
   const [chantiers, setChantiers] = useState([]);
 
   const normalize = (str) => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -182,11 +182,13 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
         open={openPopinEdit}
         onClose={closePopinEditChantier}
         chantier={selectedChantier}
+        onUpdated={onChantierModifie}
       />
       <PopinDeleteChantier
         open={openPopinDelete}
         onClose={closePopinDeleteChantier}
         chantier={selectedChantier}
+        onDeleted={onChantierSupprime}
       />
     </>
   );

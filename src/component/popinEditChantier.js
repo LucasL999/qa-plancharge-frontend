@@ -2,7 +2,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typogra
 import { useState, useEffect } from 'react';
 import { getStatuts, getPriorites, getQA, updateChantier } from "../services/chantierService.js";
 
-export default function PopinEditChantier({ open, onClose, chantier }) {
+export default function PopinEditChantier({ open, onClose, chantier, onUpdated }) {
 
     const [chefDeProjet, setChefDeProjet] = useState("");
     const [financement, setFinancement] = useState("");
@@ -117,6 +117,8 @@ export default function PopinEditChantier({ open, onClose, chantier }) {
             const result = await updateChantier(chantierData);
             console.log("Chantier updated avec succès");
 
+            // notifie le parent (affichage d'une notification "chantier modifié")
+            onUpdated?.(titre);
 
             handleClose();
             onClose();

@@ -16,6 +16,7 @@ export default function PopinDeleteChantier({
     onClose,
     chantier,
     onDelete,
+    onDeleted,
 }) {
 
     const handleDelete = async () => {
@@ -23,6 +24,10 @@ export default function PopinDeleteChantier({
 
       const result = await deleteChantier(chantier?.id_chantier);
       console.log("Chantier supprimé avec succès");
+
+      // notifie le parent (affichage d'une notification "chantier supprimé")
+      onDeleted?.(chantier?.titre);
+
       // reset
       onClose(true);
 

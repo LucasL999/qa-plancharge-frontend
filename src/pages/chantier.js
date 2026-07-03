@@ -43,6 +43,8 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
 // -----------------------------------------------------------------------------
 // STYLE PARTAGÉ - boutons "pill" avec effet de survol par calque
@@ -84,6 +86,40 @@ const pillButtonLayers = (baseColor, hoverColor) => ({
     transform: "translateX(0)",
   },
 });
+
+// -----------------------------------------------------------------------------
+// STYLE PARTAGÉ - notifications (toasts)
+// -----------------------------------------------------------------------------
+const TOAST_STYLES = {
+  warning: {
+    bg: "#fff3cd",
+    border: "#ffe69c",
+    color: "#664d03",
+    Icon: WarningAmberOutlinedIcon,
+  },
+  success: {
+    bg: "#d1e7dd",
+    border: "#a3cfbb",
+    color: "#0f5132",
+    Icon: CheckCircleOutlineIcon,
+  },
+  info: {
+    bg: "#cfe2ff",
+    border: "#9ec5fe",
+    color: "#084298",
+    Icon: InfoOutlinedIcon,
+  },
+  danger: {
+    bg: "#f8d7da",
+    border: "#f1aeb5",
+    color: "#842029",
+    Icon: DeleteOutlineIcon,
+  },
+};
+
+const NOTIF_DURATION = 6000; // durée d'affichage avant fermeture auto (ms)
+const TOAST_HEIGHT_ESTIMATE = { xs: 96, md: 104 }; // décalage vertical approximatif entre 2 toasts empilés
+const TOAST_GAP = 12;
 
 // -----------------------------------------------------------------------------
 // COMPOSANT PRINCIPAL
@@ -141,19 +177,40 @@ export default function Chantier() {
   };
 
   // ---------------------------------------------------------------------------
+  // NOTIFICATIONS (toasts) - warning / success / info / danger
+  // ---------------------------------------------------------------------------
+  const [toasts, setToasts] = useState([]);
+
+  const pushToast = (type, title, items = []) => {
+    const id = `${Date.now()}-${Math.random()}`;
+    setToasts((prev) => [...prev, { id, type, title, items, open: true }]);
+
+    setTimeout(() => {
+      setToasts((prev) => prev.map((t) => (t.id === id ? { ...t, open: false } : t)));
+    }, NOTIF_DURATION);
+  };
+
+  const closeToast = (id) => {
+    setToasts((prev) => prev.map((t) => (t.id === id ? { ...t, open: false } : t)));
+  };
+
+  // une fois le fade de sortie terminé, on retire vraiment le toast
+  const removeToast = (id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  // callbacks à transmettre à TableChantier -> PopinEditChantier / PopinDeleteChantier
+  const notifyChantierModifie = (titre) => {
+    pushToast("info", "Chantier modifié avec succès", titre ? [titre] : []);
+  };
+
+  const notifyChantierSupprime = (titre) => {
+    pushToast("danger", "Chantier supprimé avec succès", titre ? [titre] : []);
+  };
+
+  // ---------------------------------------------------------------------------
   // IMPORT EXCEL - référentiel chantier
   // ---------------------------------------------------------------------------
-  const [chantiersExistants, setChantiersExistants] = useState([]);
-  const [notifOpen, setNotifOpen] = useState(false);
-
-  const [chantiersImportes, setChantiersImportes] = useState([]);
-  const [notifSuccessOpen, setNotifSuccessOpen] = useState(false);
-
-  const NOTIF_DURATION = 6000; // durée d'affichage avant fermeture auto (ms)
-
-  const closeNotif = () => setNotifOpen(false);
-  const closeNotifSuccess = () => setNotifSuccessOpen(false);
-
   const importExcel = ImportExcel({
     onDataExtracted: async (titresChantiers) => {
       console.log("Titres reçus depuis Excel");
@@ -183,10 +240,18 @@ export default function Chantier() {
           }
         }
 
-        setChantiersExistants(existants);
-        setChantiersImportes(importes);
+        if (existants.length > 0) {
+          pushToast("warning", "Les chantiers suivants existent déjà", existants);
+        }
 
         if (importes.length > 0) {
+          pushToast(
+            "success",
+            importes.length > 1
+              ? `${importes.length} chantiers ont été ajoutés avec succès`
+              : "Le chantier a été ajouté avec succès",
+            importes
+          );
           refreshAll();
         }
       }
@@ -197,39 +262,6 @@ export default function Chantier() {
 
     },
   });
-
-  useEffect(() => {
-    if (chantiersExistants.length > 0) {
-      setNotifOpen(true);
-
-      const timer = setTimeout(() => {
-        setNotifOpen(false);
-      }, NOTIF_DURATION);
-
-      return () => clearTimeout(timer);
-    }
-  }, [chantiersExistants]);
-
-  useEffect(() => {
-    if (chantiersImportes.length > 0) {
-      setNotifSuccessOpen(true);
-
-      const timer = setTimeout(() => {
-        setNotifSuccessOpen(false);
-      }, NOTIF_DURATION);
-
-      return () => clearTimeout(timer);
-    }
-  }, [chantiersImportes]);
-
-  // une fois le fade de sortie terminé, on vide vraiment le contenu
-  const handleNotifExited = () => {
-    setChantiersExistants([]);
-  };
-
-  const handleNotifSuccessExited = () => {
-    setChantiersImportes([]);
-  };
 
   // ---------------------------------------------------------------------------
   // API CALLS - KPIs
@@ -357,156 +389,87 @@ export default function Chantier() {
         refreshTrigger={refreshAlertes}
       />
 
-      {chantiersExistants.length > 0 && (
-        <Fade in={notifOpen} timeout={{ enter: 250, exit: 400 }} onExited={handleNotifExited}>
-          <Box
-            role="alert"
-            sx={{
-              position: "fixed",
-              top: { xs: 12, md: 24 },
-              right: { xs: 12, md: 24 },
-              left: { xs: 12, md: "auto" },
-              zIndex: 1400,
-              width: { xs: "auto", sm: 380 },
-              maxWidth: { xs: "calc(100% - 24px)", sm: 380 },
-              backgroundColor: "#fff3cd",
-              border: "1px solid #ffe69c",
-              borderRadius: "10px",
-              boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.15)",
-              color: "#664d03",
-              overflow: "hidden",
-            }}
+      {/* NOTIFICATIONS (toasts) empilées */}
+      {toasts.map((toast, index) => {
+        const style = TOAST_STYLES[toast.type] || TOAST_STYLES.info;
+        const ToastIcon = style.Icon;
+
+        return (
+          <Fade
+            key={toast.id}
+            in={toast.open}
+            timeout={{ enter: 250, exit: 400 }}
+            onExited={() => removeToast(toast.id)}
           >
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, p: 2 }}>
-              <WarningAmberOutlinedIcon sx={{ color: "#997404", mt: "2px" }} />
+            <Box
+              role={toast.type === "danger" ? "alert" : "status"}
+              sx={{
+                position: "fixed",
+                top: {
+                  xs: 12 + index * (TOAST_HEIGHT_ESTIMATE.xs + TOAST_GAP),
+                  md: 24 + index * (TOAST_HEIGHT_ESTIMATE.md + TOAST_GAP),
+                },
+                right: { xs: 12, md: 24 },
+                left: { xs: 12, md: "auto" },
+                zIndex: 1400,
+                width: { xs: "auto", sm: 380 },
+                maxWidth: { xs: "calc(100% - 24px)", sm: 380 },
+                backgroundColor: style.bg,
+                border: `1px solid ${style.border}`,
+                borderRadius: "10px",
+                boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.15)",
+                color: style.color,
+                overflow: "hidden",
+                transition: "top 0.3s ease",
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, p: 2 }}>
+                <ToastIcon sx={{ color: style.color, mt: "2px" }} />
 
-              <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-                <Typography fontWeight="bold" sx={{ fontSize: 15 }}>
-                  Les chantiers suivants existent déjà
-                </Typography>
+                <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                  <Typography fontWeight="bold" sx={{ fontSize: 15 }}>
+                    {toast.title}
+                  </Typography>
 
-                <Box
-                  component="ul"
-                  sx={{
-                    mt: 0.5,
-                    mb: 0,
-                    pl: 2.5,
-                  }}
-                >
-                  {chantiersExistants.map((chantier, index) => (
-                    <li key={index}>
-                      <Typography sx={{ fontSize: 14 }}>{chantier}</Typography>
-                    </li>
-                  ))}
+                  {toast.items.length > 0 && (
+                    <Box component="ul" sx={{ mt: 0.5, mb: 0, pl: 2.5 }}>
+                      {toast.items.map((item, itemIndex) => (
+                        <li key={itemIndex}>
+                          <Typography sx={{ fontSize: 14 }}>{item}</Typography>
+                        </li>
+                      ))}
+                    </Box>
+                  )}
                 </Box>
+
+                <IconButton
+                  size="small"
+                  onClick={() => closeToast(toast.id)}
+                  aria-label="Fermer la notification"
+                  sx={{ color: style.color, mt: "-4px", mr: "-8px" }}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
               </Box>
 
-              <IconButton
-                size="small"
-                onClick={closeNotif}
-                aria-label="Fermer la notification"
-                sx={{ color: "#664d03", mt: "-4px", mr: "-8px" }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </Box>
-
-            {/* barre de progression indiquant le temps avant fermeture automatique */}
-            {notifOpen && (
-              <Box
-                key={chantiersExistants.length /* relance l'anim à chaque nouvelle notif */}
-                sx={{
-                  height: 3,
-                  backgroundColor: "#997404",
-                  animation: `chantierNotifProgress ${NOTIF_DURATION}ms linear forwards`,
-                  "@keyframes chantierNotifProgress": {
-                    from: { width: "100%" },
-                    to: { width: "0%" },
-                  },
-                }}
-              />
-            )}
-          </Box>
-        </Fade>
-      )}
-
-      {chantiersImportes.length > 0 && (
-        <Fade in={notifSuccessOpen} timeout={{ enter: 250, exit: 400 }} onExited={handleNotifSuccessExited}>
-          <Box
-            role="status"
-            sx={{
-              position: "fixed",
-              top: {
-                xs: chantiersExistants.length > 0 ? 132 : 12,
-                md: chantiersExistants.length > 0 ? 148 : 24,
-              },
-              right: { xs: 12, md: 24 },
-              left: { xs: 12, md: "auto" },
-              zIndex: 1400,
-              width: { xs: "auto", sm: 380 },
-              maxWidth: { xs: "calc(100% - 24px)", sm: 380 },
-              backgroundColor: "#d1e7dd",
-              border: "1px solid #a3cfbb",
-              borderRadius: "10px",
-              boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.15)",
-              color: "#0f5132",
-              overflow: "hidden",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, p: 2 }}>
-              <CheckCircleOutlineIcon sx={{ color: "#0f5132", mt: "2px" }} />
-
-              <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-                <Typography fontWeight="bold" sx={{ fontSize: 15 }}>
-                  {chantiersImportes.length > 1
-                    ? `${chantiersImportes.length} chantiers ont été ajoutés avec succès`
-                    : "Le chantier a été ajouté avec succès"}
-                </Typography>
-
+              {/* barre de progression indiquant le temps avant fermeture automatique */}
+              {toast.open && (
                 <Box
-                  component="ul"
                   sx={{
-                    mt: 0.5,
-                    mb: 0,
-                    pl: 2.5,
+                    height: 3,
+                    backgroundColor: style.color,
+                    animation: `chantierNotifProgress ${NOTIF_DURATION}ms linear forwards`,
+                    "@keyframes chantierNotifProgress": {
+                      from: { width: "100%" },
+                      to: { width: "0%" },
+                    },
                   }}
-                >
-                  {chantiersImportes.map((chantier, index) => (
-                    <li key={index}>
-                      <Typography sx={{ fontSize: 14 }}>{chantier}</Typography>
-                    </li>
-                  ))}
-                </Box>
-              </Box>
-
-              <IconButton
-                size="small"
-                onClick={closeNotifSuccess}
-                aria-label="Fermer la notification"
-                sx={{ color: "#0f5132", mt: "-4px", mr: "-8px" }}
-              >
-                <CloseIcon fontSize="small" />
-              </IconButton>
+                />
+              )}
             </Box>
-
-            {/* barre de progression indiquant le temps avant fermeture automatique */}
-            {notifSuccessOpen && (
-              <Box
-                key={chantiersImportes.length /* relance l'anim à chaque nouvelle notif */}
-                sx={{
-                  height: 3,
-                  backgroundColor: "#0f5132",
-                  animation: `chantierNotifProgress ${NOTIF_DURATION}ms linear forwards`,
-                  "@keyframes chantierNotifProgress": {
-                    from: { width: "100%" },
-                    to: { width: "0%" },
-                  },
-                }}
-              />
-            )}
-          </Box>
-        </Fade>
-      )}
+          </Fade>
+        );
+      })}
 
       {/* KPIs */}
       <Box sx={{ pt: { xs: 3, md: "26px" }, px: { xs: 2, sm: 3, md: "80px" } }}>
@@ -711,6 +674,8 @@ export default function Chantier() {
         <TableChantier
           key={refreshTableKey}
           onChantierUpdated={refreshAll}
+          onChantierModifie={notifyChantierModifie}
+          onChantierSupprime={notifyChantierSupprime}
           filtres={filtres}
           search={search}
           selectedId={chantierId}
