@@ -146,20 +146,26 @@ export default function Chantier() {
   const [chantiersExistants, setChantiersExistants] = useState([]);
   const [notifOpen, setNotifOpen] = useState(false);
 
+  const [chantiersImportes, setChantiersImportes] = useState([]);
+  const [notifSuccessOpen, setNotifSuccessOpen] = useState(false);
+
   const NOTIF_DURATION = 6000; // durée d'affichage avant fermeture auto (ms)
 
   const closeNotif = () => setNotifOpen(false);
+  const closeNotifSuccess = () => setNotifSuccessOpen(false);
 
   const importExcel = ImportExcel({
     onDataExtracted: async (titresChantiers) => {
       console.log("Titres reçus depuis Excel");
 
       const existants = [];
+      const importes = [];
 
       try {
         for (const titre of titresChantiers) {
           try {
             await importChantier(titre);
+            importes.push(titre);
           } catch (error) {
             console.log("ERROR FRONT :", error);
 
@@ -178,6 +184,11 @@ export default function Chantier() {
         }
 
         setChantiersExistants(existants);
+        setChantiersImportes(importes);
+
+        if (importes.length > 0) {
+          refreshAll();
+        }
       }
       catch (error) {
         console.error("Erreur globale :", error);
@@ -199,9 +210,25 @@ export default function Chantier() {
     }
   }, [chantiersExistants]);
 
+  useEffect(() => {
+    if (chantiersImportes.length > 0) {
+      setNotifSuccessOpen(true);
+
+      const timer = setTimeout(() => {
+        setNotifSuccessOpen(false);
+      }, NOTIF_DURATION);
+
+      return () => clearTimeout(timer);
+    }
+  }, [chantiersImportes]);
+
   // une fois le fade de sortie terminé, on vide vraiment le contenu
   const handleNotifExited = () => {
     setChantiersExistants([]);
+  };
+
+  const handleNotifSuccessExited = () => {
+    setChantiersImportes([]);
   };
 
   // ---------------------------------------------------------------------------
@@ -391,6 +418,84 @@ export default function Chantier() {
                 sx={{
                   height: 3,
                   backgroundColor: "#997404",
+                  animation: `chantierNotifProgress ${NOTIF_DURATION}ms linear forwards`,
+                  "@keyframes chantierNotifProgress": {
+                    from: { width: "100%" },
+                    to: { width: "0%" },
+                  },
+                }}
+              />
+            )}
+          </Box>
+        </Fade>
+      )}
+
+      {chantiersImportes.length > 0 && (
+        <Fade in={notifSuccessOpen} timeout={{ enter: 250, exit: 400 }} onExited={handleNotifSuccessExited}>
+          <Box
+            role="status"
+            sx={{
+              position: "fixed",
+              top: {
+                xs: chantiersExistants.length > 0 ? 132 : 12,
+                md: chantiersExistants.length > 0 ? 148 : 24,
+              },
+              right: { xs: 12, md: 24 },
+              left: { xs: 12, md: "auto" },
+              zIndex: 1400,
+              width: { xs: "auto", sm: 380 },
+              maxWidth: { xs: "calc(100% - 24px)", sm: 380 },
+              backgroundColor: "#d1e7dd",
+              border: "1px solid #a3cfbb",
+              borderRadius: "10px",
+              boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.15)",
+              color: "#0f5132",
+              overflow: "hidden",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, p: 2 }}>
+              <CheckCircleOutlineIcon sx={{ color: "#0f5132", mt: "2px" }} />
+
+              <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                <Typography fontWeight="bold" sx={{ fontSize: 15 }}>
+                  {chantiersImportes.length > 1
+                    ? `${chantiersImportes.length} chantiers ont été ajoutés avec succès`
+                    : "Le chantier a été ajouté avec succès"}
+                </Typography>
+
+                <Box
+                  component="ul"
+                  sx={{
+                    mt: 0.5,
+                    mb: 0,
+                    pl: 2.5,
+                  }}
+                >
+                  {chantiersImportes.map((chantier, index) => (
+                    <li key={index}>
+                      <Typography sx={{ fontSize: 14 }}>{chantier}</Typography>
+                    </li>
+                  ))}
+                </Box>
+              </Box>
+
+              <IconButton
+                size="small"
+                onClick={closeNotifSuccess}
+                aria-label="Fermer la notification"
+                sx={{ color: "#0f5132", mt: "-4px", mr: "-8px" }}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </Box>
+
+            {/* barre de progression indiquant le temps avant fermeture automatique */}
+            {notifSuccessOpen && (
+              <Box
+                key={chantiersImportes.length /* relance l'anim à chaque nouvelle notif */}
+                sx={{
+                  height: 3,
+                  backgroundColor: "#0f5132",
                   animation: `chantierNotifProgress ${NOTIF_DURATION}ms linear forwards`,
                   "@keyframes chantierNotifProgress": {
                     from: { width: "100%" },
