@@ -107,6 +107,9 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
             const result = await addChantier(chantierData);
             console.log("Chantier créé avec succès");
 
+            // on garde le titre avant le reset des champs, pour la notification
+            const titreCree = selectedChantier;
+
             //reset
             setSelectedChantier("");
             setSelectedPriorite("");
@@ -122,7 +125,7 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
             setSelectedDateFin("");
 
             handleClose();
-            onCreated?.(); // Notifie le parent que le chantier a été créé
+            onCreated?.(titreCree); // Notifie le parent que le chantier a été créé
             onClose(true);
 
         } catch (error) {

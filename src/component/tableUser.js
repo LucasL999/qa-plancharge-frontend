@@ -53,7 +53,7 @@ export default function TableUser() {
       <Table sx={{ minWidth: 650, borderRadius: 10 }} aria-label="simple table">
         <TableHead>
           <TableRow sx={{backgroundColor: "rgba(1, 120, 165, 0.8)"}}>
-            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Utilisateur</TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >UTILISATEUR</TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Email</TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Rôle</TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Actions</TableCell>

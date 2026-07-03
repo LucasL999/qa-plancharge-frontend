@@ -208,6 +208,11 @@ export default function Chantier() {
     pushToast("danger", "Chantier supprimé avec succès", titre ? [titre] : []);
   };
 
+  const notifyChantierCree = (titre) => {
+    pushToast("success", "Chantier créé avec succès", titre ? [titre] : []);
+    refreshAll();
+  };
+
   // ---------------------------------------------------------------------------
   // IMPORT EXCEL - référentiel chantier
   // ---------------------------------------------------------------------------
@@ -683,7 +688,7 @@ export default function Chantier() {
       </Box>
 
       {/* POPINS */}
-      <PopinNewChantier open={openPopin} onClose={closePopinNewChantier} onCreated={refreshAll} />
+      <PopinNewChantier open={openPopin} onClose={closePopinNewChantier} onCreated={notifyChantierCree} />
       <PopinFiltre open={openPopinFiltre} onClose={closePopinFiltres} onApply={handleApplyFiltres} />
     </>
   );

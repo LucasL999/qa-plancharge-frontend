@@ -128,16 +128,18 @@ export default function Schedule({ onMonthYearChange }) {
     });
   };
 
-  const eventOther = (date) => {
-    if (!Array.isArray(eventsOther)) return false;
+  // ✅ retourne la liste des événements (autres utilisateurs) présents ce jour-là,
+  // avec leur prénom/nom, pour pouvoir les afficher sur la baguette
+  const getOtherEventsOnDate = (date) => {
+    if (!Array.isArray(eventsOther)) return [];
 
     const shiftedDate = new Date(date);
     shiftedDate.setDate(shiftedDate.getDate() - 1);
 
     const key = formatDateKey(shiftedDate);
 
-    // ✅ 1. récupérer les events du jour
-    const matchedEvents = eventsOther.filter(event => {
+    return eventsOther.filter(event => {
+      if (!event) return false;
       if (!event.date_debut || !event.date_fin) return false;
 
       const start = event.date_debut.split("T")[0];
@@ -145,12 +147,6 @@ export default function Schedule({ onMonthYearChange }) {
 
       return key >= start && key <= end;
     });
-
-    // ✅ 2. récupérer les prénoms
-    const firstnames = matchedEvents.map(e => e.firstname).join(", ");
-
-    // ✅ 4. retourner boolean (comme avant)
-    return matchedEvents.length > 0;
   };
 
   useEffect(() => {
@@ -159,7 +155,7 @@ export default function Schedule({ onMonthYearChange }) {
 
   /* ================= RENDER ================= */
   return (
-    <div style={{...styles.calendar, boxShadow: "0px 0px 4px rgba(0,0,0,0.25)"}}>
+    <div style={{ ...styles.calendar, boxShadow: "0px 0px 4px rgba(0,0,0,0.25)" }}>
 
       <PopinNewEvent
         open={openPopin}
@@ -174,7 +170,7 @@ export default function Schedule({ onMonthYearChange }) {
       />
 
       {/* HEADER */}
-      <div style={{...styles.header}}>
+      <div style={{ ...styles.header }}>
         <button onClick={prevMonth} style={{ background: "none", border: "none", cursor: "pointer" }}>
           <ArrowBackIosOutlinedIcon />
         </button>
@@ -220,7 +216,8 @@ export default function Schedule({ onMonthYearChange }) {
           const isWeekend = [0, 6].includes(date.getDay());
           const ferieName = isFerie(date);
           const hasEvent = hasEventOnDate(date);
-          const hasEventOther = eventOther(date);
+          const otherEvents = getOtherEventsOnDate(date);
+          const hasEventOther = otherEvents.length > 0;
 
           let background = "#f5f5f5";
           let color = "black";
@@ -263,9 +260,10 @@ export default function Schedule({ onMonthYearChange }) {
               {/* numéro du jour */}
               {dayNumber}
 
-              {/* ✅ baguette ici */}
+              {/* ✅ baguette + noms des absents (autres utilisateurs) */}
               {hasEventOther && (
                 <div
+                  //title={otherNames.join(", ")}
                   style={{
                     position: "absolute",
                     bottom: "4px",
