@@ -10,7 +10,7 @@
 // -----------------------------------------------------------------------------
 
 // Import UI Material UI
-import { alpha, Box, Divider, Grid, Button, TextField, Typography } from "@mui/material";
+import { alpha, Box, Divider, Grid, Button, TextField, Typography, IconButton, Fade } from "@mui/material";
 
 // React hooks
 import { useState, useEffect } from "react";
@@ -41,6 +41,8 @@ import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined';
+import CloseIcon from '@mui/icons-material/Close';
+import WarningAmberOutlinedIcon from '@mui/icons-material/WarningAmberOutlined';
 
 // -----------------------------------------------------------------------------
 // STYLE PARTAGÉ - boutons "pill" avec effet de survol par calque
@@ -142,6 +144,12 @@ export default function Chantier() {
   // IMPORT EXCEL - référentiel chantier
   // ---------------------------------------------------------------------------
   const [chantiersExistants, setChantiersExistants] = useState([]);
+  const [notifOpen, setNotifOpen] = useState(false);
+
+  const NOTIF_DURATION = 6000; // durée d'affichage avant fermeture auto (ms)
+
+  const closeNotif = () => setNotifOpen(false);
+
   const importExcel = ImportExcel({
     onDataExtracted: async (titresChantiers) => {
       console.log("Titres reçus depuis Excel");
@@ -181,13 +189,20 @@ export default function Chantier() {
 
   useEffect(() => {
     if (chantiersExistants.length > 0) {
+      setNotifOpen(true);
+
       const timer = setTimeout(() => {
-        setChantiersExistants([]);
-      }, 5000);
+        setNotifOpen(false);
+      }, NOTIF_DURATION);
 
       return () => clearTimeout(timer);
     }
   }, [chantiersExistants]);
+
+  // une fois le fade de sortie terminé, on vide vraiment le contenu
+  const handleNotifExited = () => {
+    setChantiersExistants([]);
+  };
 
   // ---------------------------------------------------------------------------
   // API CALLS - KPIs
@@ -316,28 +331,76 @@ export default function Chantier() {
       />
 
       {chantiersExistants.length > 0 && (
-        <Box
-          sx={{
-            mx: "auto",
-            mt: 2,
-            width: { xs: "92%", md: "88%" },
-            backgroundColor: "#fff3cd",
-            border: "1px solid #ffe69c",
-            borderRadius: "8px",
-            p: 2,
-            color: "#664d03",
-          }}
-        >
-          <Typography fontWeight="bold">
-            Les chantiers suivants existent déjà :
-          </Typography>
+        <Fade in={notifOpen} timeout={{ enter: 250, exit: 400 }} onExited={handleNotifExited}>
+          <Box
+            role="alert"
+            sx={{
+              position: "fixed",
+              top: { xs: 12, md: 24 },
+              right: { xs: 12, md: 24 },
+              left: { xs: 12, md: "auto" },
+              zIndex: 1400,
+              width: { xs: "auto", sm: 380 },
+              maxWidth: { xs: "calc(100% - 24px)", sm: 380 },
+              backgroundColor: "#fff3cd",
+              border: "1px solid #ffe69c",
+              borderRadius: "10px",
+              boxShadow: "0px 6px 20px rgba(0, 0, 0, 0.15)",
+              color: "#664d03",
+              overflow: "hidden",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1.5, p: 2 }}>
+              <WarningAmberOutlinedIcon sx={{ color: "#997404", mt: "2px" }} />
 
-          <ul style={{ marginTop: "8px", marginBottom: 0 }}>
-            {chantiersExistants.map((chantier, index) => (
-              <li key={index}>{chantier}</li>
-            ))}
-          </ul>
-        </Box>
+              <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+                <Typography fontWeight="bold" sx={{ fontSize: 15 }}>
+                  Les chantiers suivants existent déjà
+                </Typography>
+
+                <Box
+                  component="ul"
+                  sx={{
+                    mt: 0.5,
+                    mb: 0,
+                    pl: 2.5,
+                  }}
+                >
+                  {chantiersExistants.map((chantier, index) => (
+                    <li key={index}>
+                      <Typography sx={{ fontSize: 14 }}>{chantier}</Typography>
+                    </li>
+                  ))}
+                </Box>
+              </Box>
+
+              <IconButton
+                size="small"
+                onClick={closeNotif}
+                aria-label="Fermer la notification"
+                sx={{ color: "#664d03", mt: "-4px", mr: "-8px" }}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </Box>
+
+            {/* barre de progression indiquant le temps avant fermeture automatique */}
+            {notifOpen && (
+              <Box
+                key={chantiersExistants.length /* relance l'anim à chaque nouvelle notif */}
+                sx={{
+                  height: 3,
+                  backgroundColor: "#997404",
+                  animation: `chantierNotifProgress ${NOTIF_DURATION}ms linear forwards`,
+                  "@keyframes chantierNotifProgress": {
+                    from: { width: "100%" },
+                    to: { width: "0%" },
+                  },
+                }}
+              />
+            )}
+          </Box>
+        </Fade>
       )}
 
       {/* KPIs */}
@@ -539,7 +602,7 @@ export default function Chantier() {
       </Box>
 
       {/* TABLE */}
-      <Box sx={{ px: { xs: 1, sm: 3, md: "100px" }, pt: { xs: 3, md: "30px" }, display: "flex", justifyContent: "center", overflowX: "auto" }}>
+      <Box sx={{ px: { xs: 1, sm: 3, md: "100px" }, pt: { xs: 3, md: "30px" }, pb: { xs: 4, md: 6 }, display: "flex", justifyContent: "center" }}>
         <TableChantier
           key={refreshTableKey}
           onChantierUpdated={refreshAll}
