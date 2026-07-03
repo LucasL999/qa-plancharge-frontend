@@ -120,6 +120,38 @@ export async function addChantier(data) {
   }
 }
 
+export async function importChantier(titre) {
+  try {
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/import`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ titre }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw {
+        status: response.status,
+        message: data.message || "Erreur lors de l'import",
+      };
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error importing chantier:", error);
+    throw error;
+  }
+}
+
 export async function getChantier() {
   try {
     const token = getAuthToken();
@@ -283,6 +315,7 @@ export async function getNbAlertes() {
       `${process.env.REACT_APP_BACKEND_URL}/Nbalertes`,
       {
         headers: {
+          method: "GET",
           Authorization: `Bearer ${token}`,
         },
       }
@@ -320,6 +353,31 @@ export async function deleteChantier(id_chantier) {
     return await response.json();
   } catch (error) {
     console.error("Error deleting chantier:", error);
+    throw error;
+  }
+}
+
+export async function getNbChantierEncours() {
+  try {
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/NbChantierEncours`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch Nb chantiers en cours");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching Nb chantiers en cours:", error);
     throw error;
   }
 }

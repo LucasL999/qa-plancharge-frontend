@@ -28,7 +28,7 @@ import PopinFiltre from "../component/popinFiltre";
 
 // Import métier / services
 import ImportExcel from "../algo/importExcel";
-import { getPrev, getCons } from "../services/chantierService.js";
+import { getPrev, getCons, getNbChantierEncours, importChantier } from "../services/chantierService.js";
 import { exportExcel } from "../services/exportExcelService.js";
 
 // Icônes MUI
@@ -40,6 +40,48 @@ import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import AutorenewOutlinedIcon from '@mui/icons-material/AutorenewOutlined';
+
+// -----------------------------------------------------------------------------
+// STYLE PARTAGÉ - boutons "pill" avec effet de survol par calque
+// -----------------------------------------------------------------------------
+const pillButtonBaseSx = {
+  position: "relative",
+  isolation: "isolate",
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+  borderRadius: "100px",
+  height: { xs: "48px", sm: "56px", md: "60px" },
+  width: { xs: "100%", sm: "auto" },
+  minWidth: { sm: "150px" },
+  fontSize: { xs: 16, sm: 18, md: 20 },
+  textTransform: "none",
+  color: "black",
+  px: { xs: 2, md: 3 },
+  backgroundColor: "transparent",
+};
+
+const pillButtonLayers = (baseColor, hoverColor) => ({
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    inset: 0,
+    backgroundColor: baseColor,
+    zIndex: -2,
+  },
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    inset: 0,
+    transform: "translateX(-100%)",
+    backgroundColor: hoverColor,
+    transition: "transform 0.3s ease",
+    zIndex: -1,
+  },
+  "&:hover::before": {
+    transform: "translateX(0)",
+  },
+});
 
 // -----------------------------------------------------------------------------
 // COMPOSANT PRINCIPAL
@@ -82,7 +124,7 @@ export default function Chantier() {
   const [displayRAF, setDisplayRAF] = useState(0);
   const [displayCons, setDisplayCons] = useState(0);
   const [displayPrev, setDisplayPrev] = useState(0);
-
+  const [nbChantierEncours, setNbChantierEncours] = useState(0);
   // ---------------------------------------------------------------------------
   // POPIN HANDLERS
   // ---------------------------------------------------------------------------
@@ -99,11 +141,53 @@ export default function Chantier() {
   // ---------------------------------------------------------------------------
   // IMPORT EXCEL - référentiel chantier
   // ---------------------------------------------------------------------------
+  const [chantiersExistants, setChantiersExistants] = useState([]);
   const importExcel = ImportExcel({
-    onDataExtracted: (titresChantiers) => {
+    onDataExtracted: async (titresChantiers) => {
       console.log("Titres reçus depuis Excel");
-    }
+
+      const existants = [];
+
+      try {
+        for (const titre of titresChantiers) {
+          try {
+            await importChantier(titre);
+          } catch (error) {
+            console.log("ERROR FRONT :", error);
+
+            if (
+              error.status === 409 ||
+              error.message?.includes("existe")
+            ) {
+              existants.push(titre);
+            } else {
+              console.error(
+                `Erreur lors de l'ajout du chantier ${titre} :`,
+                error
+              );
+            }
+          }
+        }
+
+        setChantiersExistants(existants);
+      }
+      catch (error) {
+        console.error("Erreur globale :", error);
+      }
+
+
+    },
   });
+
+  useEffect(() => {
+    if (chantiersExistants.length > 0) {
+      const timer = setTimeout(() => {
+        setChantiersExistants([]);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [chantiersExistants]);
 
   // ---------------------------------------------------------------------------
   // API CALLS - KPIs
@@ -121,6 +205,15 @@ export default function Chantier() {
     try {
       const res = await getCons();
       setCons(res[0].sum);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchNbChantierEncours = async () => {
+    try {
+      const res = await getNbChantierEncours();
+      setNbChantierEncours(res[0].count);
     } catch (error) {
       console.error(error);
     }
@@ -175,12 +268,15 @@ export default function Chantier() {
     animateValue(displayRAF, end, setDisplayRAF);
   }, [prev, cons, raf]);
 
+  useEffect(() => {
+    fetchNbChantierEncours();
+  }, [prev]);
 
   // ---------------------------------------------------------------------------
   // REFRESH HELPERS
   // ---------------------------------------------------------------------------
   const refreshKpis = async () => {
-    await Promise.all([fetchPrev(), fetchCons()]);
+    await Promise.all([fetchPrev(), fetchCons(), fetchNbChantierEncours()]);
   };
 
   const refreshAll = async () => {
@@ -219,11 +315,36 @@ export default function Chantier() {
         refreshTrigger={refreshAlertes}
       />
 
-      {/* KPIs */}
-      <Box sx={{ paddingTop: "26px", paddingLeft: "80px", height: "180px" }}>
-        <Grid container spacing={2} alignItems="center">
+      {chantiersExistants.length > 0 && (
+        <Box
+          sx={{
+            mx: "auto",
+            mt: 2,
+            width: { xs: "92%", md: "88%" },
+            backgroundColor: "#fff3cd",
+            border: "1px solid #ffe69c",
+            borderRadius: "8px",
+            p: 2,
+            color: "#664d03",
+          }}
+        >
+          <Typography fontWeight="bold">
+            Les chantiers suivants existent déjà :
+          </Typography>
 
-          <Grid item xs={12} md={4}>
+          <ul style={{ marginTop: "8px", marginBottom: 0 }}>
+            {chantiersExistants.map((chantier, index) => (
+              <li key={index}>{chantier}</li>
+            ))}
+          </ul>
+        </Box>
+      )}
+
+      {/* KPIs */}
+      <Box sx={{ pt: { xs: 3, md: "26px" }, px: { xs: 2, sm: 3, md: "80px" } }}>
+        <Grid container spacing={2} alignItems="stretch">
+
+          <Grid item xs={12} sm={6} md={3}>
             <Card6
               title="Reste à faire (RAF)"
               value={displayRAF}
@@ -233,7 +354,7 @@ export default function Chantier() {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <Card5
               title="Charge consommée"
               value={displayCons}
@@ -243,7 +364,7 @@ export default function Chantier() {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <Card5
               title="Charge globale"
               value={displayPrev}
@@ -253,22 +374,33 @@ export default function Chantier() {
             />
           </Grid>
 
+          <Grid item xs={12} sm={6} md={3}>
+            <Card5
+              title="Nombre de chantiers"
+              value={nbChantierEncours}
+              icon={<AutorenewOutlinedIcon sx={{ color: "black", fontSize: 35 }} />}
+              unit="en cours"
+              color="black"
+            />
+          </Grid>
+
         </Grid>
       </Box>
 
       {/* séparation */}
-      <Box sx={{ paddingTop: "60px", display: "flex", justifyContent: "center", marginBottom: "30px" }}>
-        <Divider sx={{ width: "88%" }} />
+      <Box sx={{ pt: { xs: 4, md: "60px" }, display: "flex", justifyContent: "center", mb: { xs: 3, md: "30px" } }}>
+        <Divider sx={{ width: { xs: "92%", md: "88%" } }} />
       </Box>
 
       {/* BARRE D'ACTIONS */}
       <Box
         sx={{
-          px: { xs: 2, md: 6 },
+          px: { xs: 2, sm: 3, md: 6 },
           display: "flex",
-          alignItems: "center",
+          flexDirection: { xs: "column", md: "row" },
+          alignItems: { xs: "stretch", md: "center" },
           gap: 2,
-          flexWrap: "wrap",
+          flexWrap: { md: "wrap" },
         }}
       >
 
@@ -283,15 +415,15 @@ export default function Chantier() {
             position: "relative",
             isolation: "isolate",
             overflow: "hidden",
+            width: { xs: "100%", md: "600px" },
             minWidth: { xs: "100%", md: 300 },
-            width: "600px",
             backgroundColor: "transparent",
             borderRadius: "100px",
             boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.4)",
-            marginLeft: "50px",
+            ml: { xs: 0, md: "50px" },
             "& fieldset": { border: "none" },
             "& .MuiOutlinedInput-root": {
-              fontSize: "18px",
+              fontSize: { xs: 16, md: 18 },
               paddingLeft: "16px",
             },
 
@@ -324,205 +456,80 @@ export default function Chantier() {
           }}
         />
 
-        {/* filtres */}
-        <Button
-          variant="contained"
-          onClick={openPopinFiltres}
+        {/* rangée de boutons secondaires : passe en grille 2 colonnes sur mobile */}
+        <Box
           sx={{
-            whiteSpace: "nowrap",
-            position: "relative",
-            isolation: "isolate",
-            overflow: "hidden",
-            borderRadius: "100px",
-            height: "60px",
-            width: "180px",
-            fontSize: 20,
-            textTransform: "none",
-            backgroundColor: "#DFDFDF",
-            color: "black",
-            px: 3,
-            backgroundColor: "transparent",
-
-            // fond de base
-            "&::after": {
-              content: '""',
-              position: "absolute",
-              inset: 0,
-              backgroundColor: "rgba(223, 223, 223, 1)",
-              zIndex: -2,
-            },
-
-            // couche animée
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              inset: 0,
-              transform: "translateX(-100%)",
-              backgroundColor: "#cccccc",
-              transition: "transform 0.3s ease",
-              zIndex: -1,
-            },
-
-            "&:hover::before": {
-              transform: "translateX(0)",
-            },
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr 1fr", sm: "repeat(3, auto)", md: "repeat(3, auto)" },
+            gap: 2,
+            width: { xs: "100%", md: "auto" },
           }}
         >
-          <FilterAltOutlinedIcon sx={{ mr: 1 }} />
-          Filtres
-        </Button>
-
-        {/* export excel */}
-        <Button
-          variant="contained"
-          onClick={(e) => {
-            e.preventDefault(); // ✅ bloque comportement navigateur
-            e.stopPropagation(); // ✅ sécurité supplémentaire
-            handleExportExcel();
-          }}
-
-          sx={{
-            whiteSpace: "nowrap",
-            position: "relative",
-            isolation: "isolate",
-            overflow: "hidden",
-            borderRadius: "100px",
-            height: "60px",
-            width: "180px",
-            fontSize: 20,
-            textTransform: "none",
-            color: "black",
-            px: 3,
-            backgroundColor: "transparent",
-
-
-            // fond de base
-            "&::after": {
-              content: '""',
-              position: "absolute",
-              inset: 0,
-              backgroundColor: "rgba(1, 120, 165, 0.8)",
-              zIndex: -2,
-            },
-
-            // couche animée
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              inset: 0,
-              transform: "translateX(-100%)",
-              backgroundColor: "#0178A5",
-              transition: "transform 0.3s ease",
-              zIndex: -1,
-            },
-
-            "&:hover::before": {
-              transform: "translateX(0)",
-            },
-          }}
-        >
-          <FileUploadOutlinedIcon sx={{ mr: 1 }} />
-          Excel
-        </Button>
-
-        {/* import référentiel */}
-        <Button
-          variant="contained"
-          component="label"
-          sx={{
-            whiteSpace: "nowrap",
-            position: "relative",
-            isolation: "isolate",
-            overflow: "hidden",
-            borderRadius: "100px",
-            height: "60px",
-            width: "180px",
-            textTransform: "none",
-            color: "black",
-            px: 3,
-            backgroundColor: "transparent",
-
-            // fond de base
-            "&::after": {
-              content: '""',
-              position: "absolute",
-              inset: 0,
-              backgroundColor: "rgba(1, 120, 165, 0.8)",
-              zIndex: -2,
-            },
-
-            // couche animée
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              inset: 0,
-              transform: "translateX(-100%)",
-              backgroundColor: "#0178A5",
-              transition: "transform 0.3s ease",
-              zIndex: -1,
-            },
-
-            "&:hover::before": {
-              transform: "translateX(0)",
-            },
-          }}
-        >
-          <FileDownloadOutlinedIcon sx={{ mr: 1 }} />
-          <Typography
+          {/* filtres */}
+          <Button
+            variant="contained"
+            onClick={openPopinFiltres}
             sx={{
-              fontFamily: "Roboto, sans-serif",
-              fontWeight: 400,
-              fontSize: 20,
+              ...pillButtonBaseSx,
+              gridColumn: { xs: "span 1", sm: "auto" },
+              ...pillButtonLayers("rgba(223, 223, 223, 1)", "#cccccc"),
             }}
           >
-            Référentiel
-          </Typography>
-          <input hidden type="file" accept=".xlsx,.xls" onChange={importExcel.handleFileChange} />
-        </Button>
+            <FilterAltOutlinedIcon sx={{ mr: 1 }} />
+            Filtres
+          </Button>
+
+          {/* export excel */}
+          <Button
+            variant="contained"
+            onClick={(e) => {
+              e.preventDefault(); // ✅ bloque comportement navigateur
+              e.stopPropagation(); // ✅ sécurité supplémentaire
+              handleExportExcel();
+            }}
+            sx={{
+              ...pillButtonBaseSx,
+              gridColumn: { xs: "span 1", sm: "auto" },
+              ...pillButtonLayers("rgba(1, 120, 165, 0.8)", "#0178A5"),
+            }}
+          >
+            <FileUploadOutlinedIcon sx={{ mr: 1 }} />
+            Excel
+          </Button>
+
+          {/* import référentiel */}
+          <Button
+            variant="contained"
+            component="label"
+            sx={{
+              ...pillButtonBaseSx,
+              gridColumn: { xs: "span 2", sm: "auto" },
+              ...pillButtonLayers("rgba(1, 120, 165, 0.8)", "#0178A5"),
+            }}
+          >
+            <FileDownloadOutlinedIcon sx={{ mr: 1 }} />
+            <Typography
+              sx={{
+                fontFamily: "Roboto, sans-serif",
+                fontWeight: 400,
+                fontSize: { xs: 16, sm: 18, md: 20 },
+              }}
+            >
+              Référentiel
+            </Typography>
+            <input hidden type="file" accept=".xlsx,.xls" onChange={importExcel.handleFileChange} />
+          </Button>
+        </Box>
 
         {/* CTA création */}
         <Button
           variant="contained"
           onClick={openPopinNewChantier}
           sx={{
-            position: "relative",
-            isolation: "isolate", // important
-            overflow: "hidden",
-            ml: { md: "auto" },
-            whiteSpace: "nowrap",
-            borderRadius: "100px",
-            marginRight: "50px",
-            height: "60px",
-            width: "180px",
-            fontSize: 20,
-            textTransform: "none",
-            color: "black",
-            px: 3,
-            backgroundColor: "transparent", // on désactive le bg MUI
-
-            // fond de base
-            "&::after": {
-              content: '""',
-              position: "absolute",
-              inset: 0,
-              backgroundColor: "rgba(212,218,23,0.8)",
-              zIndex: -2,
-            },
-
-            // couche animée
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              inset: 0,
-              transform: "translateX(-100%)",
-              backgroundColor: "#c2c91a",
-              transition: "transform 0.3s ease",
-              zIndex: -1,
-            },
-
-            "&:hover::before": {
-              transform: "translateX(0)",
-            },
+            ...pillButtonBaseSx,
+            ml: { xs: 0, md: "auto" },
+            mr: { xs: 0, md: "50px" },
+            ...pillButtonLayers("rgba(212,218,23,0.8)", "#c2c91a"),
           }}
         >
           <AddOutlinedIcon sx={{ mr: 1 }} />
@@ -532,7 +539,7 @@ export default function Chantier() {
       </Box>
 
       {/* TABLE */}
-      <Box sx={{ paddingLeft: "100px", paddingRight: "100px", paddingTop: "30px", display: "flex", justifyContent: "center" }}>
+      <Box sx={{ px: { xs: 1, sm: 3, md: "100px" }, pt: { xs: 3, md: "30px" }, display: "flex", justifyContent: "center", overflowX: "auto" }}>
         <TableChantier
           key={refreshTableKey}
           onChantierUpdated={refreshAll}
