@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Tooltip } from "@mui/material";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 import PopinNewEvent from "./popinNewEvent";
@@ -139,7 +140,6 @@ export default function Schedule({ onMonthYearChange }) {
     const key = formatDateKey(shiftedDate);
 
     return eventsOther.filter(event => {
-      if (!event) return false;
       if (!event.date_debut || !event.date_fin) return false;
 
       const start = event.date_debut.split("T")[0];
@@ -155,7 +155,7 @@ export default function Schedule({ onMonthYearChange }) {
 
   /* ================= RENDER ================= */
   return (
-    <div style={{ ...styles.calendar, boxShadow: "0px 0px 4px rgba(0,0,0,0.25)" }}>
+    <div style={{...styles.calendar, boxShadow: "0px 0px 4px rgba(0,0,0,0.25)"}}>
 
       <PopinNewEvent
         open={openPopin}
@@ -170,7 +170,7 @@ export default function Schedule({ onMonthYearChange }) {
       />
 
       {/* HEADER */}
-      <div style={{ ...styles.header }}>
+      <div style={{...styles.header}}>
         <button onClick={prevMonth} style={{ background: "none", border: "none", cursor: "pointer" }}>
           <ArrowBackIosOutlinedIcon />
         </button>
@@ -232,6 +232,9 @@ export default function Schedule({ onMonthYearChange }) {
             color = "white";
           }
 
+          // couleurs de segments légèrement alternées pour bien distinguer chaque tranche
+          const segmentShades = ["#0178A5", "#3596bd", "#015f82"];
+
           return (
             <div
               key={dayNumber}
@@ -260,21 +263,39 @@ export default function Schedule({ onMonthYearChange }) {
               {/* numéro du jour */}
               {dayNumber}
 
-              {/* ✅ baguette + noms des absents (autres utilisateurs) */}
+              {/* ✅ une seule baguette, divisée en segments égaux (1 par personne absente) */}
               {hasEventOther && (
                 <div
-                  //title={otherNames.join(", ")}
                   style={{
                     position: "absolute",
                     bottom: "4px",
                     left: "4px",
                     right: "4px",
-                    height: "6px",
+                    display: "flex",
+                    height: "7px",
                     borderRadius: "2px",
-                    backgroundColor: "#0178A5"
+                    overflow: "hidden",
+                    gap: "1px",
                   }}
-
-                />
+                >
+                  {otherEvents.map((ev, idx) => (
+                    <Tooltip
+                      key={idx}
+                      title={`${ev.firstname} ${ev.name}`}
+                      arrow
+                      placement="top"
+                    >
+                      <div
+                        style={{
+                          flex: 1,
+                          height: "100%",
+                          backgroundColor: segmentShades[idx % segmentShades.length],
+                          cursor: "default",
+                        }}
+                      />
+                    </Tooltip>
+                  ))}
+                </div>
               )}
             </div>
           );
