@@ -23,6 +23,10 @@ export default function PopinNewEvent({ open, onClose, date }) {
         alert("Utilisateur non authentifié");
         return;
       }
+      if (endDate < startDate) {
+        alert("La date de fin ne doit pas être inférieure à la date de début.");
+        return;
+      }
       const decoded = jwtDecode(token);
       const emailFromToken = decoded.email;
       const eventData = { email: emailFromToken, date_debut: startDate, date_fin: endDate };

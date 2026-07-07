@@ -11,7 +11,7 @@ export default function TableTeam({ qas }) {
           <TableRow sx={{backgroundColor: "rgba(1, 120, 165, 0.8)"}}>
             <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >QA</TableCell>
             <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Capacité disponible</TableCell>
-            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Absences restantes</TableCell>
+            <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "16px", color: "white" }} >Absences</TableCell>
           </TableRow>
         </TableHead>
 

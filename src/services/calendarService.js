@@ -5,6 +5,7 @@
 // Responsabilités :
 // - création d’un événement
 // - récupération des événements
+// - modification d’un événement
 // - suppression d’un événement
 // -----------------------------------------------------------------------------
 
@@ -95,9 +96,41 @@ export async function getEventsOther() {
 }
 
 // -----------------------------------------------------------------------------
+// API - MODIFICATION D'UN ÉVÉNEMENT
+// -----------------------------------------------------------------------------
+export async function updateEvent(id_event, date_debut, date_fin) {
+  try {
+    const token = getAuthToken();
+
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_URL}/updateEvent`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id_event, date_debut, date_fin }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to update event");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error("Error updating event:", error);
+    throw error;
+  }
+}
+
+// -----------------------------------------------------------------------------
 // API - SUPPRESSION D'UN ÉVÉNEMENT
 // -----------------------------------------------------------------------------
-export async function deleteEvent(date_debut, date_fin) {
+// ✅ basé sur id_event (et non plus sur date_debut/date_fin) pour que la
+// suppression fonctionne quel que soit le jour cliqué dans la plage d'absence
+export async function deleteEvent(id_event) {
   try {
     const token = getAuthToken();
 
@@ -109,7 +142,7 @@ export async function deleteEvent(date_debut, date_fin) {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ date_debut, date_fin }),
+        body: JSON.stringify({ id_event }),
       }
     );
 

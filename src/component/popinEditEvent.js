@@ -1,24 +1,39 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { jwtDecode } from "jwt-decode";
-import { deleteEvent } from "../services/calendarService"
+import { deleteEvent, updateEvent } from "../services/calendarService"
 
-export default function PopinEditEvent({ open, onClose, date }) {
+// ✅ décale une date "YYYY-MM-DD" (ou ISO) de `deltaDays` jours, en UTC pur
+// pour ne jamais dépendre du fuseau horaire du navigateur
+const shiftDateString = (dateStr, deltaDays) => {
+  if (!dateStr) return "";
+  const [y, m, d] = dateStr.split("T")[0].split("-").map(Number);
+  const shifted = new Date(Date.UTC(y, m - 1, d + deltaDays));
+  return shifted.toISOString().split("T")[0];
+};
+
+export default function PopinEditEvent({ open, onClose, event }) {
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
-    if (date) {
-      setStartDate(date.toISOString().split('T')[0]);
-      setEndDate(date.toISOString().split('T')[0]);
+    if (event) {
+      const displayStart = event.date_debut ? shiftDateString(event.date_debut, 1) : "";
+      const displayEnd = event.date_fin ? shiftDateString(event.date_fin, 1) : "";
+      setStartDate(displayStart);
+      setEndDate(displayEnd);
     }
-  }, [date]);
+  }, [event]);
 
   const handleDelete = async () => {
     try {
+      if (!event?.id_event) {
+        console.error("id_event manquant, suppression impossible");
+        return;
+      }
 
-      const result = await deleteEvent(startDate, endDate);
+      const result = await deleteEvent(event.id_event);
       console.log("Event supprimé avec succès");
       // reset
       setStartDate("");
@@ -27,6 +42,27 @@ export default function PopinEditEvent({ open, onClose, date }) {
 
     } catch (error) {
       console.error("Erreur suppression event:", error);
+    }
+  };
+
+  const handleUpdate = async () => {
+    try {
+      if (!event?.id_event) {
+        console.error("id_event manquant, modification impossible");
+        return;
+      }
+      if (endDate < startDate) {
+        alert("La date de fin ne doit pas être inférieure à la date de début.");
+        return;
+      }
+
+      const result = await updateEvent(event.id_event, startDate, endDate);
+      console.log("Event modifié avec succès");
+
+      onClose(true);
+
+    } catch (error) {
+      console.error("Erreur modification event:", error);
     }
   };
 
@@ -79,6 +115,7 @@ export default function PopinEditEvent({ open, onClose, date }) {
                 variant="outlined"
                 type="date"
                 value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
                 sx={{
                   "& fieldset": {
                     borderRadius: "10px"
@@ -95,6 +132,7 @@ export default function PopinEditEvent({ open, onClose, date }) {
                 variant="outlined"
                 type="date"
                 value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
                 sx={{
                   "& fieldset": {
                     borderRadius: "10px"
@@ -129,6 +167,23 @@ export default function PopinEditEvent({ open, onClose, date }) {
             color: "black",
             borderRadius: "10px",
             width: "120px"
+          }}
+          onClick={handleUpdate}
+        >
+          Modifier
+        </Button>
+
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "#ff0000",
+            color: "white",
+            borderRadius: "10px",
+            width: "120px",
+
+            "&:hover": {
+              backgroundColor: "#C00F0C",
+            },
           }}
           onClick={handleDelete}
         >

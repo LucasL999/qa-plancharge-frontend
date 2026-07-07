@@ -18,7 +18,7 @@ export default function Schedule({ onMonthYearChange }) {
   const [selectedDate, setSelectedDate] = useState(null);
 
   const [openEditPopin, setOpenEditPopin] = useState(false);
-  const [selectedEventDate, setSelectedEventDate] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState(null);
 
   /* ================= FETCH EVENTS ================= */
   const fetchEvents = async () => {
@@ -53,7 +53,22 @@ export default function Schedule({ onMonthYearChange }) {
 
   const openEditEvent = (day) => {
     const date = new Date(year, month, day);
-    setSelectedEventDate(date);
+
+    // ✅ on retrouve le véritable événement (avec son id_event et ses vraies
+    // dates de début/fin) au lieu de ne garder que le jour cliqué, pour que la
+    // suppression/modification fonctionne quel que soit le jour cliqué dans la plage
+    const shiftedDate = new Date(date);
+    shiftedDate.setDate(shiftedDate.getDate() - 1);
+    const key = formatDateKey(shiftedDate);
+
+    const matchedEvent = (Array.isArray(events) ? events : []).find(event => {
+      if (!event.date_debut || !event.date_fin) return false;
+      const start = event.date_debut.split("T")[0];
+      const end = event.date_fin.split("T")[0];
+      return key >= start && key <= end;
+    });
+
+    setSelectedEvent(matchedEvent || null);
     setOpenEditPopin(true);
   };
 
@@ -65,7 +80,7 @@ export default function Schedule({ onMonthYearChange }) {
 
   const handleCloseEditEvent = async () => {
     setOpenEditPopin(false);
-    setSelectedEventDate(null);
+    setSelectedEvent(null);
     await fetchEvents(); // ✅ recharge après modification / suppression
   };
 
@@ -166,7 +181,7 @@ export default function Schedule({ onMonthYearChange }) {
       <PopinEditEvent
         open={openEditPopin}
         onClose={handleCloseEditEvent}
-        date={selectedEventDate}
+        event={selectedEvent}
       />
 
       {/* HEADER */}
@@ -240,7 +255,7 @@ export default function Schedule({ onMonthYearChange }) {
               key={dayNumber}
               onClick={() => {
                 if (hasEvent) {
-                  openEditEvent(dayNumber + 1);
+                  openEditEvent(dayNumber);
                 } else if (!isWeekend) {
                   if (!ferieName) {
                     openPopinNewEvent(dayNumber + 1);
