@@ -1,14 +1,30 @@
+// -----------------------------------------------------------------------------
+// FENÊTRE MODALE - SUPPRESSION D'UN UTILISATEUR
+// -----------------------------------------------------------------------------
+// Cette fenêtre affiche un récapitulatif des informations de l'utilisateur
+// (lecture seule) et demande confirmation avant de le supprimer en base de données.
+// -----------------------------------------------------------------------------
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { deleteUser } from "../services/userService";
 
+// -----------------------------------------------------------------------------
+// COMPOSANT POPINDELETEUSER
+// -----------------------------------------------------------------------------
 export default function PopinDeleteUser({ open, onClose, userData }) {
+
+  // ---------------------------------------------------------------------------
+  // STATE - Informations de l'utilisateur à supprimer
+  // ---------------------------------------------------------------------------
   const [idUser, setIdUser] = React.useState("");
   const [nom, setNom] = React.useState("");
   const [prenom, setPrenom] = React.useState("");
   const [email, setEmail] = React.useState("");
 
 
+  // ---------------------------------------------------------------------------
+  // EFFECT - Initialise le formulaire avec les données de l'utilisateur à supprimer
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     setIdUser(userData?.id_user || "");
     setNom(userData?.name || "");
@@ -17,6 +33,9 @@ export default function PopinDeleteUser({ open, onClose, userData }) {
   }, [userData]);
 
 
+  // ---------------------------------------------------------------------------
+  // SUPPRESSION DE L'UTILISATEUR
+  // ---------------------------------------------------------------------------
   const handleDelete = async () => {
     try {
 
@@ -31,6 +50,9 @@ export default function PopinDeleteUser({ open, onClose, userData }) {
     }
   };
 
+  // ---------------------------------------------------------------------------
+  // RENDER
+  // ---------------------------------------------------------------------------
   return (
     <Dialog
       open={open}
@@ -46,7 +68,9 @@ export default function PopinDeleteUser({ open, onClose, userData }) {
       maxWidth="md"
       fullWidth
     >
-      {/* HEADER */}
+      {/* ------------------------------------------------------------------- */}
+      {/* EN-TÊTE DE LA FENÊTRE */}
+      {/* ------------------------------------------------------------------- */}
       <DialogTitle
         sx={{
           backgroundColor: "#0178A5",
@@ -69,6 +93,9 @@ export default function PopinDeleteUser({ open, onClose, userData }) {
 
       <DialogContent sx={{ mt: 3 }}>
 
+        {/* ------------------------------------------------------------------- */}
+        {/* RÉCAPITULATIF - Informations de l'utilisateur (lecture seule) */}
+        {/* ------------------------------------------------------------------- */}
         <Grid container spacing={2} sx={{ padding: "0 60px", paddingBottom: "40px" }}>
 
           {/* Ligne 1 */}
@@ -125,7 +152,10 @@ export default function PopinDeleteUser({ open, onClose, userData }) {
         </Grid>
       </DialogContent>
 
+      {/* ------------------------------------------------------------------- */}
       {/* ACTIONS */}
+      {/* Annulation ou confirmation de la suppression */}
+      {/* ------------------------------------------------------------------- */}
       <DialogActions sx={{ gap: "10px", px: 3, pb: 2 }}>
         <Button
           variant="contained"
@@ -157,8 +187,13 @@ export default function PopinDeleteUser({ open, onClose, userData }) {
   );
 }
 
-/* ---------- SOUS-COMPONENTS ---------- */
+/* ----------------------------------------------------------------------------- */
+/* SOUS-COMPOSANTS */
+/* ----------------------------------------------------------------------------- */
 
+// -----------------------------------------------------------------------------
+// TITRE DE SECTION
+// -----------------------------------------------------------------------------
 function SectionTitle({ title }) {
   return (
     <Typography
@@ -174,6 +209,10 @@ function SectionTitle({ title }) {
   );
 }
 
+// -----------------------------------------------------------------------------
+// CHAMP DE FORMULAIRE
+// Affiche un libellé au-dessus d'un composant de saisie.
+// -----------------------------------------------------------------------------
 function Field({ label, children }) {
   return (
     <Box>

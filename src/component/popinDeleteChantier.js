@@ -1,3 +1,9 @@
+// -----------------------------------------------------------------------------
+// FENÊTRE MODALE - SUPPRESSION D'UN CHANTIER
+// -----------------------------------------------------------------------------
+// Cette fenêtre demande confirmation à l'utilisateur avant de supprimer
+// définitivement un chantier en base de données.
+// -----------------------------------------------------------------------------
 import {
     Dialog,
     DialogTitle,
@@ -11,6 +17,9 @@ import {
 
 import { deleteChantier } from "../services/chantierService";
 
+// -----------------------------------------------------------------------------
+// COMPOSANT POPINDELETECHANTIER
+// -----------------------------------------------------------------------------
 export default function PopinDeleteChantier({
     open,
     onClose,
@@ -19,6 +28,9 @@ export default function PopinDeleteChantier({
     onDeleted,
 }) {
 
+    // ---------------------------------------------------------------------------
+    // SUPPRESSION DU CHANTIER
+    // ---------------------------------------------------------------------------
     const handleDelete = async () => {
     try {
 
@@ -36,6 +48,9 @@ export default function PopinDeleteChantier({
     }
   };
 
+    // ---------------------------------------------------------------------------
+    // RENDER
+    // ---------------------------------------------------------------------------
     return (
         <Dialog
             open={open}
@@ -51,7 +66,9 @@ export default function PopinDeleteChantier({
             fullWidth
         >
 
-            {/* HEADER */}
+            {/* ------------------------------------------------------------------- */}
+            {/* EN-TÊTE DE LA FENÊTRE */}
+            {/* ------------------------------------------------------------------- */}
 
             <DialogTitle
                 sx={{
@@ -75,7 +92,10 @@ export default function PopinDeleteChantier({
                 }}
             />
 
+            {/* ------------------------------------------------------------------- */}
             {/* CONTENU */}
+            {/* Message de confirmation et rappel du chantier concerné */}
+            {/* ------------------------------------------------------------------- */}
 
             <DialogContent sx={{ py: 4 }}>
 
@@ -131,7 +151,10 @@ export default function PopinDeleteChantier({
 
             </DialogContent>
 
+            {/* ------------------------------------------------------------------- */}
             {/* ACTIONS */}
+            {/* Annulation ou confirmation de la suppression */}
+            {/* ------------------------------------------------------------------- */}
 
             <DialogActions
                 sx={{

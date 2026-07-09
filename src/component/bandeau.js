@@ -1,3 +1,10 @@
+// -----------------------------------------------------------------------------
+// BANDEAU - EN-TÊTE DE PAGE
+// -----------------------------------------------------------------------------
+// Ce composant affiche le bandeau supérieur de l'application : titre, sous-titre,
+// icône de notifications (avec badge du nombre d'alertes) et email de
+// l'utilisateur connecté. Il ouvre également la popin listant les alertes.
+// -----------------------------------------------------------------------------
 import { useState } from "react";
 import { Box, Divider, Typography, Badge } from "@mui/material";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
@@ -8,12 +15,21 @@ import PopinAlertes from "./popinAlertes"; // ✅ import
 import { getNbAlertes } from "../services/chantierService.js";
 import { me } from "../services/userService.js";
 
+// -----------------------------------------------------------------------------
+// COMPOSANT BANDEAU
+// -----------------------------------------------------------------------------
 export default function Bandeau({ title, subtitle, refreshTrigger }) {
 
+  // ---------------------------------------------------------------------------
+  // STATE - Ouverture de la popin, nombre d'alertes, email de l'utilisateur
+  // ---------------------------------------------------------------------------
   const [open, setOpen] = useState(false);
   const [alertes, setAlertes] = useState(0); // État pour stocker le nombre d'alertes
   const [email, setEmail] = useState("");
 
+  // ---------------------------------------------------------------------------
+  // EFFECT - Récupère les informations de l'utilisateur connecté (email)
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -27,6 +43,10 @@ export default function Bandeau({ title, subtitle, refreshTrigger }) {
     fetchUser();
   });
 
+  // ---------------------------------------------------------------------------
+  // EFFECT - Récupère le nombre d'alertes à afficher sur le badge
+  // Se relance à chaque changement de refreshTrigger (transmis par le parent)
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     const fetchNbAlertes = async () => {
       try {
@@ -40,9 +60,14 @@ export default function Bandeau({ title, subtitle, refreshTrigger }) {
     fetchNbAlertes();
   }, [refreshTrigger]);
 
+  // ---------------------------------------------------------------------------
+  // RENDER
+  // ---------------------------------------------------------------------------
   return (
     <>
+      {/* ------------------------------------------------------------------- */}
       {/* Bandeau */}
+      {/* ------------------------------------------------------------------- */}
       <Box
         sx={{
           position: "relative",
@@ -53,7 +78,7 @@ export default function Bandeau({ title, subtitle, refreshTrigger }) {
         }}
       >
 
-        {/* Icône notif */}
+        {/* Icône notif + compte utilisateur */}
         <Box sx={{ position: "absolute", top: "50%", right: 24, transform: "translateY(-50%)", display: "flex", alignItems: "flex-start", gap: 3, }}>
           <Badge badgeContent={alertes} color="error" overlap="circular"
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -88,6 +113,7 @@ export default function Bandeau({ title, subtitle, refreshTrigger }) {
               }}
             />
 
+            {/* Email masqué : n'affiche que la partie avant le "@" */}
             <Typography variant="body2" sx={{ mt: 0.5, }}>
               {email?.replace(/@.*/, "@...")}
             </Typography>
@@ -122,6 +148,9 @@ export default function Bandeau({ title, subtitle, refreshTrigger }) {
 
       <Divider sx={{ width: "100%", border: "1px solid #8d8d8d" }} />
 
+      {/* ------------------------------------------------------------------- */}
+      {/* POPIN DES ALERTES */}
+      {/* ------------------------------------------------------------------- */}
       {/* ✅ Popin séparée */}
       <PopinAlertes
         open={open}

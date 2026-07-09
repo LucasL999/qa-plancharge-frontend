@@ -1,6 +1,19 @@
+// -----------------------------------------------------------------------------
+// CARTE - INDICATEUR CHIFFRÉ (DASHBOARD)
+// -----------------------------------------------------------------------------
+// Ce composant affiche une carte cliquable présentant un indicateur : un titre
+// avec icône, et une valeur chiffrée mise en avant (exprimée en Jours-Homme).
+// Utilisée sur le tableau de bord pour résumer des données en un coup d'œil.
+// -----------------------------------------------------------------------------
 import { alpha, Box, Typography } from "@mui/material";
 
+// -----------------------------------------------------------------------------
+// COMPOSANT CARD1
+// -----------------------------------------------------------------------------
 export default function Card1({ titre, value, icon, onClick }) {
+  // ---------------------------------------------------------------------------
+  // RENDER
+  // ---------------------------------------------------------------------------
   return (
     <Box
       onClick={onClick}
@@ -24,6 +37,9 @@ export default function Card1({ titre, value, icon, onClick }) {
         },
 
       }}>
+      {/* ------------------------------------------------------------------- */}
+      {/* EN-TÊTE DE LA CARTE - Icône + titre */}
+      {/* ------------------------------------------------------------------- */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#0178A5", }}>
         <div>
           {icon}
@@ -32,6 +48,10 @@ export default function Card1({ titre, value, icon, onClick }) {
           {titre}
         </Typography>
       </div>
+
+      {/* ------------------------------------------------------------------- */}
+      {/* VALEUR DE L'INDICATEUR - Chiffre principal + unité (JH) */}
+      {/* ------------------------------------------------------------------- */}
       <Box
         sx={{
           display: "flex",

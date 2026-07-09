@@ -1,8 +1,22 @@
+// -----------------------------------------------------------------------------
+// FENÊTRE MODALE - CRÉATION D'UN UTILISATEUR
+// -----------------------------------------------------------------------------
+// Cette fenêtre permet de créer un nouvel utilisateur. Elle récupère les rôles
+// disponibles, valide les informations saisies puis enregistre le nouvel
+// utilisateur en base de données.
+// -----------------------------------------------------------------------------
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { getRoles, addUser } from "../services/userService";
 import React, { useEffect } from 'react';
 
+// -----------------------------------------------------------------------------
+// COMPOSANT POPINNEWUSER
+// -----------------------------------------------------------------------------
 export default function PopinNewUser({ open, onClose }) {
+
+  // ---------------------------------------------------------------------------
+  // STATE - Données du formulaire
+  // ---------------------------------------------------------------------------
   const [roles, setRoles] = React.useState([]);
   const [selectedRole, setSelectedRole] = React.useState("");
   const [absences, setAbsences] = React.useState(0);
@@ -10,6 +24,9 @@ export default function PopinNewUser({ open, onClose }) {
   const [prenom, setPrenom] = React.useState("");
   const [email, setEmail] = React.useState("");
 
+  // ---------------------------------------------------------------------------
+  // EFFECT - Chargement de la liste des rôles
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     const fetchRoles = async () => {
       try {
@@ -22,22 +39,31 @@ export default function PopinNewUser({ open, onClose }) {
     fetchRoles();
   }, []);
 
+  // ---------------------------------------------------------------------------
+  // VALIDATION ET CRÉATION DE L'UTILISATEUR
+  // ---------------------------------------------------------------------------
   const handleSubmit = async () => {
     try {
+
+      // Vérification des champs obligatoires
       if (!nom || !prenom || !email || !selectedRole) {
         alert("Veuillez remplir tous les champs obligatoires.");
         return;
       }
+
+      // Vérification des caractères autorisés
       if (/[!@#$%^&*(),.?":{}|<>]/.test(nom) || /[!@#$%^&*(),.?":{}|<>]/.test(prenom)) {
         alert("Les champs Nom et Prénom ne peuvent contenir de caractères spéciaux.");
         return;
       }
+
+      // Vérification du domaine de l'adresse mail
       if (!email.endsWith("@mnt.fr")) {
         alert("L'email n'est pas correct.");
         return;
       }
 
-
+      // Création de l'utilisateur
       const userData = { nom: nom, prenom: prenom, id_role: selectedRole, absences: absences || null, email: email };
       const result = await addUser(userData);
       console.log("Utilisateur créé avec succès");
@@ -53,6 +79,7 @@ export default function PopinNewUser({ open, onClose }) {
       onClose(true);
 
     } catch (error) {
+      // Gestion des erreurs spécifiques
       if (error.response?.status === 409) {
         alert("Cet email est déjà utilisé.");
         return;
@@ -63,6 +90,9 @@ export default function PopinNewUser({ open, onClose }) {
     }
   };
 
+  // ---------------------------------------------------------------------------
+  // FERMETURE DE LA FENÊTRE ET RÉINITIALISATION DU FORMULAIRE
+  // ---------------------------------------------------------------------------
   const handleClose = () => {
     setNom("");
     setPrenom("");
@@ -73,7 +103,9 @@ export default function PopinNewUser({ open, onClose }) {
     onClose();
   };
 
-
+  // ---------------------------------------------------------------------------
+  // RENDER
+  // -----------------------------------------------------------------------------
   return (
     <Dialog
       open={open}
@@ -89,7 +121,10 @@ export default function PopinNewUser({ open, onClose }) {
       maxWidth="md"
       fullWidth
     >
-      {/* HEADER */}
+
+      {/* ------------------------------------------------------------------- */}
+      {/* EN-TÊTE DE LA FENÊTRE */}
+      {/* ------------------------------------------------------------------- */}
       <DialogTitle
         sx={{
           backgroundColor: "#0178A5",
@@ -112,7 +147,9 @@ export default function PopinNewUser({ open, onClose }) {
 
       <DialogContent sx={{ mt: 3 }}>
 
-        {/* PLANNING */}
+        {/* ------------------------------------------------------------------- */}
+        {/* FORMULAIRE DE CRÉATION */}
+        {/* ------------------------------------------------------------------- */}
         <Grid container spacing={2} sx={{ padding: "0 60px", paddingBottom: "40px" }}>
 
           {/* Ligne 1 */}
@@ -204,7 +241,10 @@ export default function PopinNewUser({ open, onClose }) {
         </Grid>
       </DialogContent>
 
+      {/* ------------------------------------------------------------------- */}
       {/* ACTIONS */}
+      {/* Annulation ou validation de la création */}
+      {/* ------------------------------------------------------------------- */}
       <DialogActions sx={{ gap: "10px", px: 3, pb: 2 }}>
         <Button
           variant="contained"
@@ -236,8 +276,13 @@ export default function PopinNewUser({ open, onClose }) {
   );
 }
 
-/* ---------- SOUS-COMPONENTS ---------- */
+/* ----------------------------------------------------------------------------- */
+/* SOUS-COMPOSANTS */
+/* ----------------------------------------------------------------------------- */
 
+// -----------------------------------------------------------------------------
+// TITRE DE SECTION
+// -----------------------------------------------------------------------------
 function SectionTitle({ title }) {
   return (
     <Typography
@@ -253,6 +298,10 @@ function SectionTitle({ title }) {
   );
 }
 
+// -----------------------------------------------------------------------------
+// CHAMP DE FORMULAIRE
+// Affiche un libellé au-dessus d'un composant de saisie.
+// -----------------------------------------------------------------------------
 function Field({ label, children }) {
   return (
     <Box>

@@ -1,6 +1,19 @@
+// -----------------------------------------------------------------------------
+// CARTE - INDICATEUR CHIFFRÉ SECONDAIRE (DASHBOARD)
+// -----------------------------------------------------------------------------
+// Ce composant affiche une carte cliquable présentant un indicateur secondaire :
+// un titre avec icône, et une valeur chiffrée accompagnée de son unité.
+// Version plus discrète de Card1, utilisée sur le tableau de bord.
+// -----------------------------------------------------------------------------
 import { alpha, Box, Typography } from "@mui/material";
 
+// -----------------------------------------------------------------------------
+// COMPOSANT CARD2
+// -----------------------------------------------------------------------------
 export default function Card2({ titre, value, icon, unit, onClick }) {
+  // ---------------------------------------------------------------------------
+  // RENDER
+  // ---------------------------------------------------------------------------
   return (
     <Box
       onClick={onClick}
@@ -24,6 +37,9 @@ export default function Card2({ titre, value, icon, unit, onClick }) {
         },
 
       }}>
+      {/* ------------------------------------------------------------------- */}
+      {/* EN-TÊTE DE LA CARTE - Icône + titre */}
+      {/* ------------------------------------------------------------------- */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#6B6B6B", }}>
         <div>
           {icon}
@@ -32,6 +48,10 @@ export default function Card2({ titre, value, icon, unit, onClick }) {
           {titre}
         </Typography>
       </div>
+
+      {/* ------------------------------------------------------------------- */}
+      {/* VALEUR DE L'INDICATEUR - Chiffre + unité */}
+      {/* ------------------------------------------------------------------- */}
       <Box sx={{ paddingLeft: "0px", paddingBottom: "5px", display: "flex", alignItems: "baseline", gap: 1, whiteSpace: "nowrap", }}>
         <Typography variant="h4" sx={{
           color: "#6B6B6B", fontSize: "60px",
