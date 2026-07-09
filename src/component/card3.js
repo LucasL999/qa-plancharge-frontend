@@ -1,11 +1,11 @@
 import { Box, Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
-export default function Card3({title, value, icon, unit, onClick}) {
-    return(
-        <Box
-          onClick={onClick} 
-          sx={{
+export default function Card3({ title, value, icon, unit, onClick }) {
+  return (
+    <Box
+      onClick={onClick}
+      sx={{
         width: 240,
         height: 155,
         backgroundColor: alpha("#6B6B6B", 0.05),
@@ -23,8 +23,8 @@ export default function Card3({title, value, icon, unit, onClick}) {
           boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)",
         },
         cursor: "pointer"
-    }}>
-      <div style={{display: "flex", alignItems: "center", gap: "8px", color: "#0178A5", }}>
+      }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", color: "#0178A5", }}>
         <div>
           {icon}
         </div>
@@ -33,14 +33,15 @@ export default function Card3({title, value, icon, unit, onClick}) {
         </Typography>
       </div>
       <Box sx={{ paddingLeft: "5px", display: "flex", alignItems: "baseline", gap: 1, whiteSpace: "nowrap", }}>
-        <Typography variant="h4" sx={{ color: "#0178A5", fontSize: "70px", 
+        <Typography variant="h4" sx={{
+          color: "#0178A5", fontSize: "70px",
         }}>
-            {value}
+          {value}
         </Typography>
         <Typography variant="subtitle1" sx={{ color: "#0178A5", fontSize: "18px", marginTop: "-10px" }}>
-            {unit}
+          {unit}
         </Typography>
       </Box>
     </Box>
-    );
+  );
 }

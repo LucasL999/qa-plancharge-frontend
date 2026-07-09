@@ -1,46 +1,46 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import {deleteUser} from "../services/userService";
+import { deleteUser } from "../services/userService";
 
 export default function PopinDeleteUser({ open, onClose, userData }) {
-    const [idUser, setIdUser] = React.useState("");
-    const [nom, setNom] = React.useState("");
-    const [prenom, setPrenom] = React.useState("");
-    const [email, setEmail] = React.useState("");
-   
-
-    useEffect(() => {
-        setIdUser(userData?.id_user || "");
-        setNom(userData?.name || "");
-        setPrenom(userData?.firstname || "");
-        setEmail(userData?.email || "");
-    }, [userData]);
+  const [idUser, setIdUser] = React.useState("");
+  const [nom, setNom] = React.useState("");
+  const [prenom, setPrenom] = React.useState("");
+  const [email, setEmail] = React.useState("");
 
 
-    const handleDelete = async () => {
-        try {
+  useEffect(() => {
+    setIdUser(userData?.id_user || "");
+    setNom(userData?.name || "");
+    setPrenom(userData?.firstname || "");
+    setEmail(userData?.email || "");
+  }, [userData]);
 
-            const result = await deleteUser(idUser);
-            console.log("Utilisateur supprimé avec succès");
-            // reset
-            setIdUser("");
-            onClose(true);
 
-        } catch (error) {
-            console.error("Erreur suppression user:", error);
-        }
-    };
+  const handleDelete = async () => {
+    try {
 
-return (
+      const result = await deleteUser(idUser);
+      console.log("Utilisateur supprimé avec succès");
+      // reset
+      setIdUser("");
+      onClose(true);
+
+    } catch (error) {
+      console.error("Erreur suppression user:", error);
+    }
+  };
+
+  return (
     <Dialog
       open={open}
       onClose={onClose}
       disablePortal
       PaperProps={{
-        sx:{
-            position: "absolute",
-            top: 17,
-            left: "31%",
+        sx: {
+          position: "absolute",
+          top: 17,
+          left: "31%",
         }
       }}
       maxWidth="md"
@@ -61,68 +61,68 @@ return (
         Supprimer l'utilisateur ?
       </DialogTitle>
       <Divider sx={{
-          width: "100%",
-          borderBottomWidth: 1,
-          margin: 0,
-          border: "1px solid #8d8d8d",
-        }} />
+        width: "100%",
+        borderBottomWidth: 1,
+        margin: 0,
+        border: "1px solid #8d8d8d",
+      }} />
 
       <DialogContent sx={{ mt: 3 }}>
 
         <Grid container spacing={2} sx={{ padding: "0 60px", paddingBottom: "40px" }}>
-        
-                    {/* Ligne 1 */}
-                    <Grid size={6}>
-                        <Field label={<strong>Nom</strong>}>
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                value={nom}
-                                required
-                                sx={{
-                                    "& fieldset": {
-                                    borderRadius: "10px"
-                                    },
-                                    backgroundColor: "#fff"  
-                                }}    
-                            />
-                        </Field>
-                    </Grid>
-                    <Grid size={6}>
-                        <Field label={<strong>Prénom</strong>}>
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                value={prenom}
-                                required
-                                sx={{
-                                    "& fieldset": {
-                                    borderRadius: "10px"
-                                    },
-                                    backgroundColor: "#fff"  
-                                }}    
-                            />
-                        </Field>
-                    </Grid>
-        
-                    {/* Ligne 2 */}
-                    <Grid size={12}>
-                        <Field label={<strong>Email</strong>}>
-                            <TextField
-                                fullWidth
-                                variant="outlined"
-                                value={email}
-                                required
-                                sx={{
-                                    "& fieldset": {
-                                    borderRadius: "10px"
-                                    },
-                                    backgroundColor: "#fff"  
-                                }}    
-                            />
-                        </Field>
-                    </Grid>
-                </Grid>
+
+          {/* Ligne 1 */}
+          <Grid size={6}>
+            <Field label={<strong>Nom</strong>}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                value={nom}
+                required
+                sx={{
+                  "& fieldset": {
+                    borderRadius: "10px"
+                  },
+                  backgroundColor: "#fff"
+                }}
+              />
+            </Field>
+          </Grid>
+          <Grid size={6}>
+            <Field label={<strong>Prénom</strong>}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                value={prenom}
+                required
+                sx={{
+                  "& fieldset": {
+                    borderRadius: "10px"
+                  },
+                  backgroundColor: "#fff"
+                }}
+              />
+            </Field>
+          </Grid>
+
+          {/* Ligne 2 */}
+          <Grid size={12}>
+            <Field label={<strong>Email</strong>}>
+              <TextField
+                fullWidth
+                variant="outlined"
+                value={email}
+                required
+                sx={{
+                  "& fieldset": {
+                    borderRadius: "10px"
+                  },
+                  backgroundColor: "#fff"
+                }}
+              />
+            </Field>
+          </Grid>
+        </Grid>
       </DialogContent>
 
       {/* ACTIONS */}
@@ -142,7 +142,7 @@ return (
 
         <Button
           variant="contained"
-          onClick = {handleDelete}
+          onClick={handleDelete}
           sx={{
             backgroundColor: "#fa5e5e",
             color: "black",

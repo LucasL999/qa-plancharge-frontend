@@ -9,50 +9,59 @@ import {
   alpha
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import {getChantier} from "../services/chantierService.js"
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { getChantier } from "../services/chantierService.js"
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-import PopinInfoChantier from "./popinInfoChantier"; 
+import PopinInfoChantier from "./popinInfoChantier";
 import PopinEditChantier from "./popinEditChantier";
+import PopinDeleteChantier from "./popinDeleteChantier";
 
-export default function TableTeam({ onChantierUpdated, filtres, search, selectedId }) {
+export default function TableTeam({ onChantierUpdated, onChantierModifie, onChantierSupprime, filtres, search, selectedId }) {
   const [chantiers, setChantiers] = useState([]);
 
   const normalize = (str) => str.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
   const filteredChantiers = chantiers.filter(chantier => {
-    if(selectedId && chantier.id_chantier !== selectedId){return false;}
-    if(search && !normalize(chantier.titre).includes(normalize(search))) {return false;}
-    if(filtres?.statuts?.length > 0 && !filtres.statuts.includes(String(chantier.id_statut))) {return false;}
-    if(filtres?.priorites?.length > 0 && !filtres.priorites.includes(String(chantier.id_priorite))) {return false;}
-    if(filtres?.qa?.length > 0) {
+    if (selectedId && chantier.id_chantier !== selectedId) { return false; }
+    if (search && !normalize(chantier.titre).includes(normalize(search))) { return false; }
+    if (filtres?.statuts?.length > 0 && !filtres.statuts.includes(String(chantier.id_statut))) { return false; }
+    if (filtres?.priorites?.length > 0 && !filtres.priorites.includes(String(chantier.id_priorite))) { return false; }
+    if (filtres?.qa?.length > 0) {
       const hasMatchingQa = chantier.qas?.some(q => filtres.qa.includes(String(q.id)));
-      if(!hasMatchingQa) {return false;}
+      if (!hasMatchingQa) { return false; }
     }
     return true;
   });
 
-    const fetchChantier = async () => {
-      try {
-        const res = await getChantier();
-        setChantiers(res);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const fetchChantier = async () => {
+    try {
+      const res = await getChantier();
+      setChantiers(res);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    useEffect(() => {
-      fetchChantier();
-    }, []);
+  useEffect(() => {
+    fetchChantier();
+  }, []);
 
 
   const [openPopinInfo, setOpenPopinInfo] = useState(false); // pour la popin d'info chantier
   const [openPopinEdit, setOpenPopinEdit] = useState(false); // pour la popin d'édition chantier
+  const [openPopinDelete, setOpenPopinDelete] = useState(false);
   const [selectedChantier, setSelectedChantier] = useState(null);
   const [page, setPage] = useState(0); // pour la pagination
-  const [rowsPerPage, setRowsPerPage] = useState(6); // pour la pagination
+  const [rowsPerPage, setRowsPerPage] = useState(5); // pour la pagination
 
   const closePopinInfoChantier = () => setOpenPopinInfo(false);
+  const closePopinDeleteChantier = async () => {
+    setSelectedChantier(null);
+    setOpenPopinDelete(false);
+    await fetchChantier();
+    onChantierUpdated?.();
+  }
   const closePopinEditChantier = async () => {
     setOpenPopinEdit(false);
     setSelectedChantier(null);
@@ -69,6 +78,11 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
     setSelectedChantier(chantier);
     setOpenPopinEdit(true);
   }
+
+  function openPopinDeleteChantier(chantier) {
+    setSelectedChantier(chantier);
+    setOpenPopinDelete(true);
+  } 
 
   function getColorByStatut(statut) { // fonction pour déterminer la couleur du statut
     switch (statut) {
@@ -102,14 +116,15 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
       <TableContainer sx={{ boxShadow: 3, borderRadius: 2 }}>
         <Table sx={{ minWidth: 650, borderRadius: 10, }}>
           <TableHead>
-            <TableRow>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Chantier</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Statut</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Chef de projet</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Priorité</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Prévisionnel</TableCell> 
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Consommé</TableCell>
-              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px" }}>Reste à faire</TableCell>
+            <TableRow sx={{backgroundColor: "rgba(1, 120, 165, 0.8)"}}>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>CHANTIER</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Statut</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Chef de projet</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Priorité</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Prévisionnel</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Consommé</TableCell>
+              <TableCell align="center" sx={{ fontWeight: "bold", fontSize: "20px", color: "white" }}>Reste à faire</TableCell>
+              <TableCell />
               <TableCell />
             </TableRow>
           </TableHead>
@@ -117,7 +132,7 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
           <TableBody>
             {filteredChantiers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((chantier) => (
               <TableRow
-                key={chantier.titre}
+                key={chantier.id_chantier}
                 hover
                 sx={{ cursor: "pointer", "&.MuiTableRow-hover:hover": { backgroundColor: alpha("#5DA1BC", 0.2) } }}
                 onClick={() => openPopinInfoChantier(chantier)}
@@ -132,11 +147,14 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
                 <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.prio || "N/A"}</TableCell>
                 <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.prev || 0}</TableCell>
                 <TableCell align="center" sx={{ fontSize: "16px" }}>{chantier.cons ?? 0}</TableCell>
-                <TableCell align="center" sx={{ fontSize: "18px", color: getColorByRAF(chantier.prev-chantier.cons ?? 0), fontWeight: "bold" }}>
-                  {chantier.prev-chantier.cons ?? 0}
+                <TableCell align="center" sx={{ fontSize: "18px", color: getColorByRAF(chantier.prev - chantier.cons ?? 0), fontWeight: "bold" }}>
+                  {chantier.prev - chantier.cons ?? 0}
                 </TableCell>
                 <TableCell align="center" sx={{ color: "#003CFF" }} onClick={(event) => { event.stopPropagation(); openPopinEditChantier(chantier); }}>
-                  <EditOutlinedIcon/>
+                  <EditIcon />
+                </TableCell>
+                <TableCell align="center" sx={{ color: "#ff0000" }} onClick={(event) => {event.stopPropagation(); openPopinDeleteChantier(chantier); }}>
+                  <DeleteIcon />
                 </TableCell>
               </TableRow>
             ))}
@@ -164,6 +182,13 @@ export default function TableTeam({ onChantierUpdated, filtres, search, selected
         open={openPopinEdit}
         onClose={closePopinEditChantier}
         chantier={selectedChantier}
+        onUpdated={onChantierModifie}
+      />
+      <PopinDeleteChantier
+        open={openPopinDelete}
+        onClose={closePopinDeleteChantier}
+        chantier={selectedChantier}
+        onDeleted={onChantierSupprime}
       />
     </>
   );

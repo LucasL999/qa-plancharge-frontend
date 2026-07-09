@@ -11,6 +11,29 @@
 // -----------------------------------------------------------------------------
 const getAuthToken = () => localStorage.getItem("access_token");
 
+export async function me(){
+  try{
+    const token = getAuthToken();
+
+    const meRes = await fetch(`${process.env.REACT_APP_BACKEND_URL}/me`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!meRes.ok) {
+      throw new Error("Failed to fetch user");
+    }
+
+    return await meRes.json();
+
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    throw error;
+  }
+}
+
+
 // -----------------------------------------------------------------------------
 // API - RÔLES
 // -----------------------------------------------------------------------------

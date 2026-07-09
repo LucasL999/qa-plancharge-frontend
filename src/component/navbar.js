@@ -13,8 +13,8 @@ import logo from "../img/logo.png";
 export default function Navbar({ onLogout }) {
   const navItems = [
     { label: "Dashboard", path: "/", icon: <HomeFilledIcon /> },
-    { label: "Plan de charge", path: "/team", icon: <GroupsIcon /> },
     { label: "Chantiers", path: "/chantier", icon: <ConstructionIcon /> },
+    { label: "Plan de charge", path: "/team", icon: <GroupsIcon /> },
     { label: "Calendrier", path: "/calendar", icon: <CalendarMonthIcon /> },
     { label: "Utilisateurs", path: "/user", icon: <PersonIcon /> },
   ];
@@ -74,7 +74,7 @@ export default function Navbar({ onLogout }) {
               paddingLeft: "20px",
               textDecoration: "none",
               color: isActive ? "#0178A5" : "#333333",
-              backgroundColor: isActive ? "#EAF4F8" : "transparent",
+              backgroundColor: isActive ? "#dceff7" : "transparent",
             })}
           >
             {({ isActive }) => (
@@ -99,7 +99,7 @@ export default function Navbar({ onLogout }) {
           fontSize: "16px",
           fontFamily: "Roboto, sans-serif",
           cursor: "pointer",
-          color: "black",
+          color: "red",
         }}
       >
         <LogoutIcon sx={{ marginRight: "8px" }} />
