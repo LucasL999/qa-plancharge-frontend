@@ -1,11 +1,3 @@
-// -----------------------------------------------------------------------------
-// CALENDRIER DES ABSENCES
-// -----------------------------------------------------------------------------
-// Ce composant affiche un calendrier mensuel des absences. Il permet
-// d'ajouter, modifier et visualiser les événements de l'utilisateur ainsi que
-// les absences des autres membres de l'équipe.
-// -----------------------------------------------------------------------------
-
 import { useState, useEffect } from "react";
 import { Tooltip } from "@mui/material";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
@@ -14,34 +6,21 @@ import PopinNewEvent from "./popinNewEvent";
 import PopinEditEvent from "./popinEditEvent";
 import { getEvents, getEventsOther } from "../services/calendarService.js";
 
-// -----------------------------------------------------------------------------
-// COMPOSANT SCHEDULE
-// -----------------------------------------------------------------------------
 export default function Schedule({ onMonthYearChange }) {
 
-  // ---------------------------------------------------------------------------
-  // STATE - Date courante et événements
-  // ---------------------------------------------------------------------------
   const today = new Date();
-
   const [events, setEvents] = useState([]);
   const [eventsOther, setEventsOther] = useState([]);
-
   const [month, setMonth] = useState(today.getMonth());
   const [year, setYear] = useState(today.getFullYear());
 
-  // ---------------------------------------------------------------------------
-  // STATE - Gestion des fenêtres modales
-  // ---------------------------------------------------------------------------
   const [openPopin, setOpenPopin] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
 
   const [openEditPopin, setOpenEditPopin] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  // ---------------------------------------------------------------------------
-  // RÉCUPÉRATION DES ÉVÉNEMENTS DE L'UTILISATEUR
-  // ---------------------------------------------------------------------------
+  /* ================= FETCH EVENTS ================= */
   const fetchEvents = async () => {
     try {
       const res = await getEvents();
@@ -51,9 +30,6 @@ export default function Schedule({ onMonthYearChange }) {
     }
   };
 
-  // ---------------------------------------------------------------------------
-  // RÉCUPÉRATION DES ÉVÉNEMENTS DES AUTRES UTILISATEURS
-  // ---------------------------------------------------------------------------
   const fetchEventsOther = async () => {
     try {
       const res = await getEventsOther();
@@ -63,41 +39,32 @@ export default function Schedule({ onMonthYearChange }) {
     }
   };
 
-  // ---------------------------------------------------------------------------
-  // EFFECT - Chargement initial des événements
-  // ---------------------------------------------------------------------------
   useEffect(() => {
     fetchEvents();
     fetchEventsOther();
   }, []);
 
-  // ---------------------------------------------------------------------------
-  // OUVERTURE DE LA FENÊTRE D'AJOUT D'UN ÉVÉNEMENT
-  // ---------------------------------------------------------------------------
+  /* ================= POPINS ================= */
   const openPopinNewEvent = (day) => {
     const date = new Date(year, month, day);
     setSelectedDate(date);
     setOpenPopin(true);
   };
 
-  // ---------------------------------------------------------------------------
-  // OUVERTURE DE LA FENÊTRE D'ÉDITION D'UN ÉVÉNEMENT
-  // Recherche l'événement correspondant au jour sélectionné.
-  // ---------------------------------------------------------------------------
   const openEditEvent = (day) => {
     const date = new Date(year, month, day);
 
+    // ✅ on retrouve le véritable événement (avec son id_event et ses vraies
+    // dates de début/fin) au lieu de ne garder que le jour cliqué, pour que la
+    // suppression/modification fonctionne quel que soit le jour cliqué dans la plage
     const shiftedDate = new Date(date);
     shiftedDate.setDate(shiftedDate.getDate() - 1);
-
     const key = formatDateKey(shiftedDate);
 
     const matchedEvent = (Array.isArray(events) ? events : []).find(event => {
       if (!event.date_debut || !event.date_fin) return false;
-
       const start = event.date_debut.split("T")[0];
       const end = event.date_fin.split("T")[0];
-
       return key >= start && key <= end;
     });
 
@@ -105,26 +72,20 @@ export default function Schedule({ onMonthYearChange }) {
     setOpenEditPopin(true);
   };
 
-  // ---------------------------------------------------------------------------
-  // FERMETURE DES FENÊTRES MODALES
-  // ---------------------------------------------------------------------------
   const handleCloseNewEvent = async () => {
     setOpenPopin(false);
     setSelectedDate(null);
-    await fetchEvents();
+    await fetchEvents(); // ✅ recharge après ajout
   };
 
   const handleCloseEditEvent = async () => {
     setOpenEditPopin(false);
     setSelectedEvent(null);
-    await fetchEvents();
+    await fetchEvents(); // ✅ recharge après modification / suppression
   };
 
-  // ---------------------------------------------------------------------------
-  // CONFIGURATION DU CALENDRIER
-  // ---------------------------------------------------------------------------
+  /* ================= CALENDRIER ================= */
   const daysOfWeek = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
-
   const months = [
     "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
     "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
@@ -134,9 +95,6 @@ export default function Schedule({ onMonthYearChange }) {
   const startDay = (firstDay.getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  // ---------------------------------------------------------------------------
-  // NAVIGATION ENTRE LES MOIS
-  // ---------------------------------------------------------------------------
   const prevMonth = () => {
     if (month === 0) {
       setMonth(11);
@@ -155,14 +113,9 @@ export default function Schedule({ onMonthYearChange }) {
     }
   };
 
-  // ---------------------------------------------------------------------------
-  // STATE - Jours fériés
-  // ---------------------------------------------------------------------------
+  /* ================= JOURS FÉRIÉS ================= */
   const [ferie, setFerie] = useState({});
 
-  // ---------------------------------------------------------------------------
-  // EFFECT - Chargement des jours fériés de l'année sélectionnée
-  // ---------------------------------------------------------------------------
   useEffect(() => {
     fetch(`https://calendrier.api.gouv.fr/jours-feries/metropole/${year}.json`)
       .then(res => res.json())
@@ -170,17 +123,11 @@ export default function Schedule({ onMonthYearChange }) {
       .catch(() => setFerie({}));
   }, [year]);
 
-  // ---------------------------------------------------------------------------
-  // OUTILS DE GESTION DES DATES
-  // ---------------------------------------------------------------------------
   const formatDateKey = (date) =>
     `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 
   const isFerie = (date) => ferie[formatDateKey(date)];
 
-  // ---------------------------------------------------------------------------
-  // VÉRIFIE SI L'UTILISATEUR EST ABSENT À UNE DATE DONNÉE
-  // ---------------------------------------------------------------------------
   const hasEventOnDate = (date) => {
     if (!Array.isArray(events)) return false;
 
@@ -191,17 +138,14 @@ export default function Schedule({ onMonthYearChange }) {
 
     return events.some(event => {
       if (!event.date_debut || !event.date_fin) return false;
-
       const start = event.date_debut.split("T")[0];
       const end = event.date_fin.split("T")[0];
-
       return key >= start && key <= end;
     });
   };
 
-  // ---------------------------------------------------------------------------
-  // RÉCUPÈRE LES ABSENCES DES AUTRES UTILISATEURS POUR UNE DATE
-  // ---------------------------------------------------------------------------
+  // ✅ retourne la liste des événements (autres utilisateurs) présents ce jour-là,
+  // avec leur prénom/nom, pour pouvoir les afficher sur la baguette
   const getOtherEventsOnDate = (date) => {
     if (!Array.isArray(eventsOther)) return [];
 
@@ -220,16 +164,11 @@ export default function Schedule({ onMonthYearChange }) {
     });
   };
 
-  // ---------------------------------------------------------------------------
-  // EFFECT - Notification du changement de mois au composant parent
-  // ---------------------------------------------------------------------------
   useEffect(() => {
     onMonthYearChange?.({ month, year });
   }, [month, year]);
 
-  // ---------------------------------------------------------------------------
-  // RENDER
-  // ---------------------------------------------------------------------------
+  /* ================= RENDER ================= */
   return (
     <div style={{...styles.calendar, boxShadow: "0px 0px 4px rgba(0,0,0,0.25)"}}>
 
