@@ -1,8 +1,22 @@
+// -----------------------------------------------------------------------------
+// FENÊTRE MODALE - MODIFICATION D'UN UTILISATEUR
+// -----------------------------------------------------------------------------
+// Cette fenêtre permet de modifier les informations d'un utilisateur existant.
+// Elle récupère les données actuelles de l'utilisateur, valide les informations
+// saisies puis met à jour l'utilisateur en base de données.
+// -----------------------------------------------------------------------------
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { getRoles, updateUser } from "../services/userService";
 import React, { useEffect, useState } from 'react';
 
+// -----------------------------------------------------------------------------
+// COMPOSANT POPINEDITUSER
+// -----------------------------------------------------------------------------
 export default function PopinEditUser({ open, onClose, userData }) {
+
+  // ---------------------------------------------------------------------------
+  // STATE - Données du formulaire
+  // ---------------------------------------------------------------------------
   const [roles, setRoles] = React.useState([]);
   const [selectedRole, setSelectedRole] = React.useState("");
   const [absences, setAbsences] = React.useState(0);
@@ -10,6 +24,9 @@ export default function PopinEditUser({ open, onClose, userData }) {
   const [prenom, setPrenom] = React.useState("");
   const [email, setEmail] = React.useState("");
 
+  // ---------------------------------------------------------------------------
+  // EFFECT - Initialise le formulaire avec les données de l'utilisateur à éditer
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     setNom(userData?.name || "");
     setPrenom(userData?.firstname || "");
@@ -18,6 +35,9 @@ export default function PopinEditUser({ open, onClose, userData }) {
     setAbsences(userData?.nbrestant || 0);
   }, [userData]);
 
+  // ---------------------------------------------------------------------------
+  // EFFECT - Récupère la liste des rôles disponibles
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     const fetchRoles = async () => {
       try {
@@ -30,16 +50,22 @@ export default function PopinEditUser({ open, onClose, userData }) {
     fetchRoles();
   }, []);
 
+  // ---------------------------------------------------------------------------
+  // VALIDATION ET MODIFICATION DE L'UTILISATEUR
+  // ---------------------------------------------------------------------------
   const handleSubmit = async () => {
     try {
+      // Vérifie que tous les champs obligatoires sont renseignés
       if (!nom || !prenom || !email || !selectedRole) {
         alert("Veuillez remplir tous les champs obligatoires.");
         return;
       }
+      // Vérifie que le nom et le prénom ne contiennent pas de caractères spéciaux
       if (/[!@#$%^&*(),.?":{}|<>]/.test(nom) || /[!@#$%^&*(),.?":{}|<>]/.test(prenom)) {
         alert("Les champs Nom et Prénom ne peuvent contenir de caractères spéciaux.");
         return;
       }
+      // Vérifie que l'email respecte le domaine attendu
       if (!email.endsWith("@mnt.fr")) {
         alert("L'email n'est pas correct.");
         return;
@@ -64,6 +90,9 @@ export default function PopinEditUser({ open, onClose, userData }) {
     }
   };
 
+  // ---------------------------------------------------------------------------
+  // RENDER
+  // ---------------------------------------------------------------------------
   return (
     <Dialog
       open={open}
@@ -79,7 +108,9 @@ export default function PopinEditUser({ open, onClose, userData }) {
       maxWidth="md"
       fullWidth
     >
-      {/* HEADER */}
+      {/* ------------------------------------------------------------------- */}
+      {/* EN-TÊTE DE LA FENÊTRE */}
+      {/* ------------------------------------------------------------------- */}
       <DialogTitle
         sx={{
           backgroundColor: "#0178A5",
@@ -102,6 +133,9 @@ export default function PopinEditUser({ open, onClose, userData }) {
 
       <DialogContent sx={{ mt: 3 }}>
 
+        {/* ------------------------------------------------------------------- */}
+        {/* FORMULAIRE DE MODIFICATION */}
+        {/* ------------------------------------------------------------------- */}
         <Grid container spacing={2} sx={{ padding: "0 60px", paddingBottom: "40px" }}>
 
           {/* Ligne 1 */}
@@ -171,6 +205,7 @@ export default function PopinEditUser({ open, onClose, userData }) {
               </Select>
             </Field>
           </Grid>
+          {/* Champ conditionnel - affiché uniquement pour le rôle concerné (id 1) */}
           {selectedRole === 1 && (
             <Grid size={6}>
               <Field label={<strong>Absences</strong>}>
@@ -193,7 +228,10 @@ export default function PopinEditUser({ open, onClose, userData }) {
         </Grid>
       </DialogContent>
 
+      {/* ------------------------------------------------------------------- */}
       {/* ACTIONS */}
+      {/* Annulation ou validation de la modification */}
+      {/* ------------------------------------------------------------------- */}
       <DialogActions sx={{ gap: "10px", px: 3, pb: 2 }}>
         <Button
           variant="contained"
@@ -225,8 +263,13 @@ export default function PopinEditUser({ open, onClose, userData }) {
   );
 }
 
-/* ---------- SOUS-COMPONENTS ---------- */
+/* ----------------------------------------------------------------------------- */
+/* SOUS-COMPOSANTS */
+/* ----------------------------------------------------------------------------- */
 
+// -----------------------------------------------------------------------------
+// TITRE DE SECTION
+// -----------------------------------------------------------------------------
 function SectionTitle({ title }) {
   return (
     <Typography
@@ -242,6 +285,10 @@ function SectionTitle({ title }) {
   );
 }
 
+// -----------------------------------------------------------------------------
+// CHAMP DE FORMULAIRE
+// Affiche un libellé au-dessus d'un composant de saisie.
+// -----------------------------------------------------------------------------
 function Field({ label, children }) {
   return (
     <Box>

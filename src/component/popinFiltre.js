@@ -1,9 +1,21 @@
+// -----------------------------------------------------------------------------
+// FENÊTRE MODALE - FILTRES DES CHANTIERS
+// -----------------------------------------------------------------------------
+// Cette fenêtre permet de filtrer la liste des chantiers par QA(s), statuts
+// et priorités. Les critères sélectionnés sont transmis au parent via onApply.
+// -----------------------------------------------------------------------------
 import { Dialog, DialogTitle, DialogContent, DialogActions, Checkbox, ListItemText, Button, Box, Typography, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { getStatuts, getPriorites, getQA } from '../services/chantierService';
 
+// -----------------------------------------------------------------------------
+// COMPOSANT POPINFILTRE
+// -----------------------------------------------------------------------------
 export default function PopinFiltre({ open, onClose, onApply }) {
 
+  // ---------------------------------------------------------------------------
+  // STATE - Listes récupérées depuis l'API (référentiels)
+  // ---------------------------------------------------------------------------
   const [statuts, setStatuts] = useState([]);
   const [selectedStatuts, setSelectedStatuts] = useState([]);
 
@@ -13,6 +25,9 @@ export default function PopinFiltre({ open, onClose, onApply }) {
   const [qa, setQa] = useState([]);
   const [selectedQa, setSelectedQa] = useState([]);
 
+  // ---------------------------------------------------------------------------
+  // EFFECT - Récupère la liste des statuts disponibles à l'ouverture de la popin
+  // ---------------------------------------------------------------------------
   // Fetch statuts
   useEffect(() => {
     if (!open) return;
@@ -29,6 +44,9 @@ export default function PopinFiltre({ open, onClose, onApply }) {
     fetchStatuts();
   }, [open]);
 
+  // ---------------------------------------------------------------------------
+  // EFFECT - Récupère la liste des priorités disponibles à l'ouverture de la popin
+  // ---------------------------------------------------------------------------
   // Fetch priorites
   useEffect(() => {
     if (!open) return;
@@ -45,6 +63,9 @@ export default function PopinFiltre({ open, onClose, onApply }) {
     fetchPriorites();
   }, [open]);
 
+  // ---------------------------------------------------------------------------
+  // EFFECT - Récupère la liste des QA (utilisateurs) disponibles à l'ouverture de la popin
+  // ---------------------------------------------------------------------------
   // Fetch QA
   useEffect(() => {
     if (!open) return;
@@ -61,6 +82,9 @@ export default function PopinFiltre({ open, onClose, onApply }) {
     fetchQA();
   }, [open]);
 
+  // ---------------------------------------------------------------------------
+  // FERMETURE ET RÉINITIALISATION DE LA POPIN
+  // ---------------------------------------------------------------------------
   const handleClose = () => {
     setSelectedStatuts([]);
     setSelectedPriorites([]);
@@ -68,6 +92,10 @@ export default function PopinFiltre({ open, onClose, onApply }) {
     onClose();
   };
 
+  // ---------------------------------------------------------------------------
+  // APPLICATION DES FILTRES
+  // Transmet les critères sélectionnés au composant parent puis ferme la popin
+  // ---------------------------------------------------------------------------
   const handleApply = () => {
     onApply?.({
       statuts: selectedStatuts,
@@ -77,12 +105,19 @@ export default function PopinFiltre({ open, onClose, onApply }) {
     onClose();
   };
 
+  // ---------------------------------------------------------------------------
+  // RÉINITIALISATION DES FILTRES
+  // Remet à zéro les sélections sans fermer la popin
+  // ---------------------------------------------------------------------------
   const handleReset = () => {
     setSelectedStatuts([]);
     setSelectedPriorites([]);
     setSelectedQa([]);
   };
 
+  // ---------------------------------------------------------------------------
+  // RENDER
+  // ---------------------------------------------------------------------------
   return (
     <Dialog
       open={open}
@@ -98,7 +133,9 @@ export default function PopinFiltre({ open, onClose, onApply }) {
       maxWidth="md"
       fullWidth
     >
-      {/* HEADER */}
+      {/* ------------------------------------------------------------------- */}
+      {/* EN-TÊTE DE LA FENÊTRE */}
+      {/* ------------------------------------------------------------------- */}
       <DialogTitle
         sx={{
           backgroundColor: "#0178A5",
@@ -117,6 +154,9 @@ export default function PopinFiltre({ open, onClose, onApply }) {
 
       <DialogContent sx={{ mt: 3 }}>
 
+        {/* ------------------------------------------------------------------- */}
+        {/* FORMULAIRE DE FILTRAGE */}
+        {/* ------------------------------------------------------------------- */}
         <Grid container spacing={2} sx={{ padding: "0 60px", paddingBottom: "40px" }}>
 
           {/* QA */}
@@ -202,7 +242,10 @@ export default function PopinFiltre({ open, onClose, onApply }) {
         </Grid>
       </DialogContent>
 
+      {/* ------------------------------------------------------------------- */}
       {/* ACTIONS */}
+      {/* Annulation, réinitialisation ou application des filtres */}
+      {/* ------------------------------------------------------------------- */}
       <DialogActions sx={{ gap: "10px", px: 3, pb: 2 }}>
         <Button
           variant="contained"
@@ -247,6 +290,14 @@ export default function PopinFiltre({ open, onClose, onApply }) {
   );
 }
 
+/* ----------------------------------------------------------------------------- */
+/* SOUS-COMPOSANTS */
+/* ----------------------------------------------------------------------------- */
+
+// -----------------------------------------------------------------------------
+// CHAMP DE FORMULAIRE
+// Affiche un libellé au-dessus d'un composant de saisie.
+// -----------------------------------------------------------------------------
 function Field({ label, children }) {
   return (
     <Box>

@@ -1,10 +1,22 @@
+// -----------------------------------------------------------------------------
+// FENÊTRE MODALE - CRÉATION D'UN CHANTIER
+// -----------------------------------------------------------------------------
+// Cette fenêtre permet de créer un nouveau chantier. Elle récupère les informations entrées par l'utilisateur
+// , valide les informations saisies puis enregistre le nouveau
+// chantier en base de données.
+// -----------------------------------------------------------------------------
 import { Dialog, DialogTitle, DialogContent, DialogActions, Checkbox, ListItemText, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { getStatuts, getPriorites, getQA, updateChantier, addChantier } from '../services/chantierService';
 
-
+// -----------------------------------------------------------------------------
+// COMPOSANT POPINNEWCHANTIER
+// -----------------------------------------------------------------------------
 export default function PopinNewChantier({ open, onClose, onCreated }) {
 
+    // ---------------------------------------------------------------------------
+    // STATE - Listes récupérées depuis l'API (référentiels)
+    // ---------------------------------------------------------------------------
     const [statuts, setStatuts] = useState([]);
     const [selectedStatut, setSelectedStatut] = useState("");
 
@@ -14,6 +26,9 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
     const [qa, setQa] = useState([]);
     const [selectedQa, setSelectedQa] = useState([]);
 
+    // ---------------------------------------------------------------------------
+    // STATE - Données du formulaire (infos générales, pilotage, budget, planning)
+    // ---------------------------------------------------------------------------
     //const [chantier, setChantier] = useState([]);
     const [selectedChantier, setSelectedChantier] = useState("");
 
@@ -27,6 +42,9 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
     const [selectedDateDebut, setSelectedDateDebut] = useState("");
     const [selectedDateFin, setSelectedDateFin] = useState("");
 
+    // ---------------------------------------------------------------------------
+    // EFFECT - Récupère la liste des statuts disponibles
+    // ---------------------------------------------------------------------------
     useEffect(() => {
         const fetchStatut = async () => {
             try {
@@ -39,7 +57,9 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
         fetchStatut();
     }, []);
 
-
+    // ---------------------------------------------------------------------------
+    // EFFECT - Récupère la liste des priorités disponibles
+    // ---------------------------------------------------------------------------
     useEffect(() => {
         const fetchPriorite = async () => {
             try {
@@ -52,7 +72,9 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
         fetchPriorite();
     }, []);
 
-
+    // ---------------------------------------------------------------------------
+    // EFFECT - Récupère la liste des QA (utilisateurs) disponibles
+    // ---------------------------------------------------------------------------
     useEffect(() => {
         const fetchQA = async () => {
             try {
@@ -65,24 +87,31 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
         fetchQA();
     }, []);
 
+    // ---------------------------------------------------------------------------
+    // VALIDATION ET CRÉATION DU CHANTIER
+    // ---------------------------------------------------------------------------
     const handleSubmit = async () => {
         try {
+            // Vérifie que le champ obligatoire "Chantier" est renseigné
             if (!selectedChantier) {
                 alert("Veuillez choisir le chantier.");
                 return;
             }
+            // Vérifie que "Prévisionnel" et "Consommé" sont bien numériques
             if (selectedCons || selectedPrev) {
                 if (!/^\d+$/.test(selectedCons) || !/^\d+$/.test(selectedPrev)) {
                     alert("Les champs 'Prévisionnel' et 'Consommé' doivent contenir uniquement des chiffres.");
                     return;
                 }
             }
+            // Vérifie que "Capacité" est bien numérique
             if (selectedCap) {
                 if (!/^\d+$/.test(selectedCap)) {
                     alert("Le champ 'Capacité' doit contenir uniquement des chiffres.");
                     return;
                 }
             }
+            // Vérifie que la date de fin n'est pas inférieure à la date de début
             if (selectedDateDebut && selectedDateFin) {
                 if (selectedDateFin < selectedDateDebut) {
                     alert("La date de fin ne doit pas être inférieure à la date de début.");
@@ -90,6 +119,7 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
                 }
             }
 
+            // Construction de l'objet envoyé à l'API
             const chantierData = {
                 chantier: selectedChantier,
                 priorite: selectedPriorite ? parseInt(selectedPriorite) : null,
@@ -110,7 +140,7 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
             // on garde le titre avant le reset des champs, pour la notification
             const titreCree = selectedChantier;
 
-            //reset
+            // reset form
             setSelectedChantier("");
             setSelectedPriorite("");
             setSelectedStatut("");
@@ -134,6 +164,9 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
         }
     }
 
+    // ---------------------------------------------------------------------------
+    // FERMETURE ET RÉINITIALISATION DE LA POPIN
+    // ---------------------------------------------------------------------------
     const handleClose = () => {
         setSelectedStatut("");
         setSelectedPriorite("");
@@ -142,7 +175,9 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
         onClose();
     };
 
-
+    // ---------------------------------------------------------------------------
+    // RENDER
+    // ---------------------------------------------------------------------------
     return (
         <Dialog
             open={open}
@@ -158,7 +193,9 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
             maxWidth="md"
             fullWidth
         >
-            {/* HEADER */}
+            {/* ------------------------------------------------------------------- */}
+            {/* EN-TÊTE DE LA FENÊTRE */}
+            {/* ------------------------------------------------------------------- */}
             <DialogTitle
                 sx={{
                     backgroundColor: "#0178A5",
@@ -181,7 +218,10 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
 
             <DialogContent sx={{ mt: 3 }}>
 
-                {/* INFOS GÉNÉRALES */}
+                {/* ------------------------------------------------------------------- */}
+                {/* SECTION - INFOS GÉNÉRALES */}
+                {/* Chantier, priorité, QA(s) affectés et statut */}
+                {/* ------------------------------------------------------------------- */}
                 <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2 }}>
                     Infos générales
                 </Typography>
@@ -256,7 +296,10 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
                     </Grid>
                 </Grid>
 
-                {/* PILOTAGE */}
+                {/* ------------------------------------------------------------------- */}
+                {/* SECTION - PILOTAGE */}
+                {/* Chef de projet, financement, nature du projet, capacité */}
+                {/* ------------------------------------------------------------------- */}
                 <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2 }}>
                     Pilotage
                 </Typography>
@@ -328,7 +371,10 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
                     </Grid>
                 </Grid>
 
-                {/* SUIVI BUDGÉTAIRE */}
+                {/* ------------------------------------------------------------------- */}
+                {/* SECTION - SUIVI BUDGÉTAIRE */}
+                {/* Prévisionnel, consommé et calcul automatique du reste à faire */}
+                {/* ------------------------------------------------------------------- */}
                 <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2 }}>
                     Suivi budgétaire
                 </Typography>
@@ -342,6 +388,7 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
                                 fullWidth
                                 variant="outlined"
                                 onChange={(e) => {
+                                    // Met à jour le prévisionnel et recalcule le reste à faire
                                     const newPrev = Number(e.target.value);
                                     setSelectedPrev(newPrev);
                                     setRaf(newPrev - selectedCons);
@@ -361,6 +408,7 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
                                 fullWidth
                                 variant="outlined"
                                 onChange={(e) => {
+                                    // Met à jour le consommé et recalcule le reste à faire
                                     const newCons = Number(e.target.value);
                                     setSelectedCons(newCons);
                                     setRaf(selectedPrev - newCons);
@@ -376,6 +424,7 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
                     </Grid>
                     <Grid size={4}>
                         <Field label="Reste à faire">
+                            {/* Champ calculé automatiquement, non modifiable */}
                             <TextField
                                 fullWidth
                                 variant="outlined"
@@ -392,7 +441,10 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
                     </Grid>
                 </Grid>
 
-                {/* PLANNING */}
+                {/* ------------------------------------------------------------------- */}
+                {/* SECTION - PLANNING */}
+                {/* Dates de début et de fin du chantier */}
+                {/* ------------------------------------------------------------------- */}
                 <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2, }}>
                     Planning
                 </Typography>
@@ -435,7 +487,10 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
                 </Grid>
             </DialogContent>
 
+            {/* ------------------------------------------------------------------- */}
             {/* ACTIONS */}
+            {/* Annulation ou validation de la création */}
+            {/* ------------------------------------------------------------------- */}
             <DialogActions sx={{ gap: "10px", px: 3, pb: 2 }}>
                 <Button
                     variant="contained"
@@ -467,8 +522,13 @@ export default function PopinNewChantier({ open, onClose, onCreated }) {
     );
 }
 
-/* ---------- SOUS-COMPONENTS ---------- */
+/* ----------------------------------------------------------------------------- */
+/* SOUS-COMPOSANTS */
+/* ----------------------------------------------------------------------------- */
 
+// -----------------------------------------------------------------------------
+// TITRE DE SECTION
+// -----------------------------------------------------------------------------
 function SectionTitle({ title }) {
     return (
         <Typography
@@ -484,6 +544,10 @@ function SectionTitle({ title }) {
     );
 }
 
+// -----------------------------------------------------------------------------
+// CHAMP DE FORMULAIRE
+// Affiche un libellé au-dessus d'un composant de saisie.
+// -----------------------------------------------------------------------------
 function Field({ label, children }) {
     return (
         <Box>

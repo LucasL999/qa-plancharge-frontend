@@ -1,6 +1,20 @@
+// -----------------------------------------------------------------------------
+// CARTE - INDICATEUR CHIFFRÉ AVEC COULEUR DYNAMIQUE (DASHBOARD)
+// -----------------------------------------------------------------------------
+// Ce composant affiche une carte présentant un indicateur : un titre avec
+// icône, et une valeur chiffrée accompagnée de son unité. La couleur du texte
+// et de l'icône est personnalisable via la prop `color`. Fond transparent,
+// utilisée sur le tableau de bord.
+// -----------------------------------------------------------------------------
 import { Box, Typography } from "@mui/material";
 
+// -----------------------------------------------------------------------------
+// COMPOSANT CARD5
+// -----------------------------------------------------------------------------
 export default function Card5({ title, value, icon, unit, color }) {
+  // ---------------------------------------------------------------------------
+  // RENDER
+  // ---------------------------------------------------------------------------
   return (
     <Box sx={{
       width: 225,
@@ -20,6 +34,9 @@ export default function Card5({ title, value, icon, unit, color }) {
         boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)",
       },
     }}>
+      {/* ------------------------------------------------------------------- */}
+      {/* EN-TÊTE DE LA CARTE - Icône + titre (couleur dynamique) */}
+      {/* ------------------------------------------------------------------- */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", color: { color }, }}>
         <div>
           {icon}
@@ -28,6 +45,10 @@ export default function Card5({ title, value, icon, unit, color }) {
           {title}
         </Typography>
       </div>
+
+      {/* ------------------------------------------------------------------- */}
+      {/* VALEUR DE L'INDICATEUR - Chiffre + unité (couleur dynamique) */}
+      {/* ------------------------------------------------------------------- */}
       <Box>
         <Typography variant="h4" sx={{
           color: { color }, fontSize: "55px", paddingLeft: "12px", paddingTop: "5px"

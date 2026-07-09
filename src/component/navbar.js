@@ -1,3 +1,10 @@
+// -----------------------------------------------------------------------------
+// BARRE DE NAVIGATION
+// -----------------------------------------------------------------------------
+// Ce composant affiche le menu latéral de l'application. Il permet de naviguer
+// entre les différents modules et de se déconnecter.
+// -----------------------------------------------------------------------------
+
 import { NavLink } from "react-router-dom";
 import { Box, Button, Divider } from "@mui/material";
 
@@ -10,7 +17,15 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 import logo from "../img/logo.png";
 
+// -----------------------------------------------------------------------------
+// COMPOSANT NAVBAR
+// -----------------------------------------------------------------------------
 export default function Navbar({ onLogout }) {
+
+  // ---------------------------------------------------------------------------
+  // CONFIGURATION DES ÉLÉMENTS DU MENU
+  // Chaque entrée contient son libellé, sa route et son icône.
+  // ---------------------------------------------------------------------------
   const navItems = [
     { label: "Dashboard", path: "/", icon: <HomeFilledIcon /> },
     { label: "Chantiers", path: "/chantier", icon: <ConstructionIcon /> },
@@ -19,6 +34,9 @@ export default function Navbar({ onLogout }) {
     { label: "Utilisateurs", path: "/user", icon: <PersonIcon /> },
   ];
 
+  // ---------------------------------------------------------------------------
+  // RENDER
+  // -----------------------------------------------------------------------------
   return (
     <nav
       className="sidebar"
@@ -35,6 +53,10 @@ export default function Navbar({ onLogout }) {
         borderRight: "2px solid #8d8d8d",
       }}
     >
+
+      {/* ------------------------------------------------------------------- */}
+      {/* LOGO DE L'APPLICATION */}
+      {/* ------------------------------------------------------------------- */}
       <img
         src={logo}
         alt="logo"
@@ -49,6 +71,10 @@ export default function Navbar({ onLogout }) {
 
       <Divider sx={{ marginBottom: "20px", border: "1px solid #8d8d8d" }} />
 
+      {/* ------------------------------------------------------------------- */}
+      {/* MENU DE NAVIGATION */}
+      {/* Mise en évidence de la page actuellement active */}
+      {/* ------------------------------------------------------------------- */}
       <Box
         style={{
           display: "flex",
@@ -87,6 +113,9 @@ export default function Navbar({ onLogout }) {
         ))}
       </Box>
 
+      {/* ------------------------------------------------------------------- */}
+      {/* BOUTON DE DÉCONNEXION */}
+      {/* ------------------------------------------------------------------- */}
       <Button
         variant="text"
         onClick={onLogout}
@@ -105,6 +134,7 @@ export default function Navbar({ onLogout }) {
         <LogoutIcon sx={{ marginRight: "8px" }} />
         Déconnexion
       </Button>
+
     </nav>
   );
 }

@@ -1,9 +1,22 @@
+// -----------------------------------------------------------------------------
+// FENÊTRE MODALE - MODIFICATION D'UN CHANTIER
+// -----------------------------------------------------------------------------
+// Cette fenêtre permet de modifier un chantier existant. Elle récupère les
+// informations actuelles du chantier, valide les informations saisies puis
+// met à jour le chantier en base de données.
+// -----------------------------------------------------------------------------
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider, Checkbox, ListItemText } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { getStatuts, getPriorites, getQA, updateChantier } from "../services/chantierService.js";
 
+// -----------------------------------------------------------------------------
+// COMPOSANT POPINEDITCHANTIER
+// -----------------------------------------------------------------------------
 export default function PopinEditChantier({ open, onClose, chantier, onUpdated }) {
 
+    // ---------------------------------------------------------------------------
+    // STATE - Données du formulaire (infos générales, pilotage, budget, planning)
+    // ---------------------------------------------------------------------------
     const [chefDeProjet, setChefDeProjet] = useState("");
     const [financement, setFinancement] = useState("");
     const [natureDuProjet, setNatureDuProjet] = useState("");
@@ -15,6 +28,9 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
     const [fin, setFin] = useState("");
     const [titre, setTitre] = useState("");
 
+    // ---------------------------------------------------------------------------
+    // STATE - Listes récupérées depuis l'API (référentiels)
+    // ---------------------------------------------------------------------------
     const [priorites, setPriorites] = useState([]);
     const [selectedPriorite, setSelectedPriorite] = useState("");
     const [statuts, setStatuts] = useState([]);
@@ -23,8 +39,14 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
     const [selectedQas, setSelectedQas] = useState([]);
 
 
+    // ---------------------------------------------------------------------------
+    // FORMATAGE - Date au format YYYY-MM-DD
+    // ---------------------------------------------------------------------------
     const formatDate = (date) => date ? date.split("T")[0] : "";
 
+    // ---------------------------------------------------------------------------
+    // EFFECT - Récupère la liste des statuts disponibles
+    // ---------------------------------------------------------------------------
     useEffect(() => {
         const fetchStatuts = async () => {
             try {
@@ -37,6 +59,9 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
         fetchStatuts();
     }, []);
 
+    // ---------------------------------------------------------------------------
+    // EFFECT - Récupère la liste des QA (utilisateurs) disponibles
+    // ---------------------------------------------------------------------------
     useEffect(() => {
         const fetchQas = async () => {
             try {
@@ -49,6 +74,9 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
         fetchQas();
     }, []);
 
+    // ---------------------------------------------------------------------------
+    // EFFECT - Récupère la liste des priorités disponibles
+    // ---------------------------------------------------------------------------
     useEffect(() => {
         const fetchPriorites = async () => {
             try {
@@ -61,6 +89,9 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
         fetchPriorites();
     }, []);
 
+    // ---------------------------------------------------------------------------
+    // EFFECT - Initialise le formulaire avec les données du chantier à éditer
+    // ---------------------------------------------------------------------------
     useEffect(() => {
         if (chantier) {
             setChefDeProjet(chantier.cp);
@@ -79,20 +110,26 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
         }
     }, [chantier]);
 
+    // ---------------------------------------------------------------------------
+    // VALIDATION ET MODIFICATION DU CHANTIER
+    // ---------------------------------------------------------------------------
     const handleSubmit = async () => {
         try {
+            // Vérifie que "Prévisionnel" et "Consommé" sont bien numériques
             if (cons || prev) {
                 if (!/^\d+$/.test(cons) || !/^\d+$/.test(prev)) {
                     alert("Les champs 'Prévisionnel' et 'Consommé' doivent contenir uniquement des chiffres.");
                     return;
                 }
             }
+            // Vérifie que "Capacité" est bien numérique
             if (capacite) {
                 if (!/^\d+$/.test(capacite)) {
                     alert("Le champ 'Capacité' doit contenir uniquement des chiffres.");
                     return;
                 }
             }
+            // Vérifie que la date de fin n'est pas inférieure à la date de début
             if (debut && fin) {
                 if (fin < debut) {
                     alert("La date de fin ne doit pas être inférieure à la date de début.");
@@ -100,6 +137,7 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
                 }
             }
 
+            // Construction de l'objet envoyé à l'API
             const chantierData = {
                 id: chantier.id_chantier,
                 priorite: selectedPriorite ? parseInt(selectedPriorite) : null,
@@ -128,6 +166,9 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
         }
     }
 
+    // ---------------------------------------------------------------------------
+    // FERMETURE ET RÉINITIALISATION DE LA POPIN
+    // ---------------------------------------------------------------------------
     const handleClose = () => {
         setSelectedPriorite("");
         setSelectedStatut("");
@@ -144,6 +185,9 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
         onClose();
     };
 
+    // ---------------------------------------------------------------------------
+    // RENDER
+    // ---------------------------------------------------------------------------
     return (
         <Dialog
             open={open}
@@ -158,7 +202,9 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
             maxWidth="md"
             fullWidth
         >
-            {/* HEADER */}
+            {/* ------------------------------------------------------------------- */}
+            {/* EN-TÊTE DE LA FENÊTRE */}
+            {/* ------------------------------------------------------------------- */}
             <DialogTitle
                 sx={{
                     backgroundColor: "#0178A5",
@@ -181,7 +227,10 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
 
             <DialogContent sx={{ mt: 3 }}>
 
-                {/* INFOS GÉNÉRALES */}
+                {/* ------------------------------------------------------------------- */}
+                {/* SECTION - INFOS GÉNÉRALES */}
+                {/* Chantier (non modifiable), priorité, QA(s) et statut */}
+                {/* ------------------------------------------------------------------- */}
                 <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2 }}>
                     Infos générales
                 </Typography>
@@ -250,7 +299,10 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
                     </Grid>
                 </Grid>
 
-                {/* PILOTAGE */}
+                {/* ------------------------------------------------------------------- */}
+                {/* SECTION - PILOTAGE */}
+                {/* Chef de projet, financement, nature du projet, capacité */}
+                {/* ------------------------------------------------------------------- */}
                 <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2 }}>
                     Pilotage
                 </Typography>
@@ -326,7 +378,10 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
                     </Grid>
                 </Grid>
 
-                {/* SUIVI BUDGÉTAIRE */}
+                {/* ------------------------------------------------------------------- */}
+                {/* SECTION - SUIVI BUDGÉTAIRE */}
+                {/* Prévisionnel, consommé et calcul automatique du reste à faire */}
+                {/* ------------------------------------------------------------------- */}
                 <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2 }}>
                     Suivi budgétaire
                 </Typography>
@@ -341,6 +396,7 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
                                 variant="outlined"
                                 value={prev}
                                 onChange={(e) => {
+                                    // Met à jour le prévisionnel et recalcule le reste à faire
                                     const newPrev = Number(e.target.value);
                                     setPrev(newPrev);
                                     setRaf(newPrev - cons);
@@ -361,6 +417,7 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
                                 variant="outlined"
                                 value={cons}
                                 onChange={(e) => {
+                                    // Met à jour le consommé et recalcule le reste à faire
                                     const newCons = Number(e.target.value);
                                     setCons(newCons);
                                     setRaf(prev - newCons);
@@ -376,6 +433,7 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
                     </Grid>
                     <Grid size={4}>
                         <Field label="Reste à faire">
+                            {/* Champ calculé automatiquement, non modifiable */}
                             <TextField
                                 fullWidth
                                 variant="outlined"
@@ -392,7 +450,10 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
                     </Grid>
                 </Grid>
 
-                {/* PLANNING */}
+                {/* ------------------------------------------------------------------- */}
+                {/* SECTION - PLANNING */}
+                {/* Dates de début et de fin du chantier */}
+                {/* ------------------------------------------------------------------- */}
                 <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2, }}>
                     Planning
                 </Typography>
@@ -437,7 +498,10 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
                 </Grid>
             </DialogContent>
 
+            {/* ------------------------------------------------------------------- */}
             {/* ACTIONS */}
+            {/* Annulation ou validation de la modification */}
+            {/* ------------------------------------------------------------------- */}
             <DialogActions sx={{ gap: "10px", px: 3, pb: 2 }}>
                 <Button
                     variant="contained"
@@ -469,8 +533,14 @@ export default function PopinEditChantier({ open, onClose, chantier, onUpdated }
     );
 }
 
-/* ---------- SOUS-COMPONENTS ---------- */
+/* ----------------------------------------------------------------------------- */
+/* SOUS-COMPOSANTS */
+/* ----------------------------------------------------------------------------- */
 
+// -----------------------------------------------------------------------------
+// CHAMP DE FORMULAIRE
+// Affiche un libellé au-dessus d'un composant de saisie.
+// -----------------------------------------------------------------------------
 function Field({ label, children }) {
     return (
         <Box>

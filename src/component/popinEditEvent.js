@@ -1,8 +1,18 @@
+// -----------------------------------------------------------------------------
+// FENÊTRE MODALE - MODIFICATION D'UNE ABSENCE
+// -----------------------------------------------------------------------------
+// Cette fenêtre permet de modifier ou de supprimer une absence existante.
+// Elle récupère les dates actuelles de l'absence, valide les informations
+// saisies puis met à jour (ou supprime) l'absence en base de données.
+// -----------------------------------------------------------------------------
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TextField, Grid, MenuItem, Select, Divider } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { jwtDecode } from "jwt-decode";
 import { deleteEvent, updateEvent } from "../services/calendarService"
 
+// -----------------------------------------------------------------------------
+// UTILITAIRE - Décalage de date
+// -----------------------------------------------------------------------------
 // ✅ décale une date "YYYY-MM-DD" (ou ISO) de `deltaDays` jours, en UTC pur
 // pour ne jamais dépendre du fuseau horaire du navigateur
 const shiftDateString = (dateStr, deltaDays) => {
@@ -12,11 +22,20 @@ const shiftDateString = (dateStr, deltaDays) => {
   return shifted.toISOString().split("T")[0];
 };
 
+// -----------------------------------------------------------------------------
+// COMPOSANT POPINEDITEVENT
+// -----------------------------------------------------------------------------
 export default function PopinEditEvent({ open, onClose, event }) {
 
+  // ---------------------------------------------------------------------------
+  // STATE - Dates de l'absence
+  // ---------------------------------------------------------------------------
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
+  // ---------------------------------------------------------------------------
+  // EFFECT - Initialise le formulaire avec les dates de l'absence à éditer
+  // ---------------------------------------------------------------------------
   useEffect(() => {
     if (event) {
       const displayStart = event.date_debut ? shiftDateString(event.date_debut, 1) : "";
@@ -26,6 +45,9 @@ export default function PopinEditEvent({ open, onClose, event }) {
     }
   }, [event]);
 
+  // ---------------------------------------------------------------------------
+  // SUPPRESSION DE L'ABSENCE
+  // ---------------------------------------------------------------------------
   const handleDelete = async () => {
     try {
       if (!event?.id_event) {
@@ -45,12 +67,16 @@ export default function PopinEditEvent({ open, onClose, event }) {
     }
   };
 
+  // ---------------------------------------------------------------------------
+  // VALIDATION ET MODIFICATION DE L'ABSENCE
+  // ---------------------------------------------------------------------------
   const handleUpdate = async () => {
     try {
       if (!event?.id_event) {
         console.error("id_event manquant, modification impossible");
         return;
       }
+      // Vérifie que la date de fin n'est pas inférieure à la date de début
       if (endDate < startDate) {
         alert("La date de fin ne doit pas être inférieure à la date de début.");
         return;
@@ -66,6 +92,9 @@ export default function PopinEditEvent({ open, onClose, event }) {
     }
   };
 
+  // ---------------------------------------------------------------------------
+  // RENDER
+  // ---------------------------------------------------------------------------
   return (
     <Dialog
       open={open}
@@ -81,7 +110,9 @@ export default function PopinEditEvent({ open, onClose, event }) {
       maxWidth="md"
       fullWidth
     >
-      {/* HEADER */}
+      {/* ------------------------------------------------------------------- */}
+      {/* EN-TÊTE DE LA FENÊTRE */}
+      {/* ------------------------------------------------------------------- */}
       <DialogTitle
         sx={{
           backgroundColor: "#0178A5",
@@ -104,6 +135,9 @@ export default function PopinEditEvent({ open, onClose, event }) {
 
       <DialogContent sx={{ mt: 3 }}>
 
+        {/* ------------------------------------------------------------------- */}
+        {/* FORMULAIRE DE MODIFICATION */}
+        {/* ------------------------------------------------------------------- */}
         {/* PLANNING */}
         <Grid container spacing={2} sx={{ padding: "0 60px", paddingBottom: "40px" }}>
 
@@ -145,7 +179,10 @@ export default function PopinEditEvent({ open, onClose, event }) {
         </Grid>
       </DialogContent>
 
+      {/* ------------------------------------------------------------------- */}
       {/* ACTIONS */}
+      {/* Annulation, modification ou suppression de l'absence */}
+      {/* ------------------------------------------------------------------- */}
       <DialogActions sx={{ gap: "10px", px: 3, pb: 2 }}>
         <Button
           variant="contained"
@@ -194,8 +231,13 @@ export default function PopinEditEvent({ open, onClose, event }) {
   );
 }
 
-/* ---------- SOUS-COMPONENTS ---------- */
+/* ----------------------------------------------------------------------------- */
+/* SOUS-COMPOSANTS */
+/* ----------------------------------------------------------------------------- */
 
+// -----------------------------------------------------------------------------
+// TITRE DE SECTION
+// -----------------------------------------------------------------------------
 function SectionTitle({ title }) {
   return (
     <Typography
@@ -211,6 +253,10 @@ function SectionTitle({ title }) {
   );
 }
 
+// -----------------------------------------------------------------------------
+// CHAMP DE FORMULAIRE
+// Affiche un libellé au-dessus d'un composant de saisie.
+// -----------------------------------------------------------------------------
 function Field({ label, children }) {
   return (
     <Box>

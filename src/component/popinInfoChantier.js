@@ -1,10 +1,24 @@
+// -----------------------------------------------------------------------------
+// FENÊTRE MODALE - INFORMATIONS D'UN CHANTIER
+// -----------------------------------------------------------------------------
+// Cette fenêtre affiche en lecture seule les informations détaillées d'un
+// chantier (infos générales, pilotage, suivi budgétaire et planning).
+// -----------------------------------------------------------------------------
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Box, Typography, TableContainer, Table, TableCell, Grid, MenuItem, Select, Divider, TableBody, TableRow } from '@mui/material';
 
-
+// -----------------------------------------------------------------------------
+// COMPOSANT POPININFOCHANTIER
+// -----------------------------------------------------------------------------
 export default function PopinInfoChantier({ open, onClose, chantier }) {
 
+    // ---------------------------------------------------------------------------
+    // FORMATAGE - Date au format YYYY-MM-DD
+    // ---------------------------------------------------------------------------
     const formatDate = (date) => date ? date.split("T")[0] : "";
 
+    // ---------------------------------------------------------------------------
+    // FORMATAGE - Liste des QA(s) affectés au chantier
+    // ---------------------------------------------------------------------------
     const afficheQA = (tableauQA) => {
         if (!Array.isArray(tableauQA) || tableauQA.length === 0) {
             return "N/A";
@@ -13,6 +27,9 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
         return tableauQA.map(qa => `${qa.firstname}`).join(", ");
     };
 
+    // ---------------------------------------------------------------------------
+    // RENDER
+    // ---------------------------------------------------------------------------
     return (
         <Dialog
             open={open}
@@ -28,7 +45,9 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
             maxWidth="md"
             fullWidth
         >
-            {/* HEADER */}
+            {/* ------------------------------------------------------------------- */}
+            {/* EN-TÊTE DE LA FENÊTRE */}
+            {/* ------------------------------------------------------------------- */}
             <DialogTitle
                 sx={{
                     backgroundColor: "#0178A5",
@@ -51,11 +70,12 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
 
             <DialogContent sx={{ mt: 3 }}>
 
-
-
                 <Grid container spacing={2} sx={{ padding: "0 60px", paddingBottom: "40px" }}>
 
-                    {/* INFOS GÉNÉRALES */}
+                    {/* ------------------------------------------------------------------- */}
+                    {/* SECTION - INFOS GÉNÉRALES */}
+                    {/* Chantier, statut, QA(s) et priorité */}
+                    {/* ------------------------------------------------------------------- */}
                     <Grid size={6}>
                         <Box sx={{ paddingRight: "30px" }}>
                             <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2 }}>
@@ -93,7 +113,10 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
                         </Box>
                     </Grid>
 
-                    {/* PILOTAGE */}
+                    {/* ------------------------------------------------------------------- */}
+                    {/* SECTION - PILOTAGE */}
+                    {/* Chef de projet, nature du projet, financement et capacité */}
+                    {/* ------------------------------------------------------------------- */}
                     <Grid size={6} >
                         <Box sx={{ paddingLeft: "30px" }}>
                             <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2 }}>
@@ -131,7 +154,10 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
                         </Box>
                     </Grid>
 
-                    {/* SUVI BUDGÉTAIRE */}
+                    {/* ------------------------------------------------------------------- */}
+                    {/* SECTION - SUIVI BUDGÉTAIRE */}
+                    {/* Prévisionnel, consommé et reste à faire (calculé) */}
+                    {/* ------------------------------------------------------------------- */}
                     <Grid size={6}>
                         <Box sx={{ paddingTop: "30px", paddingRight: "30px" }}>
                             <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2 }}>
@@ -165,7 +191,10 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
                         </Box>
                     </Grid>
 
-                    {/* PLANNING */}
+                    {/* ------------------------------------------------------------------- */}
+                    {/* SECTION - PLANNING */}
+                    {/* Dates de début et de fin du chantier */}
+                    {/* ------------------------------------------------------------------- */}
                     <Grid size={6}>
                         <Box sx={{ paddingTop: "30px", paddingLeft: "30px" }}>
                             <Typography align="center" justifyContent="center" sx={{ fontSize: "20px", fontWeight: "bold", mb: 2 }}>
@@ -198,7 +227,10 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
 
             </DialogContent>
 
+            {/* ------------------------------------------------------------------- */}
             {/* ACTIONS */}
+            {/* Fermeture de la fenêtre */}
+            {/* ------------------------------------------------------------------- */}
             <DialogActions sx={{ gap: "10px", px: 3, pb: 2 }}>
                 <Button
                     variant="contained"
@@ -217,8 +249,13 @@ export default function PopinInfoChantier({ open, onClose, chantier }) {
     );
 }
 
-/* ---------- SOUS-COMPONENTS ---------- */
+/* ----------------------------------------------------------------------------- */
+/* SOUS-COMPOSANTS */
+/* ----------------------------------------------------------------------------- */
 
+// -----------------------------------------------------------------------------
+// TITRE DE SECTION
+// -----------------------------------------------------------------------------
 function SectionTitle({ title }) {
     return (
         <Typography
@@ -234,6 +271,10 @@ function SectionTitle({ title }) {
     );
 }
 
+// -----------------------------------------------------------------------------
+// CHAMP DE FORMULAIRE
+// Affiche un libellé au-dessus d'un composant de saisie.
+// -----------------------------------------------------------------------------
 function Field({ label, children }) {
     return (
         <Box>
